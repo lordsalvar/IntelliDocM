@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Student Dashboard</title>
+        <link rel="stylesheet" href="../css/calendar.css" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <header>
+            <h2>Student User</h2>
+        </header>
+
+        <div class="sidebar">
+            <a href="student_dashboard.php">Dashboard</a>
+            <a href="studentActivities.html">Student Activities Forms</a>
+            <!-- Button to trigger notification modal -->
+            <button
+                type="button"
+                class="btn btn-light"
+                data-toggle="modal"
+                data-target="#notificationModal"
+            >
+                Notification
+            </button>
+            <a href="logout.html">Logout</a>
+        </div>
+
+        <div class="content">
+            <h3>Your Submitted Forms and Status Updates</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date Submitted</th>
+                        <th>Form Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-11-15</td>
+                        <td>Activity Proposal Form</td>
+                        <td>
+                            <span class="badge badge-success">Approved</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-14</td>
+                        <td>Booking Form</td>
+                        <td>
+                            <span class="badge badge-secondary">Pending</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-13</td>
+                        <td>Booking Form</td>
+                        <td>
+                            <span class="badge badge-success">Approved</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-12</td>
+                        <td>Activity Proposal Form</td>
+                        <td>
+                            <span class="badge badge-secondary">Pending</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-11</td>
+                        <td>Activity Proposal Form</td>
+                        <td>
+                            <span class="badge badge-success">Approved</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-11</td>
+                        <td>Booking Form</td>
+                        <td>
+                            <span class="badge badge-danger">Disapproved</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Notification Modal -->
+        <div
+            class="modal fade"
+            id="notificationModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="notificationModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationModalLabel">
+                            Notifications
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>Activity Proposal Form</strong><br />
+                                Submitted on: 2024-11-15<br />
+                                Status:
+                                <span class="badge badge-success"
+                                    >Approved</span
+                                >
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Booking Form</strong><br />
+                                Submitted on: 2024-11-11<br />
+                                Status:
+                                <span class="badge badge-danger"
+                                    >Disapproved</span
+                                >
+                                <!-- View Reason button for disapproved status -->
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger mt-2"
+                                    onclick="showDisapprovalReason('Insufficient details provided')"
+                                >
+                                    View Reason
+                                </button>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Parent Consent Form</strong><br />
+                                Submitted on: 2024-11-14<br />
+                                Status:
+                                <span class="badge badge-secondary"
+                                    >Pending</span
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Disapproval Reason -->
+        <div
+            class="modal fade"
+            id="disapprovalReasonModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="disapprovalReasonModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5
+                            class="modal-title"
+                            id="disapprovalReasonModalLabel"
+                        >
+                            Disapproval Reason
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="disapprovalReasonText">
+                        <!-- Disapproval reason will be injected here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Cor Jesu College. All Rights Reserved.</p>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            // JavaScript function to show the disapproval reason in the modal
+            function showDisapprovalReason(reason) {
+                document.getElementById("disapprovalReasonText").innerText =
+                    reason;
+                $("#disapprovalReasonModal").modal("show");
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,206 @@
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #e31b23;
+    color: white;
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #e31b23;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    margin-top: auto;
+}
+
+.sidebar {
+    position: fixed;
+    top: 60px; /* Adjusted for fixed header */
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 75px); /* Adjusted for footer */
+    background-color: #f1f1f1;
+    padding-top: 20px;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a,
+.sidebar button {
+    padding: 10px 20px;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+}
+
+.sidebar a:hover,
+.sidebar button:hover {
+    background-color: #ddd;
+    color: #333;
+    cursor: pointer;
+}
+
+.sidebar h4 {
+    padding: 10px 20px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.content {
+    margin-left: 240px; /* Space for the sidebar */
+    padding: 20px;
+    margin-top: 80px;
+    margin-bottom: 80px; /* Space for the fixed header */
+    flex: 1;
+}
+
+.logo {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #e31b23;
+    color: white;
+}
+
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-text {
+    text-align: center;
+}
+
+.header-info label,
+.header-info input {
+    display: block;
+    width: 100%;
+}
+
+.header-info input {
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+.form-row {
+    margin-top: 30px;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.signature-block {
+    text-align: center;
+    width: 25%;
+}
+
+.content-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Modal Customization */
+.modal-header {
+    background-color: #e31b23;
+    color: white;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #e31b23;
+    border: none;
+}
+
+/* Button styles */
+.btn-light.btn-block {
+    margin-bottom: 10px;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+.btn-light.btn-block:hover {
+    background-color: #ddd;
+}
+
+/* Calendar Styles */
+.calendar-container {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day-cell {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    cursor: pointer;
+}
+
+.day-cell:hover {
+    background-color: #f1f1f1;
+}
+
+.day-cell.active {
+    background-color: #e31b23;
+    color: white;
+}
+
+.activity-list {
+    margin-top: 20px;
+}
+
+.back-button {
+    margin-top: 10px;
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}

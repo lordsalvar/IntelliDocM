@@ -1,0 +1,30 @@
+[11-Nov-2024 02:04:02 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
+[11-Nov-2024 02:04:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
+[11-Nov-2024 02:04:28 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
+[11-Nov-2024 02:04:35 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
+[11-Nov-2024 02:04:36 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
+[11-Nov-2024 02:05:08 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\xampp\htdocs\kabuang\clubmanagement.php:97
+Stack trace:
+#0 C:\xampp\htdocs\kabuang\clubmanagement.php(97): mysqli->query('SELECT club_nam...')
+#1 {main}
+  thrown in C:\xampp\htdocs\kabuang\clubmanagement.php on line 97
