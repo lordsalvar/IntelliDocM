@@ -215,15 +215,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col mb-6">
                     <label class="form-label">Type of Activity:</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="on-campus" name="activityType[]" value="On-Campus">
+                        <input class="form-check-input" type="checkbox" id="on-campus" name="activityType[]" value="On-Campus Activity">
                         <label class="form-check-label" for="on-campus">On-Campus Activity</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="off-campus" name="activityType[]" value="Off-Campus">
+                        <input class="form-check-input" type="checkbox" id="off-campus" name="activityType[]" value="Off-Campus Activity">
                         <label class="form-check-label" for="off-campus">Off-Campus Activity</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="online" name="activityType[]" value="Online">
+                        <input class="form-check-input" type="checkbox" id="online" name="activityType[]" value="Online Activity">
                         <label class="form-check-label" for="online">Online Activity</label>
                     </div>
                 </div>

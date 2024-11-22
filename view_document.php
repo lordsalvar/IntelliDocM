@@ -76,9 +76,26 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="activityTitle" class="form-label">Title of the Activity:</label>
-                    <input type="text" class="form-control" id="activityTitle" value="<?= htmlspecialchars($proposal['activity_title']) ?>" readonly />
+                <div class="row mb-4">
+                    <div class="col mb-6">
+                        <label for="activityTitle" class="form-label">Title of the Activity:</label>
+                        <input type="text" class="form-control" id="activityTitle" value="<?= htmlspecialchars($proposal['activity_title']) ?>" readonly />
+                    </div>
+                    <div class="col mb-6">
+                        <label class="form-label">Type of Activity:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="on-campus" <?= ($proposal['activity_type'] === 'On-Campus Activity') ? 'checked' : ''; ?> disabled>
+                            <label class="form-check-label" for="on-campus">On-Campus Activity</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="off-campus" <?= ($proposal['activity_type'] === 'Off-Campus Activity') ? 'checked' : ''; ?> disabled>
+                            <label class="form-check-label" for="off-campus">Off-Campus Activity</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="online" <?= ($proposal['activity_type'] === 'Online Activity') ? 'checked' : ''; ?> disabled>
+                            <label class="form-check-label" for="online">Online Activity</label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-4">
