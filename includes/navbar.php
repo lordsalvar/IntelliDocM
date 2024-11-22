@@ -19,7 +19,7 @@ if (substr($basePath, -1) !== '/') {
                 <li class="nav-item"><a class="nav-link active" href="<?php echo $basePath; ?>view_proposals.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo $basePath; ?>clubmanagement.php">Club Management</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo $basePath; ?>calendar.php">Calendar</a></li>
-                <li class="nav-item"><a class="nav-link" href="../logout.php">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="../logout.php">Logout</a></li>
             </ul>
         </div>
     </div>
