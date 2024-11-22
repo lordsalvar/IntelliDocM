@@ -51,10 +51,10 @@ function handleFetchUsers($clubId)
     $users = [];
     while ($row = $result->fetch_assoc()) {
         $users[] = [
+            'id' => $row['id'],
             'username' => $row['username'],
             'email' => $row['email'],
-            'id' => $row['id'],
-            'contact' => $row['contact'], // Add contact field here
+            'contact' => $row['contact'],
             'designation' => $row['designation']
         ];
     }
@@ -62,6 +62,7 @@ function handleFetchUsers($clubId)
     $stmt->close();
     $conn->close();
 }
+
 
 
 function handleAddUser()
@@ -107,16 +108,16 @@ function handleEditUser()
     $conn = getDbConnection();
     $userId = $_POST['user_id'];
     $username = $_POST['username'];
+    $email = $_POST['email']; // Retrieve email from POST data
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $designation = $_POST['designation'];
     $contact = $_POST['contact'];
+    $designation = $_POST['designation'];
 
-    $sql = "UPDATE users SET username = ?, password = ?, contact = ? WHERE id = ?";
+    $sql = "UPDATE users SET username = ?, email = ?, password = ?, contact = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssi", $username, $password, $contact, $userId);
+    $stmt->bind_param("ssssi", $username, $email, $password, $contact, $userId);
 
     if ($stmt->execute()) {
-        // Update the user's designation in club_memberships if needed
         $membershipSql = "UPDATE club_memberships SET designation = ? WHERE user_id = ?";
         $membershipStmt = $conn->prepare($membershipSql);
         $membershipStmt->bind_param("si", $designation, $userId);
@@ -237,33 +238,29 @@ function handleAddClub()
                 try {
                     const users = JSON.parse(response);
 
-                    // Check if an error is returned
-                    if (users.error) {
-                        userTableBody.html("<tr><td colspan='4' class='text-danger'>" + users.error + "</td></tr>");
-                        return;
-                    }
-
                     if (users.length === 0) {
-                        userTableBody.append("<tr><td colspan='4'>No users found.</td></tr>");
+                        userTableBody.append("<tr><td colspan='5'>No users found.</td></tr>");
                     } else {
                         users.forEach(user => {
                             userTableBody.append(`
-                                <tr>
-                                    <td class="text-center">${user.username}</td>
-                                    <td class="text-center">${user.contact}</td>
-                                    <td class="text-center">${user.designation}</td>
-                                   <td class="text-center">
-                                        <button class="btn btn-primary btn-sm" onclick="openEditModal(${user.id}, '${user.username}')">Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser(${user.id})">Remove</button>
-                                    </td>
-                                </tr>
-                            `);
+                    <tr>
+                        <td class="text-center">${user.username}</td>
+                        <td class="text-center">${user.contact}</td>
+                        <td class="text-center">${user.designation}</td>
+                        <td class="text-center">${user.email}</td>
+                        <td class="text-center">
+                            <button class="btn btn-primary btn-sm" onclick="openEditModal(${user.id}, '${user.username}', '${user.email}', '${user.contact}', '${user.designation}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser(${user.id})">Remove</button>
+                        </td>
+                    </tr>
+                `);
                         });
                     }
                 } catch (e) {
-                    userTableBody.html("<tr><td colspan='4' class='text-danger'>Error loading users.</td></tr>");
+                    userTableBody.html("<tr><td colspan='5' class='text-danger'>Error loading users.</td></tr>");
                 }
             }
+
 
             $('#addClubForm').submit(function(event) {
                 event.preventDefault();
@@ -310,12 +307,15 @@ function handleAddClub()
             });
 
 
-
-            window.openEditModal = function(userId, username) {
+            window.openEditModal = function(userId, username, email, contact, designation) {
                 $('#editUserId').val(userId);
                 $('#editUsername').val(username);
+                $('#editEmail').val(email); // Populate email field
+                $('#editContact').val(contact);
+                $('#editDesignation').val(designation);
                 $('#editUserModal').modal('show');
             };
+
 
             $('#editUserForm').submit(function(event) {
                 event.preventDefault();
@@ -323,6 +323,7 @@ function handleAddClub()
                     action: 'editUser',
                     user_id: $('#editUserId').val(),
                     username: $('#editUsername').val(),
+                    email: $('#editEmail').val(), // Include email in submission
                     password: $('#editPassword').val(),
                     designation: $('#editDesignation').val(),
                     contact: $('#editContact').val()
@@ -486,6 +487,10 @@ function handleAddClub()
                             <div class="form-group">
                                 <label for="editUsername">Username:</label>
                                 <input type="text" class="form-control" id="editUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEmail">Email:</label>
+                                <input type="email" class="form-control" id="editEmail" required>
                             </div>
                             <div class="form-group">
                                 <label for="editPassword">New Password:</label>
