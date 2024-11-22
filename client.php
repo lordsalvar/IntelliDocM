@@ -71,7 +71,7 @@ $result = $stmt->get_result();
                             <td class="text-center"><?= htmlspecialchars($row['end_time'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['status'] ?? 'Pending') ?></td>
                             <td class="text-center">
-                                <a href="view_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
+                                <a href="client_view.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
