@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $club_type = isset($club_data['club_type']) ? $club_data['club_type'] : $_POST['clubType'];
     $designation = isset($club_data['designation']) ? $club_data['designation'] : $_POST['designation'];
     $activity_title = $_POST['activityTitle'];
+    $activity_type = isset($_POST['activityType']) ? implode(", ", $_POST['activityType']) : ""; // Convert activity type array to string
     $objectives = $_POST['objectives'];
     $program_category = implode(", ", array_filter([
         $_POST['omp'] ?? null,
@@ -74,13 +75,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $faculty_contact = $_POST['facultyContact'];
     $dean_signature = $_POST['deanSignature'];
 
-    // Insert data into activity_proposals table
+    // Default values for status and rejection_reason
+    $status = "Received";
+    $rejection_reason = null;
+
     // Insert data into activity_proposals table
     $stmt = $conn->prepare("INSERT INTO activity_proposals 
-(user_id, club_name, acronym, club_type, designation, activity_title, objectives, program_category, activity_type, venue, address, activity_date, start_time, end_time, target_participants, expected_participants, applicant_signature, applicant_designation, applicant_date_filed, applicant_contact, moderator_signature, moderator_date_signed, moderator_contact, faculty_signature, faculty_contact, dean_signature)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (user_id, club_name, acronym, club_type, designation, activity_title, activity_type, objectives, program_category, venue, address, activity_date, start_time, end_time, target_participants, expected_participants, applicant_signature, applicant_designation, applicant_date_filed, applicant_contact, moderator_signature, moderator_date_signed, moderator_contact, faculty_signature, faculty_contact, dean_signature, status, rejection_reason)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // Updated bind_param call
     $stmt->bind_param(
         "issssssssssssssissssssssssss",
         $user_id,
@@ -89,9 +92,9 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         $club_type,
         $designation,
         $activity_title,
+        $activity_type,
         $objectives,
         $program_category,
-        $activity_type, // The new activity_type field
         $venue,
         $address,
         $activity_date,
@@ -108,7 +111,9 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         $moderator_contact,
         $faculty_signature,
         $faculty_contact,
-        $dean_signature
+        $dean_signature,
+        $status,
+        $rejection_reason
     );
 
     if ($stmt->execute()) {
@@ -200,6 +205,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
             </div>
 
             <!-- Activity Title -->
+
+
             <div class="row mb-4">
                 <div class="col mb-6">
                     <label for="activityTitle" class="form-label">Title of the Activity:</label>
