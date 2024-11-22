@@ -15,13 +15,13 @@ if (substr($basePath, -1) !== '/') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Navbar with Notifications</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e31b23;">
-        <a class="navbar-brand text-white" href="#">INTELLIDOC</a>
+        <a class="navbar-brand text-white" href="#" id="responsive-title">IntelliDoc</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#studentNavbar" aria-controls="studentNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,10 +29,10 @@ if (substr($basePath, -1) !== '/') {
         <div class="collapse navbar-collapse" id="studentNavbar">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="student_dashboard.php">Dashboard</a>
+                    <a class="nav-link text-white" href="client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="studentActivities.html">Student Activities Forms</a>
+                    <a class="nav-link text-white" href="public/forms.php">Student Activities Forms</a>
                 </li>
                 <li class="nav-item">
                     <?php include 'notifModal.php'; ?>
@@ -41,7 +41,7 @@ if (substr($basePath, -1) !== '/') {
                     </button>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="logout.html">Logout</a>
+                    <a class="nav-link text-white" href="logout.php">Logout</a>
                 </li>
             </ul>
         </div>

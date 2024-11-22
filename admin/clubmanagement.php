@@ -420,6 +420,7 @@ function handleAddClub()
                     <th class="text-center">Student Name</th>
                     <th class="text-center">Contact Number</th>
                     <th class="text-center">Designation</th>
+                    <th class="text-center">Email</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>

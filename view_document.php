@@ -12,6 +12,15 @@
     $result = $stmt->get_result();
     $proposal = $result->fetch_assoc();
     $stmt->close();
+
+    if ($proposal && $proposal['status'] === 'Received') {
+        // Update the status to "Pending"
+        $updateSql = "UPDATE activity_proposals SET status = 'Pending' WHERE proposal_id = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("i", $id);
+        $updateStmt->execute();
+        $updateStmt->close();
+    }
     $conn->close();
     ?>
     <!DOCTYPE html>

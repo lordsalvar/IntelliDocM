@@ -10,15 +10,35 @@
             </div>
             <div class="modal-body">
                 <ul class="list-group">
+                    <!-- Activity Proposal Notification -->
                     <li class="list-group-item">
-                        <strong>Activity Proposal Form</strong><br>
-                        Submitted on: 2024-11-15<br>
-                        Status: <span class="badge badge-success">Approved</span>
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <strong>Activity Proposal Form</strong><br>
+                                <small class="text-muted">Submitted on: 2024-11-15</small><br>
+                                Status: <span class="badge badge-success">Approved</span>
+                            </div>
+                            <div class="col-md-4 text-md-right mt-2 mt-md-0">
+                                <button class="btn btn-primary btn-sm" onclick="viewDocument('proposal')">
+                                    View Document
+                                </button>
+                            </div>
+                        </div>
                     </li>
+                    <!-- Booking Form Notification -->
                     <li class="list-group-item">
-                        <strong>Booking Form</strong><br>
-                        Submitted on: 2024-11-11<br>
-                        Status: <span class="badge badge-danger">Disapproved</span>
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <strong>Booking Form</strong><br>
+                                <small class="text-muted">Submitted on: 2024-11-11</small><br>
+                                Status: <span class="badge badge-danger">Disapproved</span>
+                            </div>
+                            <div class="col-md-4 text-md-right mt-2 mt-md-0">
+                                <button class="btn btn-primary btn-sm" onclick="viewDocument('booking')">
+                                    View Document
+                                </button>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

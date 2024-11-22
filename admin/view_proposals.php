@@ -58,7 +58,7 @@ $result = $conn->query($sql);
                                     data-bs-toggle="modal"
                                     data-bs-target="#rejectModal"
                                     data-id="<?= $row['proposal_id'] ?>">Reject</button>
-                                <a href="view_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
+                                <a href="../view_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
