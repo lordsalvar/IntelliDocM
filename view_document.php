@@ -142,7 +142,12 @@
                                 <input class="form-check-input" type="checkbox" id="cesa" <?= strpos($proposal['program_category'], 'CESA') !== false ? 'checked' : '' ?> disabled>
                                 <label class="form-check-label" for="cesa">Community Engagement & Social Advocacy (CESA)</label>
                             </div>
-                            <input type="text" class="form-control mt-2" name="other_program" placeholder="Others (Please specify) " disabled>
+                            <input type="text"
+                                class="form-control mt-2"
+                                name="other_program"
+                                placeholder="Others (Please specify)"
+                                value="<?= strpos($proposal['program_category'], 'Others') !== false ? htmlspecialchars($proposal['other_program'] ?? '') : '' ?>"
+                                <?= strpos($proposal['program_category'], 'Others') === false ? 'disabled' : '' ?>>
                         </div>
                         <!-- Continue with other program categories as necessary -->
                     </div>

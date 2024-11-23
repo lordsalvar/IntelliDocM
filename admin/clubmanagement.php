@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+
+
 function fetchAllClubs()
 {
     $conn = getDbConnection();
@@ -427,6 +429,12 @@ function handleAddClub()
             </thead>
             <tbody id="userTableBody"></tbody>
         </table>
+
+        <hr>
+        <h2 class="mt-3">List of All Clubs</h2>
+        <div id="clubList" class="mt-3">
+            <ul class="list-group" id="allClubsList"></ul>
+        </div>
 
 
         <!--ADD USER MODAL -->
