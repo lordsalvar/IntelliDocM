@@ -32,10 +32,20 @@ $conn->close();
             background-color: #e9ecef;
             color: #6c757d;
         }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
     </style>
 </head>
 
 <body>
+    <a href="javascript:history.back()" class="btn btn-secondary back-button">
+        &larr; Back
+    </a>
     <div class="container my-5">
         <h2 class="text-center mb-4">Proposal Document</h2>
 
