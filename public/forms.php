@@ -22,9 +22,7 @@ include '../database.php';
 
 <body>
     <?php include '../includes/clientnavbar.php'; ?>
-    <hr>
-    <hr>
-    <hr>
+
     <div class="container mt-5">
         <div class="text-center mb-5">
             <h1>Welcome to the Forms Page</h1>
