@@ -42,7 +42,7 @@ function fetchAllClubs()
 function handleFetchUsers($clubId)
 {
     $conn = getDbConnection();
-    $sql = "SELECT users.username, users.email, users.id, users.contact, club_memberships.designation 
+    $sql = "SELECT users.full_name, users.username, users.email, users.id, users.contact, club_memberships.designation 
             FROM club_memberships 
             JOIN users ON club_memberships.user_id = users.id 
             WHERE club_memberships.club_id = ?";
@@ -54,6 +54,7 @@ function handleFetchUsers($clubId)
     while ($row = $result->fetch_assoc()) {
         $users[] = [
             'id' => $row['id'],
+            'full_name' => $row['full_name'],
             'username' => $row['username'],
             'email' => $row['email'],
             'contact' => $row['contact'],
@@ -67,20 +68,23 @@ function handleFetchUsers($clubId)
 
 
 
+
 function handleAddUser()
 {
     $conn = getDbConnection();
     $username = $_POST['username'];
     $email = $_POST['email'];
+    $fullName = $_POST['full_name']; // New field
     $clubId = $_POST['club_id'];
     $designation = $_POST['designation'];
     $contact = $_POST['contact'];
+    $defaultPassword = password_hash("123", PASSWORD_DEFAULT); // Hash the default password
     $defaultRole = 'client'; // Default role set to 'client'
 
-    // Insert user with default role 'client'
-    $sql = "INSERT INTO users (username, email, contact, role) VALUES (?, ?, ?, ?)";
+    // Insert user with default role 'client' and default password
+    $sql = "INSERT INTO users (username, email, full_name, contact, password, role) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $username, $email, $contact, $defaultRole);
+    $stmt->bind_param("ssssss", $username, $email, $fullName, $contact, $defaultPassword, $defaultRole);
 
     if ($stmt->execute()) {
         $userId = $stmt->insert_id;
@@ -91,7 +95,7 @@ function handleAddUser()
         $membershipStmt->bind_param("iis", $userId, $clubId, $designation);
 
         if ($membershipStmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'User added successfully']);
+            echo json_encode(['success' => true, 'message' => 'User added successfully with default password']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to add user to club membership']);
         }
@@ -241,11 +245,12 @@ function handleAddClub()
                     const users = JSON.parse(response);
 
                     if (users.length === 0) {
-                        userTableBody.append("<tr><td colspan='5'>No users found.</td></tr>");
+                        userTableBody.append("<tr><td colspan='6'>No users found.</td></tr>");
                     } else {
                         users.forEach(user => {
                             userTableBody.append(`
                     <tr>
+                        <td class="text-center">${user.full_name}</td>
                         <td class="text-center">${user.username}</td>
                         <td class="text-center">${user.contact}</td>
                         <td class="text-center">${user.designation}</td>
@@ -259,9 +264,10 @@ function handleAddClub()
                         });
                     }
                 } catch (e) {
-                    userTableBody.html("<tr><td colspan='5' class='text-danger'>Error loading users.</td></tr>");
+                    userTableBody.html("<tr><td colspan='6' class='text-danger'>Error loading users.</td></tr>");
                 }
             }
+
 
 
             $('#addClubForm').submit(function(event) {
@@ -291,10 +297,11 @@ function handleAddClub()
                 $.post("clubmanagement.php", {
                     action: 'addUser',
                     username: $('#username').val(),
+                    full_name: $('#full_name').val(), // Include full name
                     email: $('#email').val(),
                     club_id: selectedClubId,
                     designation: $('#designation').val(),
-                    contact: $('#contact').val() // Send contact number to backend
+                    contact: $('#contact').val()
                 }, function(response) {
                     const data = JSON.parse(response);
                     if (data.success) {
@@ -421,6 +428,7 @@ function handleAddClub()
             <thead>
                 <tr>
                     <th class="text-center">Student Name</th>
+                    <th class="text-center">Username</th>
                     <th class="text-center">Contact Number</th>
                     <th class="text-center">Designation</th>
                     <th class="text-center">Email</th>
@@ -449,6 +457,10 @@ function handleAddClub()
                             </button>
                         </div>
                         <div class="modal-body">
+                            <div class="form-group">
+                                <label for="full_name">Full Name:</label>
+                                <input type="text" class="form-control" id="full_name" required>
+                            </div>
                             <div class="form-group">
                                 <label for="username">Username:</label>
                                 <input type="text" class="form-control" id="username" required>
