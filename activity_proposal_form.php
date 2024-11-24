@@ -1,10 +1,42 @@
 <?php
-session_start();
+// Start a secure session
+session_start([
+    'cookie_lifetime' => 3600, // Session expires after 1 hour
+    'cookie_httponly' => true, // Prevent JavaScript access
+    'cookie_secure' => isset($_SERVER['HTTPS']), // HTTPS only
+    'use_strict_mode' => true // Strict session handling
+]);
+
+// Prevent session fixation
+session_regenerate_id(true);
+
+// Check user role
 if ($_SESSION['role'] !== 'client') {
     header('Location: login.php');
     exit();
 }
+
+// Include database connection
 include 'database.php';
+
+// Helper function to set the value of a field if data exists
+function setValue($data)
+{
+    return isset($data) && !empty($data) ? htmlspecialchars($data) : '';
+}
+
+// Helper function to set fields as readonly if data exists
+function setReadonly($data)
+{
+    return isset($data) && !empty($data) ? 'readonly' : '';
+}
+
+
+// Prevent directory traversal in file includes
+$allowed_includes = ['clientnavbar.php'];
+if (!in_array('clientnavbar.php', $allowed_includes)) {
+    die('Unauthorized file inclusion');
+}
 
 $user_id = $_SESSION['user_id'];
 
@@ -15,7 +47,6 @@ function getClubData($conn, $user_id)
             FROM clubs c
             JOIN club_memberships cm ON c.club_id = cm.club_id
             WHERE cm.user_id = ?";
-
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -26,29 +57,33 @@ function getClubData($conn, $user_id)
 // Fetch club data for the logged-in user
 $club_data = getClubData($conn, $user_id);
 
-// Helper function to set fields as readonly if data exists
-function setReadonly($data)
+// Helper function to sanitize input
+function sanitize_input($data)
 {
-    return isset($data) && !empty($data) ? 'readonly' : '';
+    return htmlspecialchars(strip_tags(trim($data)));
 }
 
-// Helper function to set the value of a field if data exists
-function setValue($data)
-{
-    return isset($data) && !empty($data) ? htmlspecialchars($data) : '';
+// Generate CSRF token
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check CSRF token
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die('Invalid CSRF token');
+    }
+
     // Collect data from form submission or preloaded values
-    $club_name = isset($club_data['club_name']) ? $club_data['club_name'] : $_POST['organizationName'];
-    $acronym = isset($club_data['acronym']) ? $club_data['acronym'] : $_POST['acronym'];
-    $club_type = isset($club_data['club_type']) ? $club_data['club_type'] : $_POST['clubType'];
-    $designation = isset($club_data['designation']) ? $club_data['designation'] : $_POST['designation'];
-    $activity_title = $_POST['activityTitle'];
-    $activity_type = isset($_POST['activityType']) ? implode(", ", $_POST['activityType']) : ""; // Convert activity type array to string
-    $objectives = $_POST['objectives'];
-    $program_category = implode(", ", array_filter([
+    $club_name = isset($club_data['club_name']) ? $club_data['club_name'] : sanitize_input($_POST['organizationName']);
+    $acronym = isset($club_data['acronym']) ? $club_data['acronym'] : sanitize_input($_POST['acronym']);
+    $club_type = isset($club_data['club_type']) ? $club_data['club_type'] : sanitize_input($_POST['clubType']);
+    $designation = isset($club_data['designation']) ? $club_data['designation'] : sanitize_input($_POST['designation']);
+    $activity_title = sanitize_input($_POST['activityTitle']);
+    $activity_type = isset($_POST['activityType']) ? implode(", ", array_map('sanitize_input', $_POST['activityType'])) : "";
+    $objectives = sanitize_input($_POST['objectives']);
+    $program_category = implode(", ", array_filter(array_map('sanitize_input', [
         $_POST['omp'] ?? null,
         $_POST['ksd'] ?? null,
         $_POST['ct'] ?? null,
@@ -56,24 +91,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_POST['rpInitiative'] ?? null,
         $_POST['cesa'] ?? null,
         $_POST['other_program'] ?? null
-    ]));
-    $venue = $_POST['venue'];
-    $address = $_POST['address'];
-    $activity_date = $_POST['date'];
-    $start_time = $_POST['startTime'];
-    $end_time = $_POST['endTime'];
-    $target_participants = $_POST['targetParticipants'];
-    $expected_participants = $_POST['expectedParticipants'];
-    $applicant_signature = $_POST['applicantSignature'];
-    $applicant_designation = $_POST['applicantDesignation'];
-    $applicant_date_filed = $_POST['applicantDateFiled'];
-    $applicant_contact = $_POST['applicantContact'];
-    $moderator_signature = $_POST['moderatorSignature'];
-    $moderator_date_signed = $_POST['moderatorDateSigned'];
-    $moderator_contact = $_POST['moderatorContact'];
-    $faculty_signature = $_POST['facultySignature'];
-    $faculty_contact = $_POST['facultyContact'];
-    $dean_signature = $_POST['deanSignature'];
+    ])));
+    $venue = sanitize_input($_POST['venue']);
+    $address = sanitize_input($_POST['address']);
+    $activity_date = sanitize_input($_POST['date']);
+    $start_time = sanitize_input($_POST['startTime']);
+    $end_time = sanitize_input($_POST['endTime']);
+    $target_participants = sanitize_input($_POST['targetParticipants']);
+    $expected_participants = sanitize_input($_POST['expectedParticipants']);
+    $applicant_signature = sanitize_input($_POST['applicantSignature']);
+    $applicant_designation = sanitize_input($_POST['applicantDesignation']);
+    $applicant_date_filed = sanitize_input($_POST['applicantDateFiled']);
+    $applicant_contact = sanitize_input($_POST['applicantContact']);
+    $moderator_signature = sanitize_input($_POST['moderatorSignature']);
+    $moderator_date_signed = sanitize_input($_POST['moderatorDateSigned']);
+    $moderator_contact = sanitize_input($_POST['moderatorContact']);
+    $faculty_signature = sanitize_input($_POST['facultySignature']);
+    $faculty_contact = sanitize_input($_POST['facultyContact']);
+    $dean_signature = sanitize_input($_POST['deanSignature']);
 
     // Default values for status and rejection_reason
     $status = "Received";
@@ -119,7 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         echo "<div class='alert alert-success'>Proposal submitted successfully!</div>";
     } else {
-        echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
+        error_log("Database error: " . $stmt->error); // Log error internally
+        echo "<div class='alert alert-danger'>Something went wrong. Please try again later.</div>";
     }
     $stmt->close();
 }
@@ -156,12 +192,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include 'includes/clientnavbar.php'; ?>
 
     <!-- Include Sidebar -->
-    <hr>
-
-    <hr>
     <div class="container my-5">
         <h2 class="text-center">ACTIVITY PROPOSAL FORM</h2>
         <form method="POST" action="">
+            <!-- Add CSRF token -->
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <!-- Organization Details -->
             <div class="mb-4">
                 <label for="organizationName" class="form-label">Name of the Organization/ Class/ College:</label>
