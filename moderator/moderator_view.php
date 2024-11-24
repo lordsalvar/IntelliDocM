@@ -24,11 +24,12 @@ if ($club_result->num_rows > 0) {
     exit();
 }
 
-// Query the activity_proposals table for users in the same club
+// Query to fetch activity proposals along with club name
 $sql = "
-    SELECT ap.*
+    SELECT ap.*, c.club_name
     FROM activity_proposals ap
     JOIN club_memberships cm ON ap.user_id = cm.user_id
+    JOIN clubs c ON cm.club_id = c.club_id
     WHERE cm.club_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $moderator_club_id);
@@ -68,7 +69,7 @@ $result = $stmt->get_result();
                 <tbody>
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr>
-                            <td class="text-center"><?= htmlspecialchars($moderator_club_id ?? '') ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['club_name'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['activity_title'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['activity_date'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['start_time'] ?? '') ?></td>
@@ -81,7 +82,7 @@ $result = $stmt->get_result();
                                     data-bs-toggle="modal"
                                     data-bs-target="#rejectModal"
                                     data-id="<?= $row['proposal_id'] ?>">Reject</button>
-                                <a href="../view_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
+                                <a href="modview_doc.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
