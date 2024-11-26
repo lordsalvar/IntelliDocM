@@ -31,14 +31,11 @@ function setReadonly($data)
     return isset($data) && !empty($data) ? 'readonly' : '';
 }
 
-
 // Prevent directory traversal in file includes
 $allowed_includes = ['clientnavbar.php'];
 if (!in_array('clientnavbar.php', $allowed_includes)) {
     die('Unauthorized file inclusion');
 }
-
-
 
 // Function to get club data for the logged-in user
 function getClubData($conn, $user_id)
@@ -54,11 +51,9 @@ function getClubData($conn, $user_id)
     return $result->fetch_assoc();
 }
 
-
-
 function getApplicantName($conn, $user_id)
 {
-    $sql = "SELECT (full_name) AS applicant_name FROM users WHERE id = ?";
+    $sql = "SELECT full_name AS applicant_name FROM users WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -68,7 +63,7 @@ function getApplicantName($conn, $user_id)
 
 function getModeratorData($conn, $club_id)
 {
-    $sql = "SELECT (u.full_name) AS moderator_name, cm.designation 
+    $sql = "SELECT u.full_name AS moderator_name, cm.designation 
             FROM club_memberships cm 
             JOIN users u ON cm.user_id = u.id 
             WHERE cm.club_id = ? AND cm.designation = 'moderator'";
@@ -79,21 +74,34 @@ function getModeratorData($conn, $club_id)
     return $result->fetch_assoc() ?: ['moderator_name' => '', 'designation' => ''];
 }
 
+function getDeanData($conn, $club_id)
+{
+    $sql = "SELECT u.full_name AS dean_name
+            FROM club_memberships cm
+            JOIN users u ON cm.user_id = u.id
+            WHERE cm.club_id = ? AND cm.designation = 'dean'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $club_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: ['dean_name' => ''];
+}
 
 // Fetch club data for the logged-in user
 $user_id = $_SESSION['user_id'];
 $club_data = getClubData($conn, $user_id);
 
-
 // Fetch applicant name
 $applicant_name = getApplicantName($conn, $user_id);
-
 
 // Fetch moderator name and designation
 $moderator_data = isset($club_data['club_id']) ? getModeratorData($conn, $club_data['club_id']) : ['moderator_name' => '', 'designation' => ''];
 $moderator_name = $moderator_data['moderator_name'];
 $moderator_designation = $moderator_data['designation'];
 
+// Fetch dean name
+$dean_data = isset($club_data['club_id']) ? getDeanData($conn, $club_data['club_id']) : ['dean_name' => ''];
+$dean_name = $dean_data['dean_name'];
 
 // Helper function to sanitize input
 function sanitize_input($data)
@@ -136,30 +144,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $start_time = sanitize_input($_POST['startTime']);
     $end_time = sanitize_input($_POST['endTime']);
     $target_participants = sanitize_input($_POST['targetParticipants']);
-    $expected_participants = sanitize_input($_POST['expectedParticipants']);
-    $applicant_signature = sanitize_input($_POST['applicantSignature']);
+    $expected_participants = (int)sanitize_input($_POST['expectedParticipants']);
+    $applicant_name = $applicant_name;
+    $applicant_signature = sanitize_input($_POST['applicantSignature'] ?? '');
     $applicant_designation = sanitize_input($_POST['applicantDesignation']);
     $applicant_date_filed = sanitize_input($_POST['applicantDateFiled']);
     $applicant_contact = sanitize_input($_POST['applicantContact']);
-    $moderator_signature = sanitize_input($_POST['moderatorSignature']);
+    $moderator_name = $moderator_name;
+    $moderator_signature = null;
+    if (isset($_FILES['moderatorSignature']) && is_uploaded_file($_FILES['moderatorSignature']['tmp_name'])) {
+        $moderator_signature = file_get_contents($_FILES['moderatorSignature']['tmp_name']);
+    }
     $moderator_date_signed = sanitize_input($_POST['moderatorDateSigned']);
     $moderator_contact = sanitize_input($_POST['moderatorContact']);
     $faculty_signature = sanitize_input($_POST['facultySignature']);
     $faculty_contact = sanitize_input($_POST['facultyContact']);
-    $dean_signature = sanitize_input($_POST['deanSignature']);
+    $dean_name = $dean_name;
+    $dean_signature = null;
+    if (isset($_FILES['deanSignature']) && is_uploaded_file($_FILES['deanSignature']['tmp_name'])) {
+        $dean_signature = file_get_contents($_FILES['deanSignature']['tmp_name']);
+    }
 
     // Default values for status and rejection_reason
     $status = "Received";
     $rejection_reason = null;
 
-    // Insert data into activity_proposals table
-    // Insert data into activity_proposals table
-    $stmt = $conn->prepare("INSERT INTO activity_proposals 
-(user_id, club_name, acronym, club_type, designation, activity_title, activity_type, objectives, program_category, venue, address, activity_date, start_time, end_time, target_participants, expected_participants, applicant_signature, applicant_designation, applicant_date_filed, applicant_contact, moderator_signature, moderator_date_signed, moderator_contact, faculty_signature, faculty_contact, dean_signature, status, rejection_reason, submitted_date)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+    // Corrected INSERT statement with matching columns and placeholders
+    $stmt = $conn->prepare("
+        INSERT INTO activity_proposals (
+            user_id, club_name, acronym, club_type, designation, activity_title, 
+            activity_type, objectives, program_category, venue, address, 
+            activity_date, start_time, end_time, target_participants, 
+            expected_participants, applicant_name, applicant_signature, 
+            applicant_designation, applicant_date_filed, applicant_contact, 
+            moderator_name, moderator_signature, moderator_date_signed, 
+            moderator_contact, faculty_signature, faculty_contact, 
+            dean_name, dean_signature, status, rejection_reason
+        ) 
+        VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        )
+    ");
 
+    // Corrected type string and variable list
     $stmt->bind_param(
-        "issssssssssssssissssssssssss",
+        "issssssssssssssissssssbsssssbss",
         $user_id,
         $club_name,
         $acronym,
@@ -176,29 +205,44 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         $end_time,
         $target_participants,
         $expected_participants,
+        $applicant_name,
         $applicant_signature,
         $applicant_designation,
         $applicant_date_filed,
         $applicant_contact,
+        $moderator_name,
         $moderator_signature,
         $moderator_date_signed,
         $moderator_contact,
         $faculty_signature,
         $faculty_contact,
+        $dean_name,
         $dean_signature,
         $status,
         $rejection_reason
     );
 
+    // Send blob data using send_long_data()
+    // Adjust indices if necessary (zero-based indexing)
+    if ($moderator_signature !== null) {
+        $stmt->send_long_data(22, $moderator_signature); // Index 22
+    }
+    if ($dean_signature !== null) {
+        $stmt->send_long_data(28, $dean_signature); // Index 28
+    }
+
     if ($stmt->execute()) {
         echo "<div class='alert alert-success'>Proposal submitted successfully!</div>";
     } else {
-        error_log("Database error: " . $stmt->error); // Log error internally
-        echo "<div class='alert alert-danger'>Something went wrong. Please try again later.</div>";
+        echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
     }
+
     $stmt->close();
 }
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -409,9 +453,11 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
                 </div>
             </div>
 
+
             <div class="text-center">
                 <label class="form-label">Noted by:</label>
-                <input type="text" class="form-control mb-2" name="deanSignature" placeholder="College Dean Signature Over Printed Name" />
+                <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature Over Printed Name"
+                    value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
             </div>
 
             <!-- Submit Button -->
