@@ -28,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
     $qrImage = ob_get_clean(); // Capture the generated QR code as binary data
 
     // Debugging: Save the QR code locally
-    $debugFileName = '/debug_qrs_' . $proposal['proposal_id'] . '.png'; // Unique filename
-    file_put_contents($debugFileName, $qrImage);
+    file_put_contents('debug_dean_qr.png', $qrImage);
 
     // Update the moderator_signature column with the QR code image
     $updateSql = "UPDATE activity_proposals SET dean_signature = ? WHERE proposal_id = ?";
