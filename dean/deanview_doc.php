@@ -239,14 +239,13 @@ $conn->close();
                         <div class="qr-code-container text-center">
                             <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
-                        <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
                         <p class="text-warning mt-2">Awaiting approval.</p>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Other Faculty/Staff</label>
-                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['faculty_signature']) ?>" readonly />
+                    <input type="text" class="form-control mb-2" placeholder="Optional" readonly />
                 </div>
             </div>
 
@@ -257,7 +256,6 @@ $conn->close();
                     <div class="qr-code-container text-center">
                         <img src="data:image/png;base64,<?= base64_encode($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
                     </div>
-                    <p class="text-success mt-2">Date Signed</p>
                 <?php else: ?>
                     <p class="text-warning mt-2">No QR Code generated yet.</p>
                     <form method="POST" class="text-center mt-4">
