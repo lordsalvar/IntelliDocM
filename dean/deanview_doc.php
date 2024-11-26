@@ -226,7 +226,7 @@ $conn->close();
             </div>
 
             <!-- Signatures Section -->
-            <div class="row mb-4">
+            <div class="row mb-4 text-center">
                 <div class="col-md-4">
                     <label class="form-label">Applicant</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
