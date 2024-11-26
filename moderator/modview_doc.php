@@ -1,7 +1,6 @@
 <?php
 
 include '../database.php';
-
 $id = $_GET['id']; // Get the proposal ID from the URL
 
 // Fetch the proposal data
@@ -12,15 +11,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
-
-if ($proposal && $proposal['status'] === 'Received') {
-    // Update the status to "Pending"
-    $updateSql = "UPDATE activity_proposals SET status = 'Pending' WHERE proposal_id = ?";
-    $updateStmt = $conn->prepare($updateSql);
-    $updateStmt->bind_param("i", $id);
-    $updateStmt->execute();
-    $updateStmt->close();
-}
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -210,7 +200,7 @@ $conn->close();
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
-                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_signature']) ?>" readonly />
+                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Other Faculty/Staff</label>
@@ -222,6 +212,7 @@ $conn->close();
                 <label class="form-label">Noted by:</label>
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_signature']) ?>" readonly />
             </div>
+
         <?php else: ?>
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
