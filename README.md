@@ -1,2 +1,2 @@
-# kabuang
- capstone
+# IT-THS Capstone Project
+ IntelliDoc
