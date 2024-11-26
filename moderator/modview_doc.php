@@ -57,6 +57,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposal Document</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -239,18 +240,19 @@ $conn->close();
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
 
                     <?php if (!empty($proposal['moderator_signature'])): ?>
-                        <label class="form-label mt-2">Moderator QR Code:</label>
-                        <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="img-fluid mt-2" />
-                        <p class="text-success mt-2">date signed</p>
+                        <div class="qr-code-container text-center">
+                            <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                        </div>
+                        <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
-                        <p class="text-warning mt-2"></p>
-                        <!-- Show Generate QR Code Button if not generated -->
+                        <p class="text-warning mt-2">No QR Code generated yet.</p>
                         <form method="POST" class="text-center mt-4">
                             <button type="submit" name="generate_qr" class="btn btn-primary">
                                 Sign Document
                             </button>
                         </form>
                     <?php endif; ?>
+
                 </div>
 
                 <div class="col-md-4">
