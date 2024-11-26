@@ -1,6 +1,9 @@
 <?php
 
 include '../database.php';
+include '../phpqrcode/qrlib.php';
+
+
 $id = $_GET['id']; // Get the proposal ID from the URL
 
 // Fetch the proposal data
@@ -12,7 +15,24 @@ $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
 $conn->close();
+
+if ($proposal) {
+    // Prepare QR code data
+    $qrData = json_encode([
+        'proposal_id' => $proposal['proposal_id'],
+        'activity_title' => $proposal['activity_title'],
+        'moderator_name' => $proposal['moderator_name'],
+    ]);
+
+    // Filepath to save the QR code image
+    $qrFilePath = '../qrcodes/proposal_' . $proposal['proposal_id'] . '.png';
+
+    // Generate and save the QR code
+    QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -211,6 +231,15 @@ $conn->close();
             <div class="text-center">
                 <label class="form-label">Noted by:</label>
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_signature']) ?>" readonly />
+            </div>
+
+            <div class="text-center mt-5">
+                <h5>QR Code for the Proposal:</h5>
+                <?php if (file_exists($qrFilePath)): ?>
+                    <img src="<?= $qrFilePath ?>" alt="QR Code" class="img-fluid" />
+                <?php else: ?>
+                    <p>Unable to generate QR Code. Please try again.</p>
+                <?php endif; ?>
             </div>
 
         <?php else: ?>
