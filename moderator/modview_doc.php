@@ -263,7 +263,15 @@ $conn->close();
 
             <div class="text-center">
                 <label class="form-label">Noted by:</label>
-                <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_signature']) ?>" readonly />
+                <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
+                <?php if (!empty($proposal['dean_signature'])): ?>
+                    <div class="qr-code-container text-center">
+                        <img src="data:image/png;base64,<?= base64_encode($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
+                    </div>
+                    <p class="text-success mt-2">Date Signed</p>
+                <?php else: ?>
+                    <p class="text-warning mt-2">Awaiting approval.</p>
+                <?php endif; ?>
             </div>
 
 
