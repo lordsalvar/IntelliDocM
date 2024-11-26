@@ -388,4 +388,6 @@ function handleDeleteUser($clubId)
     </script>
 </body>
 
+<?php include '../includes/footer.php' ?>
+
 </html>
