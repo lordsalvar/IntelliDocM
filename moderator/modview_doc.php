@@ -3,7 +3,6 @@
 include '../database.php';
 include '../phpqrcode/qrlib.php';
 
-
 $id = $_GET['id']; // Get the proposal ID from the URL
 
 // Fetch the proposal data
@@ -14,22 +13,39 @@ $stmt->execute();
 $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
-$conn->close();
 
-if ($proposal) {
-    // Prepare QR code data
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
+    // Generate QR Code content
     $qrData = json_encode([
         'proposal_id' => $proposal['proposal_id'],
         'activity_title' => $proposal['activity_title'],
         'moderator_name' => $proposal['moderator_name'],
     ]);
 
-    // Filepath to save the QR code image
-    $qrFilePath = '../qrcodes/proposal_' . $proposal['proposal_id'] . '.png';
+    // Create an in-memory file for the QR code
+    ob_start();
+    QRcode::png($qrData, null, QR_ECLEVEL_L, 5);
+    $qrImage = ob_get_clean(); // Capture the generated QR code as binary data
 
-    // Generate and save the QR code
-    QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+    // Debugging: Save the QR code locally
+    file_put_contents('debug_qr.png', $qrImage);
+
+    // Update the moderator_signature column with the QR code image
+    $updateSql = "UPDATE activity_proposals SET moderator_signature = ? WHERE proposal_id = ?";
+    $updateStmt = $conn->prepare($updateSql);
+    $updateStmt->bind_param("si", $qrImage, $id); // Use 's' for string (binary data)
+
+    if ($updateStmt->execute()) {
+        echo "<script>alert('Moderator signature added and QR code image stored successfully.'); window.location.href='view_documents.php?id=$id';</script>";
+    } else {
+        echo "<script>alert('Failed to update moderator signature. Please try again.');</script>";
+        error_log('Database update error: ' . $updateStmt->error);
+    }
+    $updateStmt->close();
 }
+
+$conn->close();
+
 ?>
 
 
@@ -221,7 +237,22 @@ if ($proposal) {
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
+
+                    <?php if (!empty($proposal['moderator_signature'])): ?>
+                        <label class="form-label mt-2">Moderator QR Code:</label>
+                        <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="img-fluid mt-2" />
+                        <p class="text-success mt-2">date signed</p>
+                    <?php else: ?>
+                        <p class="text-warning mt-2"></p>
+                        <!-- Show Generate QR Code Button if not generated -->
+                        <form method="POST" class="text-center mt-4">
+                            <button type="submit" name="generate_qr" class="btn btn-primary">
+                                Sign Document
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </div>
+
                 <div class="col-md-4">
                     <label class="form-label">Other Faculty/Staff</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['faculty_signature']) ?>" readonly />
@@ -233,14 +264,7 @@ if ($proposal) {
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_signature']) ?>" readonly />
             </div>
 
-            <div class="text-center mt-5">
-                <h5>QR Code for the Proposal:</h5>
-                <?php if (file_exists($qrFilePath)): ?>
-                    <img src="<?= $qrFilePath ?>" alt="QR Code" class="img-fluid" />
-                <?php else: ?>
-                    <p>Unable to generate QR Code. Please try again.</p>
-                <?php endif; ?>
-            </div>
+
 
         <?php else: ?>
             <p>No proposal found with the specified ID.</p>
