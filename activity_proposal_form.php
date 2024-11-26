@@ -38,13 +38,13 @@ if (!in_array('clientnavbar.php', $allowed_includes)) {
     die('Unauthorized file inclusion');
 }
 
-$user_id = $_SESSION['user_id'];
+
 
 // Function to get club data for the logged-in user
 function getClubData($conn, $user_id)
 {
-    $sql = "SELECT c.club_name, c.acronym, c.club_type, cm.designation
-            FROM clubs c
+    $sql = "SELECT c.club_name, c.acronym, c.club_type, cm.designation, cm.club_id
+            FROM clubs c    
             JOIN club_memberships cm ON c.club_id = cm.club_id
             WHERE cm.user_id = ?";
     $stmt = $conn->prepare($sql);
@@ -54,8 +54,46 @@ function getClubData($conn, $user_id)
     return $result->fetch_assoc();
 }
 
+
+
+function getApplicantName($conn, $user_id)
+{
+    $sql = "SELECT (full_name) AS applicant_name FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc()['applicant_name'] ?? '';
+}
+
+function getModeratorData($conn, $club_id)
+{
+    $sql = "SELECT (u.full_name) AS moderator_name, cm.designation 
+            FROM club_memberships cm 
+            JOIN users u ON cm.user_id = u.id 
+            WHERE cm.club_id = ? AND cm.designation = 'moderator'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $club_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: ['moderator_name' => '', 'designation' => ''];
+}
+
+
 // Fetch club data for the logged-in user
+$user_id = $_SESSION['user_id'];
 $club_data = getClubData($conn, $user_id);
+
+
+// Fetch applicant name
+$applicant_name = getApplicantName($conn, $user_id);
+
+
+// Fetch moderator name and designation
+$moderator_data = isset($club_data['club_id']) ? getModeratorData($conn, $club_data['club_id']) : ['moderator_name' => '', 'designation' => ''];
+$moderator_name = $moderator_data['moderator_name'];
+$moderator_designation = $moderator_data['designation'];
+
 
 // Helper function to sanitize input
 function sanitize_input($data)
@@ -115,9 +153,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rejection_reason = null;
 
     // Insert data into activity_proposals table
+    // Insert data into activity_proposals table
     $stmt = $conn->prepare("INSERT INTO activity_proposals 
-        (user_id, club_name, acronym, club_type, designation, activity_title, activity_type, objectives, program_category, venue, address, activity_date, start_time, end_time, target_participants, expected_participants, applicant_signature, applicant_designation, applicant_date_filed, applicant_contact, moderator_signature, moderator_date_signed, moderator_contact, faculty_signature, faculty_contact, dean_signature, status, rejection_reason)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+(user_id, club_name, acronym, club_type, designation, activity_title, activity_type, objectives, program_category, venue, address, activity_date, start_time, end_time, target_participants, expected_participants, applicant_signature, applicant_designation, applicant_date_filed, applicant_contact, moderator_signature, moderator_date_signed, moderator_contact, faculty_signature, faculty_contact, dean_signature, status, rejection_reason, submitted_date)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
 
     $stmt->bind_param(
         "issssssssssssssissssssssssss",
@@ -213,27 +252,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="form-label">Organization Category:</label>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="academic" name="clubType" value="Academic"
-                            <?php echo ($club_data['club_type'] === 'Academic') ? 'checked disabled' : ''; ?>>
+                            <?php echo ($club_data['club_type'] === 'Academic') ? 'checked disabled' : 'disabled'; ?>>
                         <label class="form-check-label" for="academic">Academic</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="nonAcademic" name="clubType" value="Non-Academic"
-                            <?php echo ($club_data['club_type'] === 'Non-Academic') ? 'checked disabled' : ''; ?>>
+                            <?php echo ($club_data['club_type'] === 'Non-Academic') ? 'checked disabled' : 'disabled'; ?>>
                         <label class="form-check-label" for="nonAcademic">Non-Academic</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="acco" name="clubType" value="ACCO"
-                            <?php echo ($club_data['club_type'] === 'ACCO') ? 'checked disabled' : ''; ?>>
+                            <?php echo ($club_data['club_type'] === 'ACCO') ? 'checked disabled' : 'disabled'; ?>>
                         <label class="form-check-label" for="acco">ACCO</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="csg" name="clubType" value="CSG"
-                            <?php echo ($club_data['club_type'] === 'CSG') ? 'checked disabled' : ''; ?>>
+                            <?php echo ($club_data['club_type'] === 'CSG') ? 'checked disabled' : 'disabled'; ?>>
                         <label class="form-check-label" for="csg">CSG</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="collegeLGU" name="clubType" value="College-LGU"
-                            <?php echo ($club_data['club_type'] === 'College-LGU') ? 'checked disabled' : ''; ?>>
+                            <?php echo ($club_data['club_type'] === 'College-LGU') ? 'checked disabled' : 'disabled'; ?>>
                         <label class="form-check-label" for="collegeLGU">College-LGU</label>
                     </div>
                 </div>
@@ -349,14 +388,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label class="form-label">Applicant</label>
-                    <input type="text" class="form-control mb-2" name="applicantSignature" placeholder="Signature Over Printed Name" />
-                    <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation" />
+                    <input type="text" class="form-control mb-2" name="applicantName" placeholder="Applicant Name"
+                        value="<?php echo setValue($applicant_name); ?>" <?php echo setReadonly($applicant_name); ?> />
+                    <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation"
+                        value="<?php echo setValue($club_data['designation']); ?>" <?php echo setReadonly($club_data['designation']); ?> />
                     <input type="date" class="form-control mb-2" name="applicantDateFiled" placeholder="Date Filed" />
                     <input type="text" class="form-control mb-2" name="applicantContact" placeholder="Contact Number" />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
-                    <input type="text" class="form-control mb-2" name="moderatorSignature" placeholder="Signature Over Printed Name" />
+                    <input type="text" class="form-control mb-2" name="moderatorName" placeholder="Moderator Name"
+                        value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
                     <input type="date" class="form-control mb-2" name="moderatorDateSigned" placeholder="Date Signed" />
                     <input type="text" class="form-control mb-2" name="moderatorContact" placeholder="Contact Number" />
                 </div>
