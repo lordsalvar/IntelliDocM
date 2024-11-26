@@ -35,7 +35,7 @@ $result = $conn->query($sql);
                     <tr>
                         <th class="text-center">Organization</th>
                         <th class="text-center">Title</th>
-                        <th class="text-center">Date</th>
+                        <th class="text-center">Date of Activity</th>
                         <th class="text-center">Start Time</th>
                         <th class="text-center">Finish Time</th>
                         <th class="text-center">Status</th>
