@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Get the database connection
     $conn = getDbConnection();
+    
 
     // Check if the username exists
     $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE username = ?");
@@ -37,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit();
     } else {
-        echo "Invalid username or password";
+        $error = "Invalid username or password";
     }
 
     $stmt->close();
@@ -83,11 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <div class="login-container">
-        <h2 class="text-center">Login</h2>
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php endif; ?>
-
+    <h2 class="text-center">Login</h2>
         <form method="POST" action="login.php">
             <div class="form-group">
                 <label for="username">Username</label>
@@ -97,6 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
             </div>
+            
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+        
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
         <p class="mt-3 text-center">
