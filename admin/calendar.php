@@ -72,9 +72,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Cor Jesu College. All Rights Reserved.</p>
-    </footer>
+    <?php include '../includes/footer.php' ?>
 
     <!-- Add Event Modal -->
     <div
