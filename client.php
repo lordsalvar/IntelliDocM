@@ -1,9 +1,10 @@
 <?php
-include 'database.php';
+require_once 'database.php';
+require_once 'includes/notifications.php';
 
-// Redirect to login if the user is not logged in
+// Start session and validate the user's login
 session_start();
-if ($_SESSION['role'] !== 'client') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
     header('Location: login.php');
     exit();
 }
@@ -22,6 +23,9 @@ $stmt->execute();
 $club_result = $stmt->get_result();
 $club_name = $club_result->fetch_assoc()['club_name'] ?? null;
 
+// Fetch unread notifications
+$notifications = getUnreadNotifications($user_id, $conn);
+
 // If no club is found, display a message
 if (!$club_name) {
     echo "<p>You are not currently associated with any club.</p>";
@@ -29,11 +33,13 @@ if (!$club_name) {
 }
 
 // Fetch proposals related to the user's club
-$sql = "SELECT * FROM activity_proposals WHERE club_name = ?";
-$stmt = $conn->prepare($sql);
+$sql_proposals = "SELECT * FROM activity_proposals WHERE club_name = ?";
+$stmt = $conn->prepare($sql_proposals);
 $stmt->bind_param("s", $club_name);
 $stmt->execute();
-$result = $stmt->get_result();
+$proposals_result = $stmt->get_result();
+
+//$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,11 +52,13 @@ $result = $stmt->get_result();
 </head>
 
 <body>
-    <?php include 'includes/clientnavbar.php' ?>
+    <?php include 'includes/clientnavbar.php'; ?>
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Submitted Proposals for <?= htmlspecialchars($club_name) ?></h2>
 
-        <?php if ($result && $result->num_rows > 0): ?>
+        <!-- Proposals Table -->
+        <?php if ($proposals_result && $proposals_result->num_rows > 0): ?>
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -63,7 +71,7 @@ $result = $stmt->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php while ($row = $proposals_result->fetch_assoc()): ?>
                         <tr>
                             <td class="text-center"><?= htmlspecialchars($row['activity_title'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['activity_date'] ?? '') ?></td>
@@ -80,11 +88,9 @@ $result = $stmt->get_result();
         <?php else: ?>
             <p>No proposals found for your club.</p>
         <?php endif; ?>
-
-        <?php $conn->close(); ?>
     </div>
 
-    <?php include 'includes/footer.php' ?>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
