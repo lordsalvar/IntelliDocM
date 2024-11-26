@@ -25,6 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($role === 'admin') {
             // Redirect to admin page
             header('Location: admin/view_proposals.php');
+        } elseif ($role === 'moderator') {
+            // Redirect to moderator page
+            header('Location: moderator/moderator_view.php');
+        } elseif ($role === 'dean') {
+            // Redirect to moderator page
+            header('Location: dean/dean_view.php');
         } else {
             // Redirect to client page
             header('Location: client.php');
