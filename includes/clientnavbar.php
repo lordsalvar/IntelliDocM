@@ -17,6 +17,7 @@ if (substr($basePath, -1) !== '/') {
     <title>Responsive Navbar with Offcanvas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
+
     </style>
 </head>
 
@@ -65,7 +66,7 @@ if (substr($basePath, -1) !== '/') {
                     <a class="nav-link" href="client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="public/forms.php">Student Activities Forms</a>
+                    <a class="nav-link" href="../public/forms.php">Student Activities Forms</a>
                 </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-red text-white position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -87,5 +88,21 @@ if (substr($basePath, -1) !== '/') {
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    document.querySelectorAll('.page-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const url = this.getAttribute('href');
+
+            // Fetch notifications for the selected page
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('.modal-content').innerHTML = data;
+                })
+                .catch(error => console.error('Error fetching notifications:', error));
+        });
+    });
+</script>
 
 </html>
