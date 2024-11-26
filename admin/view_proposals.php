@@ -8,14 +8,29 @@ if ($_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Query the activity_proposals table
-$sql = "SELECT * FROM activity_proposals";
-$result = $conn->query($sql);
+// Initialize variables
+$statusFilter = '';
+
+// Check if a status filter has been submitted
+if (isset($_GET['status']) && $_GET['status'] !== '') {
+    $statusFilter = $_GET['status'];
+    // Prepare a parameterized statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM activity_proposals WHERE status = ?");
+    $stmt->bind_param("s", $statusFilter);
+} else {
+    // No status filter; retrieve all proposals
+    $stmt = $conn->prepare("SELECT * FROM activity_proposals");
+}
+
+// Execute the query
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <!-- Your existing head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposals</title>
@@ -28,6 +43,21 @@ $result = $conn->query($sql);
     <hr>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Submitted Proposals</h2>
+
+        <!-- Filter Form -->
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-md-4 offset-md-4">
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Filter by Status --</option>
+                        <option value="Pending" <?= $statusFilter == 'Pending' ? 'selected' : '' ?>>Pending</option>
+                        <option value="Received " <?= $statusFilter == 'Received' ? 'selected' : '' ?>>Received</option>
+                        <option value="Approved" <?= $statusFilter == 'Approved' ? 'selected' : '' ?>>Approved</option>
+                        <option value="Rejected" <?= $statusFilter == 'Rejected' ? 'selected' : '' ?>>Rejected</option>
+                    </select>
+                </div>
+            </div>
+        </form>
 
         <?php if ($result && $result->num_rows > 0): ?>
             <table class="table table-striped table-bordered">
@@ -65,10 +95,14 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No proposals found.</p>
+            <p>No proposals found<?= $statusFilter ? ' for the selected status.' : '.' ?></p>
         <?php endif; ?>
 
-        <?php $conn->close(); ?>
+        <?php
+        // Close the statement and connection
+        $stmt->close();
+        $conn->close();
+        ?>
     </div>
 
     <!-- Reject Modal -->
@@ -76,7 +110,7 @@ $result = $conn->query($sql);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rejectModalLabel">Reject Proposal</h5>
+                    <h5 class="modal-title">Reject Proposal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="rejectForm" method="POST" action="../approvals/reject.php">
@@ -99,9 +133,10 @@ $result = $conn->query($sql);
 
     <?php include '../includes/footer.php' ?>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         const rejectModal = document.getElementById('rejectModal');
         rejectModal.addEventListener('show.bs.modal', function(event) {
