@@ -1,4 +1,4 @@
-    <?php
+<?php
     // Calculate the base path relative to the current script
     $basePath = dirname($_SERVER['SCRIPT_NAME']);
 
@@ -16,38 +16,14 @@
         <title>Responsive Navbar with Offcanvas</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <style>
-            .offcanvas {
-                background-color: #e31b23;
-            }
-
-            .offcanvas .nav-link {
-                color: white !important;
-            }
-
-            .offcanvas .navbar-brand {
-                color: white !important;
-            }
-
-            .navbar .nav-link {
-                color: white !important;
-            }
-
-            .offcanvas-title {
-                color: white !important;
-            }
-
-            .navbar-toggler {
-                border: 2px solid white !important;
-                /* Adds a white border */
-                color: white !important;
-                /* Ensures the icon is white */
-            }
         </style>
     </head>
 
     <body>
+
         <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e31b23;">
             <div class="container-fluid">
+            <button class="btn btn-outline-light me-2" id="sidebarToggle">☰</button>
                 <a class="navbar-brand text-white" href="#">IntelliDoc</a>
                 <button class="navbar-toggler text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
@@ -56,19 +32,20 @@
                 <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="client.php">Dashboard</a>
+                            <a class="nav-link text-white" href="../client.php">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="public/forms.php">Student Activities Forms</a>
+                            <a class="nav-link text-white" href="public/forms.php">Student Activities Forms</a>
                         </li>
                         <li class="nav-item">
-                            <?php include 'notifModal.php'; ?>
-                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                            <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
                                 Notification
                             </button>
+
+                            <?php include 'notifModal.php'; ?>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="logout.php">Logout</a>
+                            <a class="nav-link text-white" href="logout.php">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -77,8 +54,8 @@
 
         <!-- Offcanvas for small screens -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+            <div class="offcanvas-header" style="background-color: #e31b23;">
+                <h5 class="offcanvas-title text-white" id="offcanvasNavbarLabel">Menu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
@@ -91,7 +68,7 @@
                     </li>
                     <li class="nav-item">
                         <?php include 'notifModal.php'; ?>
-                        <button type="button" class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#notificationModal">
                             Notification
                         </button>
                     </li>
