@@ -34,10 +34,10 @@ if (substr($basePath, -1) !== '/') {
             <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="../client.php">Dashboard</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="public/forms.php">Student Activities Forms</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/public/forms.php">Student Activities Forms</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -47,7 +47,7 @@ if (substr($basePath, -1) !== '/') {
 
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="logout.php">Logout</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/logout.php">Logout</a>
                     </li>
                 </ul>
             </div>
