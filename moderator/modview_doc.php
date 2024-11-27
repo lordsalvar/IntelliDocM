@@ -22,21 +22,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
         'moderator_name' => $proposal['moderator_name'],
     ]);
 
-    // Create an in-memory file for the QR code
-    ob_start();
-    QRcode::png($qrData, null, QR_ECLEVEL_L, 5);
-    $qrImage = ob_get_clean(); // Capture the generated QR code as binary data
+    // Define the directory to save QR codes
+    $qrDirectory = "../qr_codes";
+    if (!is_dir($qrDirectory)) {
+        mkdir($qrDirectory, 0777, true); // Create the directory if it doesn't exist
+    }
 
-    // Debugging: Save the QR code locally
-    file_put_contents('debug_qr.png', $qrImage);
+    // Define the file path for the QR code
+    $qrFilePath = $qrDirectory . "/qr_" . $proposal['proposal_id'] . ".png";
 
-    // Update the moderator_signature column with the QR code image
+    // Generate and save the QR code as a file
+    QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+    // Update the moderator_signature column with the file path
     $updateSql = "UPDATE activity_proposals SET moderator_signature = ? WHERE proposal_id = ?";
     $updateStmt = $conn->prepare($updateSql);
-    $updateStmt->bind_param("si", $qrImage, $id); // Use 's' for string (binary data)
+    $updateStmt->bind_param("si", $qrFilePath, $id);
 
     if ($updateStmt->execute()) {
-        echo "<script>alert('Moderator signature added and QR code image stored successfully.'); window.location.href='view_documents.php?id=$id';</script>";
+        echo "<script>alert('Moderator signature added and QR code generated successfully.'); window.location.href='modview_doc.php?id=$id';</script>";
     } else {
         echo "<script>alert('Failed to update moderator signature. Please try again.');</script>";
         error_log('Database update error: ' . $updateStmt->error);
@@ -47,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
 $conn->close();
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -241,7 +246,7 @@ $conn->close();
 
                     <?php if (!empty($proposal['moderator_signature'])): ?>
                         <div class="qr-code-container text-center">
-                            <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                            <img src="<?= htmlspecialchars($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
                         <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
@@ -252,7 +257,6 @@ $conn->close();
                             </button>
                         </form>
                     <?php endif; ?>
-
                 </div>
 
                 <div class="col-md-4">
