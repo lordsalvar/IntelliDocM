@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertNotificationStmt->execute();
     }
 
-    header("Location: admin_dashboard.php");
+    header("Location: /main/IntelliDocM/admin/view_proposals.php");
     exit;
 }
 

@@ -83,12 +83,6 @@ $result = $stmt->get_result();
                             <td class="text-center"><?= htmlspecialchars($row['end_time'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['status'] ?? 'Pending') ?></td>
                             <td class="text-center">
-                                <a href="../approvals/approve.php?id=<?= $row['proposal_id'] ?>" class="btn btn-success btn-sm">Approve</a>
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#rejectModal"
-                                    data-id="<?= $row['proposal_id'] ?>">Reject</button>
                                 <a href="../view_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
                             </td>
                         </tr>
@@ -138,15 +132,6 @@ $result = $stmt->get_result();
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const rejectModal = document.getElementById('rejectModal');
-        rejectModal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const proposalId = button.getAttribute('data-id');
-            const modalInput = rejectModal.querySelector('#proposalId');
-            modalInput.value = proposalId;
-        });
-    </script>
 </body>
 
 </html>

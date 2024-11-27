@@ -263,7 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->bind_param("si", $qrFilePath, $proposal_id);
 
         if ($updateStmt->execute()) {
-            echo "<div class='alert alert-success'>Proposal submitted and QR code for applicant generated successfully!</div>";
+            echo "<script>alert('Proposal submitted and QR code for applicant generated successfully!'); window.location.href='client_view.php?id=$id';</script>";
         } else {
             echo "<div class='alert alert-danger'>Error generating QR code: " . $updateStmt->error . "</div>";
         }
@@ -289,7 +289,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Custom CSS -->
-    <link href="css/styles.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
@@ -470,8 +469,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         value="<?php echo setValue($applicant_name); ?>" <?php echo setReadonly($applicant_name); ?> />
                     <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation"
                         value="<?php echo setValue($club_data['designation']); ?>" <?php echo setReadonly($club_data['designation']); ?> />
-                    <input type="date" class="form-control mb-2" name="applicantDateFiled" placeholder="Date Filed" />
-                    <input type="text" class="form-control mb-2" name="applicantContact" placeholder="Contact Number" />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
