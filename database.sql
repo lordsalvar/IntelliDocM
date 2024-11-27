@@ -66,3 +66,15 @@ CREATE TABLE activity_proposals (
     submitted_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+CREATE TABLE notifications (
+    notification_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    proposal_id INT(11),
+    user_id INT(11),
+    message TEXT,
+    status ENUM('unread', 'read') DEFAULT 'unread',
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (proposal_id) REFERENCES activity_proposals(proposal_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
