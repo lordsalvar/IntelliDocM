@@ -34,6 +34,7 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposals</title>
+    <link rel="stylesheet" href="../css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
@@ -42,7 +43,7 @@ $result = $stmt->get_result();
     <hr>
     <hr>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Submitted Proposals</h2>
+        <h2 class="text-center mb-4 text-white">Submitted Proposals</h2>
 
         <!-- Filter Form -->
         <form method="GET" class="mb-4">
