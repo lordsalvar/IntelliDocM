@@ -5,7 +5,7 @@ if ($_SESSION['role'] !== 'client') {
     header('Location: login.php');
     exit();
 }
-include '../database.php';
+require_once '../database.php';
 
 ?>
 <!DOCTYPE html>

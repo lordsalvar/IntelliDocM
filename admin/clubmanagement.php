@@ -396,10 +396,10 @@ function handleAddClub()
                 <label>Type:</label>
                 <select id="type" name="type" class="form-control" required>
                     <option value="Academic">Academic</option>
-                    <option value="Non-Acad">Non-Academic</option>
-                    <option value="Non-Acad">ACCO</option>
-                    <option value="Non-Acad">CSG</option>
-                    <option value="Non-Acad">College-LGU</option>
+                    <option value="Non-Academic">Non-Academic</option>
+                    <option value="ACCO">ACCO</option>
+                    <option value="CSG">CSG</option>
+                    <option value="College-LGU">College-LGU</option>
                 </select>
             </div>
             <div class="form-group">

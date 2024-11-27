@@ -20,3 +20,42 @@ body {
     text-align: center;
 }
 
+=======
+.content {
+    margin-left: 0; /* No margin by default */
+    transition: margin-left 0.3s;
+    padding-top: 60px; /* Navbar height */
+}
+
+.content.sidebar-active {
+    margin-left: 250px; /* Adjust content when sidebar is open */
+}
+
+@media (min-width: 992px) {
+    #sidebar {
+        left: 0;
+    }
+    .content {
+        margin-left: 250px; /* Adjust margin by default on larger screens */
+    }
+}
+
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 2px solid #007bff; /* Optional: Add a border for better visibility */
+    padding: 10px;
+    border-radius: 8px; /* Rounded corners for a sleek look */
+    background-color: #f8f9fa; /* Light background for contrast */
+    max-width: 300px; /* Restrict size for larger QR codes */
+    margin-left: auto;
+    margin-right: auto; /* Center container */
+}
+
+.qr-code {
+    max-width: 100%; /* Make QR code responsive */
+    height: auto; /* Preserve aspect ratio */
+}
