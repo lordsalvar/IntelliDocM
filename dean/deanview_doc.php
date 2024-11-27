@@ -237,6 +237,13 @@ $conn->close();
                 <div class="col-md-4">
                     <label class="form-label">Applicant</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
+                    <?php if (!empty($proposal['applicant_signature'])): ?>
+                        <div class="qr-code-container text-center">
+                            <img src="/main/IntelliDocM/client_qr_codes/<?= basename($proposal['applicant_signature']) ?>" alt="Applicant QR Code" class="qr-code" />
+                        </div>
+                    <?php else: ?>
+                        <p class="text-warning mt-2">Awaiting approval.</p>
+                    <?php endif; ?>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
