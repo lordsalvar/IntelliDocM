@@ -16,8 +16,8 @@ if (substr($basePath, -1) !== '/') {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>moderator/moderator_view.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>usermanagement.php">User Managment</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/main/IntelliDocM/moderator/moderator_view.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/main/IntelliDocM/moderator/usermanagement.php">User Managment</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>calendar.php">Calendar</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="../logout.php">Logout</a></li>
             </ul>
