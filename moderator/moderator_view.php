@@ -2,11 +2,12 @@
 include '../database.php';
 
 // Redirect to login if the moderator is not logged in
-session_start();
-if ($_SESSION['role'] !== 'moderator') {
-    header('Location: login.php');
+if (!isset($_SESSION['designation']) || strtolower($_SESSION['designation']) !== 'moderator') {
+    // Redirect to login page if the user is not a moderator
+    header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
 }
+
 
 // Fetch the moderator's club_id
 $moderator_id = $_SESSION['user_id']; // Assuming user_id is stored in the session

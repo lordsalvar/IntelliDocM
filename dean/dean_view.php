@@ -1,12 +1,15 @@
 <?php
 include '../database.php';
-
-// Redirect to login if the dean is not logged in
 session_start();
-if ($_SESSION['role'] !== 'dean') {
-    header('Location: login.php');
+// Allow only users with the designation 'dean'
+if (!isset($_SESSION['designation']) || strtolower($_SESSION['designation']) !== 'dean') {
+    // Redirect to login page if the user is not a dean
+    header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
 }
+
+
+
 
 // Fetch the dean's club_id
 $dean_id = $_SESSION['user_id']; // Assuming user_id is stored in the session
