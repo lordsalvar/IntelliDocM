@@ -39,7 +39,7 @@
                 if ($role === 'admin') {
                     header('Location: /main/IntelliDocM/admin/view_proposals.php');
                     exit();
-                } elseif (strtolower($designation) === 'Moderator') {
+                } elseif (strtolower($designation) === 'moderator') {
                     header('Location: /main/IntelliDocM/moderator/moderator_view.php');
                     exit();
                 } elseif (strtolower($designation) === 'dean') {

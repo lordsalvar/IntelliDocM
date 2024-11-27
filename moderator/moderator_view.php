@@ -2,7 +2,7 @@
 include '../database.php';
 
 // Redirect to login if the moderator is not logged in
-if (!isset($_SESSION['designation']) || strtolower($_SESSION['designation']) !== 'moderator') {
+if (!isset($_SESSION['designation']) || strtolower($_SESSION['designation']) !== 'Moderator') {
     // Redirect to login page if the user is not a moderator
     header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
