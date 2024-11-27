@@ -63,7 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
+            background-color: #4158D0;
+            background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -74,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 100%;
             max-width: 400px;
             padding: 2rem;
-            background-color: #ffffff;
+            background-color: #85c1e9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
@@ -101,9 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
-        <p class="mt-3 text-center">
-            <a href="index.php">Back to Home</a>
-        </p>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
