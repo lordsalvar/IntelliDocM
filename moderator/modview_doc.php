@@ -238,7 +238,7 @@ $conn->close();
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label class="form-label">Applicant</label>
-                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_signature']) ?>" readonly />
+                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
@@ -246,7 +246,7 @@ $conn->close();
 
                     <?php if (!empty($proposal['moderator_signature'])): ?>
                         <div class="qr-code-container text-center">
-                            <img src="<?= htmlspecialchars($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                            <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
                         <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
@@ -270,7 +270,7 @@ $conn->close();
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
                 <?php if (!empty($proposal['dean_signature'])): ?>
                     <div class="qr-code-container text-center">
-                        <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                        <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                     </div>
                     <p class="text-success mt-2">Date Signed</p>
                 <?php else: ?>
