@@ -18,6 +18,7 @@ if ($_SESSION['role'] !== 'client') {
 
 // Include database connection
 include 'database.php';
+include 'phpqrcode/qrlib.php';
 
 // Helper function to set the value of a field if data exists
 function setValue($data)
@@ -232,11 +233,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
-        echo "<div class='alert alert-success'>Proposal submitted successfully!</div>";
+        // Get the ID of the newly inserted proposal
+        $proposal_id = $stmt->insert_id;
+
+        // Generate QR Code for Applicant Signature
+        $qrData = json_encode([
+            'proposal_id' => $proposal_id,
+            'applicant_name' => $applicant_name,
+            'activity_title' => $activity_title,
+        ]);
+
+        // Define the directory to save QR codes
+        $qrDirectory = "client_qr_codes";
+        if (!is_dir($qrDirectory)) {
+            if (!mkdir($qrDirectory, 0777, true) && !is_dir($qrDirectory)) {
+                die("Failed to create QR code directory: $qrDirectory");
+            }
+        }
+
+        // Define the file path for the QR code
+        $qrFilePath = $qrDirectory . "/applicant_qr_" . $proposal_id . ".png";
+
+        // Generate and save the QR code as a file
+        QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+        // Update the applicant_signature column with the QR code path
+        $updateSql = "UPDATE activity_proposals SET applicant_signature = ? WHERE proposal_id = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("si", $qrFilePath, $proposal_id);
+
+        if ($updateStmt->execute()) {
+            echo "<div class='alert alert-success'>Proposal submitted and QR code for applicant generated successfully!</div>";
+        } else {
+            echo "<div class='alert alert-danger'>Error generating QR code: " . $updateStmt->error . "</div>";
+        }
+        $updateStmt->close();
     } else {
         echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
     }
-
     $stmt->close();
 }
 
