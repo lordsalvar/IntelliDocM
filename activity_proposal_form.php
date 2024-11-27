@@ -474,8 +474,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="form-label">Moderator</label>
                     <input type="text" class="form-control mb-2" name="moderatorName" placeholder="Moderator Name"
                         value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
-                    <input type="date" class="form-control mb-2" name="moderatorDateSigned" placeholder="Date Signed" />
-                    <input type="text" class="form-control mb-2" name="moderatorContact" placeholder="Contact Number" />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Other Faculty/Staff</label>
