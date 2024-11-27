@@ -22,29 +22,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
         'dean_name' => $proposal['dean_name'],
     ]);
 
-    // Create an in-memory file for the QR code
-    ob_start();
-    QRcode::png($qrData, null, QR_ECLEVEL_L, 5);
-    $qrImage = ob_get_clean(); // Capture the generated QR code as binary data
+    // Define the directory to save QR codes
+    $qrDirectory = "../dean_qr_codes";
+    if (!is_dir($qrDirectory)) {
+        if (!mkdir($qrDirectory, 0777, true) && !is_dir($qrDirectory)) {
+            die("Failed to create QR code directory: $qrDirectory");
+        }
+    }
 
-    // Debugging: Save the QR code locally
-    file_put_contents('debug_dean_qr.png', $qrImage);
+    // Define the file path for the QR code
+    $qrFilePath = $qrDirectory . "/qr_" . $proposal['proposal_id'] . ".png";
 
-    // Update the moderator_signature column with the QR code image
+    // Generate and save the QR code as a file
+    QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+    // Update the database with the QR code file path
     $updateSql = "UPDATE activity_proposals SET dean_signature = ? WHERE proposal_id = ?";
     $updateStmt = $conn->prepare($updateSql);
-    $updateStmt->bind_param("si", $qrImage, $id); // Use 's' for string (binary data)
+    $updateStmt->bind_param("si", $qrFilePath, $id);
 
     if ($updateStmt->execute()) {
-        echo "<script>alert('Dean signature added and QR code image stored successfully.'); window.location.href='view_documents.php?id=$id';</script>";
+        echo "<script>alert('Dean signature added and QR code generated successfully.'); window.location.href='deanview_doc.php?id=$id';</script>";
     } else {
+        error_log("Failed to update dean_signature: " . $updateStmt->error);
         echo "<script>alert('Failed to update dean signature. Please try again.');</script>";
-        error_log('Database update error: ' . $updateStmt->error);
     }
     $updateStmt->close();
 }
 
 $conn->close();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -237,7 +244,7 @@ $conn->close();
 
                     <?php if (!empty($proposal['moderator_signature'])): ?>
                         <div class="qr-code-container text-center">
-                            <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                            <img src="<?= htmlspecialchars($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
                     <?php else: ?>
                         <p class="text-warning mt-2">Awaiting approval.</p>
@@ -249,18 +256,20 @@ $conn->close();
                 </div>
             </div>
 
+            <!-- Dean Signature Section -->
             <div class="text-center">
                 <label class="form-label">Noted by:</label>
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
                 <?php if (!empty($proposal['dean_signature'])): ?>
                     <div class="qr-code-container text-center">
-                        <img src="data:image/png;base64,<?= base64_encode($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
+                        <img src="<?= htmlspecialchars($proposal['dean_signature']) ?>" alt="dean QR Code" class="qr-code" />
                     </div>
+                    <p class="text-success mt-2">Date Signed</p>
                 <?php else: ?>
                     <p class="text-warning mt-2">No QR Code generated yet.</p>
                     <form method="POST" class="text-center mt-4">
                         <button type="submit" name="generate_qr" class="btn btn-primary">
-                            Sign Document
+                            Generate Dean QR Code
                         </button>
                     </form>
                 <?php endif; ?>

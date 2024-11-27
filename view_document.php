@@ -233,7 +233,7 @@ $conn->close();
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
                     <?php if (!empty($proposal['moderator_signature'])): ?>
                         <div class="qr-code-container text-center">
-                            <img src="data:image/png;base64,<?= base64_encode($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
+                            <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
                         <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
@@ -251,7 +251,7 @@ $conn->close();
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
                 <?php if (!empty($proposal['dean_signature'])): ?>
                     <div class="qr-code-container text-center">
-                        <img src="data:image/png;base64,<?= base64_encode($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
+                        <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
                     </div>
                     <p class="text-success mt-2">Date Signed</p>
                 <?php else: ?>
