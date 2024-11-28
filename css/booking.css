@@ -1,0 +1,81 @@
+body {
+    background-color: #f8f9fa;
+    padding-bottom: 100px; /* Added padding to prevent footer overlap */
+}
+
+.content {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+.logo {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.form-header,
+.form-section {
+    margin-bottom: 20px;
+}
+
+.form-header {
+    text-align: center;
+}
+
+.form-header h2 {
+    font-size: 1.5rem;
+}
+
+.form-section h3 {
+    font-size: 1.2rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-text {
+    text-align: center;
+}
+
+.header-info label,
+.header-info input {
+    display: block;
+    width: 100%;
+}
+
+.header-info input {
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.signature-block {
+    text-align: center;
+    width: 25%;
+}
+
+.signature-block input {
+    display: block;
+    margin: 5px auto;
+}
+
+.btn-light {
+    color: #333;
+    background-color: #f8f9fa;
+    border: none;
+}
+
+/* Fix for button alignment */
+.form-row {
+    margin-top: 30px; /* Ensures enough space before the buttons */
+}

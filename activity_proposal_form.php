@@ -493,7 +493,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Submit Proposal</button>
             </div>
+
         </form>
+        <a class="btn btn-success mb-3" href="/main/IntelliDocM/booking/booking.php">Booking Form</a>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
