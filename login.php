@@ -24,25 +24,29 @@
         $stmt->fetch();
 
         // Verify user credentials
+        // Verify user credentials
         if ($stmt->num_rows > 0) {
             // Debug output for fetched values
             echo "ID: $id, Role: $role, Designation: $designation<br>";
 
             if (password_verify($password, $hashed_password)) {
+                // Store normalized designation in the session
                 $_SESSION['user_id'] = $id;
                 $_SESSION['username'] = $username;
                 $_SESSION['role'] = $role;
-                $_SESSION['designation'] = $designation;
+                $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
 
-                echo "Redirecting based on: Role = $role, Designation = $designation<br>";
+                // Debugging session variables
+                echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
 
+                // Use normalized designation for comparison
                 if ($role === 'admin') {
                     header('Location: /main/IntelliDocM/admin/view_proposals.php');
                     exit();
-                } elseif (strtolower($designation) === 'moderator') {
+                } elseif ($_SESSION['designation'] === 'moderator') {
                     header('Location: /main/IntelliDocM/moderator/moderator_view.php');
                     exit();
-                } elseif (strtolower($designation) === 'dean') {
+                } elseif ($_SESSION['designation'] === 'dean') {
                     header('Location: /main/IntelliDocM/dean/dean_view.php');
                     exit();
                 } else {

@@ -2,7 +2,7 @@
 include '../database.php';
 session_start();
 // Allow only users with the designation 'dean'
-if (!isset($_SESSION['designation']) || strtolower($_SESSION['designation']) !== 'dean') {
+if (!isset($_SESSION['designation']) || ($_SESSION['designation']) !== 'dean') {
     // Redirect to login page if the user is not a dean
     header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
