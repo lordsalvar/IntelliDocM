@@ -165,7 +165,19 @@
                 <a class="btn btn-secondary" href="studentActivities.php" role="button">Back</a>
             </div>
         </div>
+
+        <div class="row mb-4">
+            <div class="form-group">
+                <label>Requested by:</label>
+                <input type="text" class="form-control" placeholder="Printed Name & Signature">
+                <div>
+                    <input type="text" class="form-control" placeholder="Designation">
+                </div>
+            </div>
+        </div>
     </div>
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
