@@ -7,7 +7,12 @@
     <title>Request for Use of School Facilities - Cor Jesu College</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/booking.css">
-
+    <style>
+        .form-check {
+            margin-right: 10px;
+            /* Add spacing between checkbox and input fields */
+        }
+    </style>
 </head>
 
 <body>
@@ -24,6 +29,9 @@
             </div>
         </div>
 
+        <div class="text-center">
+            <h4>REQUEST FOR THE USE OF SCHOOL FACILITIES</h4>
+        </div>
         <form>
             <!-- Requesting Party Information -->
             <div class="form-section">
@@ -340,16 +348,10 @@
             <div class="form-group col">
                 <label>Endorsed by:</label>
                 <input type="text" class="form-control" placeholder="Printed Name & Signature">
-                <div>
-                    <input type="text" class="form-control" placeholder="Designation">
-                </div>
             </div>
             <div class="form-group col">
                 <label>Approved by:</label>
-                <input type="text" class="form-control" placeholder="Printed Name & Signature">
-                <div>
-                    <input type="text" class="form-control" placeholder="Designation">
-                </div>
+                <input type="text" class="form-control" placeholder="Property Custodian">
             </div>
         </div>
     </div>
