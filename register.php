@@ -6,6 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'] ?? null;  // Capture full name if available
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role'];
+    $email = $_POST['email'];
+    $contact = $_POST['contact'];
 
     // Get the database connection
     $conn = getDbConnection();
@@ -20,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = "Username already exists. Please try another.";
     } else {
         // Insert the new user
-        $stmt = $conn->prepare("INSERT INTO users (username, full_name, password, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $username, $full_name, $password, $role);
+        $stmt = $conn->prepare("INSERT INTO users (username, full_name, password, role, email, contact) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $username, $full_name, $password, $role, $email, $contact);
 
         if ($stmt->execute()) {
             $success_message = "Registration successful. You can now log in.";
@@ -66,11 +68,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group">
                 <label>Full Name:</label>
-                <input type="text" name="full_name" class="form-control">
+                <input type="text" name="full_name" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Password:</label>
                 <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Contact:</label>
+                <input type="text" name="contact" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Role:</label>
