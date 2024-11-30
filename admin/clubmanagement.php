@@ -473,10 +473,18 @@ function handleAddClub()
                                 <label for="club_id">Select Club:</label>
                                 <select class="form-control" id="club_id" required></select>
                             </div>
+                            <hr>
+                            <div>
+                                <div>
+                                    <label for="laber">Note:</label>
+                                    <p class="">Set Dean/Moderator Designation for admin access</p>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="designation">Designation:</label>
                                 <input type="text" class="form-control" id="designation" required>
                             </div>
+
                             <div class="form-group">
                                 <label for="contact">Contact Number:</label>
                                 <input type="text" class="form-control" id="contact" required>
