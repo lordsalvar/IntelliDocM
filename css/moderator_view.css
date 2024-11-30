@@ -1,0 +1,181 @@
+/* General Styles */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    background-color: #e31b23;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+}
+
+/* Header */
+h2 {
+    color: #e31b23;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Table */
+.table {
+    margin-top: 20px;
+    background-color: #ffffff; /* Table background color */
+    border-radius: 10px; /* Smoother corners */
+    overflow: hidden;
+    border-collapse: separate; /* Ensure rounded corners are visible */
+    border-spacing: 0; /* Remove space between table cells */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.table th {
+    background-color: #e31b23; /* Header background color */
+    color: #ffffff; /* Header text color */
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Odd row background color */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Even row background color */
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1; /* Row hover effect */
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6; /* Table cell border color */
+}
+
+/* Approve Button Styles */
+.btn-success.btn-sm {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-success.btn-sm:hover {
+    background-color: #1a682b;
+    transform: translateY(-2px);
+}
+
+.btn-success.btn-sm:active {
+    background-color: #1e7e34;
+    transform: translateY(0);
+}
+/* General Button Styles */
+.btn-danger.btn-sm {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-danger.btn-sm:hover {
+    background-color: #901a25;
+    transform: translateY(-2px);
+}
+
+.btn-danger.btn-sm:active {
+    background-color: #bd2130;
+    transform: translateY(0);
+}
+/* General Button Styles */
+.btn-primary.btn-sm {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary.btn-sm:hover {
+    background-color: #013872;
+    transform: translateY(-2px);
+}
+
+.btn-primary.btn-sm:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+/* Modal */
+.modal-header {
+    background-color: #e31b23;
+    color: #fff;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.modal-footer .btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.modal-footer .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #e31b23;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .table th, .table td {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
