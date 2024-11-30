@@ -43,6 +43,7 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposals</title>
+    <link href="../css/moderator_view.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
@@ -51,7 +52,7 @@ $result = $stmt->get_result();
     <hr>
     <hr>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Submitted Proposals</h2>
+        <h2 class="text-center text-white mb-4">Submitted Proposals</h2>
 
         <?php if ($result && $result->num_rows > 0): ?>
             <table class="table table-striped table-bordered">
