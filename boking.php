@@ -149,31 +149,27 @@
                     const facilityId = 'facility-' + index;
                     const sanitizedFacility = facility.replace(/\s+/g, '_').replace(/[^\w]/g, '').toLowerCase();
                     const buildingName = sanitizedFacility + '_building';
-                    const startTimeName = sanitizedFacility + '_start_time';
-                    const endTimeName = sanitizedFacility + '_end_time';
+                    const timeName = sanitizedFacility + '_time';
 
                     // Create the form group HTML
                     const formGroupHTML = `
-            <div class="form-group">
-                <div class="row g-2 align-items-center mb-3">
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="${facilityId}" name="facilities[]" value="${facility}">
-                            <label class="form-check-label" for="${facilityId}">${facility}</label>
+                        <div class="form-group">
+                            <div class="row g-2 align-items-center mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="${facilityId}" name="facilities[]" value="${facility}">
+                                        <label class="form-check-label" for="${facilityId}">${facility}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Building or Room Number" name="${buildingName}">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="time" class="form-control" placeholder="Time of Use" name="${timeName}">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" placeholder="Building or Room Number" name="${buildingName}">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="time" class="form-control" placeholder="Start Time" name="${startTimeName}">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="time" class="form-control" placeholder="End Time" name="${endTimeName}">
-                    </div>
-                </div>
-            </div>
-        `;
+                    `;
                     // Append the form group to the facilities list div
                     facilitiesListDiv.append(formGroupHTML);
                 });
