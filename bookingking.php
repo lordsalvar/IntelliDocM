@@ -42,10 +42,6 @@
                     <label>Date of Use</label>
                     <input type="date" class="form-control" name="date_of_use">
                 </div>
-                <div class="form-group">
-                    <label>Time of Use</label>
-                    <input type="time" class="form-control" name="time_of_use">
-                </div>
             </div>
 
             <!-- Facilities Requested -->
@@ -102,6 +98,228 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Miserero Bldg.</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Polycarp Bldg.</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Coindre Bldg.</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Piazza</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Xavier Hall</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Open Court w/ Lights</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">ITVET</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Nursing Room/Hall</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Power Campus</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Camp Raymond Bldg.</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Norbert Bldg.</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">H.E Hall</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="boulayBldg" name="facilities[]" value="Boulay Bldg">
+                                <label class="form-check-label" for="boulayBldg">Atrium</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Building or Room Number" name="boulay_building">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Time of Use" name="boulay_time">
+                        </div>
+                    </div>
+                </div>
                 <!-- Add similar blocks for all other facilities -->
 
                 <div class="form-group">

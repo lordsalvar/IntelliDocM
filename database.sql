@@ -7,7 +7,7 @@ CREATE TABLE clubs (
     moderator VARCHAR(255) NOT NULL
 );
 
-
+/* */
 
 CREATE TABLE users (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -77,4 +77,16 @@ CREATE TABLE notifications (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (proposal_id) REFERENCES activity_proposals(proposal_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE events (
+    event_id INT(11) NOT NULL AUTO_INCREMENT,
+    event_date DATE NOT NULL,
+    event_title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    event_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    event_start_date DATE DEFAULT NULL,
+    event_end_date DATE DEFAULT NULL,
+    PRIMARY KEY (event_id)
 );
