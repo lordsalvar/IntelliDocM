@@ -1,10 +1,10 @@
 <?php
 include '../database.php';
-
-// Redirect to login if the moderator is not logged in
 session_start();
-if ($_SESSION['role'] !== 'moderator') {
-    header('Location: login.php');
+// Allow only users with the designation 'dean'
+if (!isset($_SESSION['designation']) || ($_SESSION['designation']) !== 'dean') {
+    // Redirect to login page if the user is not a dean
+    header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
 }
 

@@ -5,46 +5,61 @@ require_once 'database.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-
     // Get the database connection
     $conn = getDbConnection();
-    
 
-    // Check if the username exists
-    $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id, $hashed_password, $role);
-    $stmt->fetch();
+        // Fetch user details
+        $stmt = $conn->prepare("
+            SELECT u.id, u.password, u.role, cm.designation 
+            FROM users u
+            LEFT JOIN club_memberships cm ON u.id = cm.user_id
+            WHERE u.username = ?
+            LIMIT 1
+        ");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($id, $hashed_password, $role, $designation);
+        $stmt->fetch();
 
-    if ($stmt->num_rows > 0 && password_verify($password, $hashed_password)) {
-        $_SESSION['user_id'] = $id;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = $role;
+        // Verify user credentials
+        // Verify user credentials
+        if ($stmt->num_rows > 0) {
+            // Debug output for fetched values
+            echo "ID: $id, Role: $role, Designation: $designation<br>";
+            
+            if (password_verify($password, $hashed_password)) {
+                // Store normalized designation in the session
+                $_SESSION['user_id'] = $id;
+                $_SESSION['username'] = $username;
+                $_SESSION['role'] = $role;
+                $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
 
-        if ($role === 'admin') {
-            // Redirect to admin page
-            header('Location: admin/view_proposals.php');
-        } elseif ($role === 'moderator') {
-            // Redirect to moderator page
-            header('Location: moderator/moderator_view.php');
-        } elseif ($role === 'dean') {
-            // Redirect to moderator page
-            header('Location: dean/dean_view.php');
+                // Debugging session variables
+                echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
+
+                // Use normalized designation for comparison
+                if ($role === 'admin') {
+                    header('Location: /main/IntelliDocM/admin/view_proposals.php');
+                    exit();
+                } elseif ($_SESSION['designation'] === 'moderator') {
+                    header('Location: /main/IntelliDocM/moderator/moderator_view.php');
+                    exit();
+                } elseif ($_SESSION['designation'] === 'dean') {
+                    header('Location: /main/IntelliDocM/dean/dean_view.php');
+                    exit();
+                } else {
+                    header('Location: /main/IntelliDocM/client.php');
+                    exit();
+                }
+            } else {
+                $error = "Invalid password";
+            }
         } else {
-            // Redirect to client page
-            header('Location: client.php');
+            $error = "Invalid username or password";
         }
-        exit();
-    } else {
-        $error = "Invalid username or password";
     }
-
-    $stmt->close();
-    $conn->close();
-}
-?>
+    ?>
 
 
 <!DOCTYPE html>
@@ -89,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="text-center text-lg-start mt-4 pt-2">
               <button  type="submit" class="btn btn-primary btn-sm">Login</button>
             </div>
-        </form>
         </div>
       </div>
     </div>
