@@ -1,0 +1,61 @@
+/* Custom Styles */
+body {
+    background-color: #f8f9fa;
+}
+
+.header-container {
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 20px;
+}
+
+.header-container h2 {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.form-section h3 {
+    color: #dc3545;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.btn-success {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-success:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.form-check-label {
+    font-weight: 500;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.logo {
+    width: 100px;
+}
+
+@media (max-width: 767px) {
+    .header-container img {
+        width: 80px;
+    }
+
+    .header-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .header-container p {
+        font-size: 0.9rem;
+    }
+
+    .form-section h3 {
+        font-size: 1.2rem;
+    }
+}
