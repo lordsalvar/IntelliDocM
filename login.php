@@ -1,13 +1,12 @@
-    <?php
-    session_start();
-    require_once 'database.php';
+<?php
+session_start();
+require_once 'database.php';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        // Get the database connection
-        $conn = getDbConnection();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    // Get the database connection
+    $conn = getDbConnection();
 
         // Fetch user details
         $stmt = $conn->prepare("
@@ -28,7 +27,7 @@
         if ($stmt->num_rows > 0) {
             // Debug output for fetched values
             echo "ID: $id, Role: $role, Designation: $designation<br>";
-
+            
             if (password_verify($password, $hashed_password)) {
                 // Store normalized designation in the session
                 $_SESSION['user_id'] = $id;
@@ -63,71 +62,57 @@
     ?>
 
 
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="css/login.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+</head>
 
-        <!-- Google Fonts: Poppins -->
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-        <!-- Bootstrap CSS -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-        <style>
-            body {
-                font-family: 'Poppins', sans-serif;
-                background-color: #4158D0;
-                background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
-                ;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
-
-            .login-container {
-                width: 100%;
-                max-width: 400px;
-                padding: 2rem;
-                background-color: #85c1e9;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-            }
-        </style>
-    </head>
-
-    <body>
-
-        <div class="login-container">
-            <h2 class="text-center">Login</h2>
-            <form method="POST" action="login.php">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="username" class="form-control" id="username" name="username" required placeholder="Enter your username">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
-                </div>
-
-                <?php if (isset($error)): ?>
-                    <div class="alert alert-danger"><?php echo $error; ?></div>
-                <?php endif; ?>
-
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </form>
+<body>
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-9 col-lg-6 col-xl-5">
+          <img src="images/draw2.webp"
+            class="img-fluid" alt="Sample image">
         </div>
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 
-
-
-        <!-- Bootstrap JS and dependencies -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-
-    </html>
+        <form method="POST" action="login.php">
+            <div>
+                <h2 class="text-center">Login</h2>
+            </div>
+  
+            <!-- Username input -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="username" class="form-control" id="username" name="username" required placeholder="Enter your username">
+            </div>
+  
+            <!-- Password input -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button  type="submit" class="btn btn-primary btn-sm">Login</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

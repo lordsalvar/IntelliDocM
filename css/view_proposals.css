@@ -1,0 +1,116 @@
+/* General Styles */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    background-color: #e31b23;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+h2 {
+    color: #e31b23;
+    font-weight: 700;
+}
+
+/* Table */
+.table {
+    margin-top: 20px;
+    background-color: #d71818; /* Table background color */
+    border-radius: 10px; /* Smoother corners */
+    overflow: hidden;
+    border-collapse: separate; /* Ensure rounded corners are visible */
+    border-spacing: 0; /* Remove space between table cells */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Add a subtle shadow for depth */
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.table th {
+    background-color: #e31b23; /* Header background color */
+    color: #ffffff; /* Header text color */
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #a22323; /* Odd row background color */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Even row background color */
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1; /* Row hover effect */
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6; /* Table cell border color */
+}
+
+
+/* Form */
+.form-select {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Buttons */
+.btn-primary.btn-sm {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0901fe;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary.btn-sm:hover {
+    background-color: #1f1f8f;
+}
+
+.btn-primary.btn-sm:active {
+    background-color: #bf0f1a;
+}
+/* Modal */
+.modal-header {
+    background-color: #e31b23;
+    color: #fff;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #666;
+    border: none;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #555;
+}
+
+.modal-footer .btn-danger {
+    background-color: #d11a20;
+    border: none;
+}
+
+.modal-footer .btn-danger:hover {
+    background-color: #bf0f1a;
+}
