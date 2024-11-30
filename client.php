@@ -47,8 +47,8 @@ $proposals_result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Proposals</title>
-    <link href="../css/styles.css" rel="" stylesheet">
+    <title>Client</title>
+    <link href="css/client.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
@@ -56,7 +56,7 @@ $proposals_result = $stmt->get_result();
     <?php include 'includes/clientnavbar.php'; ?>
 
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Submitted Proposals for <?= htmlspecialchars($club_name) ?></h2>
+        <h2 class="text-center text-white mb-4">Submitted Proposals for <?= htmlspecialchars($club_name) ?></h2>
 
         <!-- Proposals Table -->
         <?php if ($proposals_result && $proposals_result->num_rows > 0): ?>
