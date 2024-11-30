@@ -7,7 +7,12 @@
     <title>Request for Use of School Facilities - Cor Jesu College</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/booking.css">
-
+    <style>
+        .form-check {
+            margin-right: 10px;
+            /* Add spacing between checkbox and input fields */
+        }
+    </style>
 </head>
 
 <body>
@@ -24,6 +29,9 @@
             </div>
         </div>
 
+        <div class="text-center">
+            <h4>REQUEST FOR THE USE OF SCHOOL FACILITIES</h4>
+        </div>
         <form>
             <!-- Requesting Party Information -->
             <div class="form-section">
@@ -56,6 +64,8 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="Ladouix Hall" id="ladouix">
                     <label class="form-check-label" for="ladouix">Ladouix Hall</label>
+                    <input type="text" placeholder="Building??">
+                    <input type="text" placeholder="Time of Use">
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="Boulay Bldg." id="boulay">
@@ -124,6 +134,144 @@
                 <input type="text" name="Others" id="others" placeholder="others">
             </div>
 
+
+            <hr>
+            <hr>
+            <h3>Facilities Requested (Please check)</h3>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Ladouix Hall</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Boulay Bldg.</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Gymnasium</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Misereor Bldg.</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Polycarp Bldg.</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Coinindre Bldg.</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Piazza </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="ladouixHall" name="facilities[]" value="Ladouix Hall">
+                            <label class="form-check-label" for="ladouixHall">Xavier Hall</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Building or Room Number" name="facility_building">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time of Use" name="time_of_use">
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Approval Section -->
             <div class="form-section">
                 <h3>Approval</h3>
@@ -166,13 +314,44 @@
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="form-group">
-                <label>Requested by:</label>
-                <input type="text" class="form-control" placeholder="Printed Name & Signature">
-                <div>
-                    <input type="text" class="form-control" placeholder="Designation">
+        <div class="row mb-4 text-center">
+            <div class="col mb-4">
+                <div class="form-group col">
+                    <label>Requested by:</label>
+                    <input type="text" class="form-control" placeholder="Printed Name & Signature">
+                    <div>
+                        <input type="text" class="form-control" placeholder="Designation">
+                    </div>
                 </div>
+            </div>
+            <div class="col mb-4">
+                <div class="form-group col">
+                    <label>Cleared by:</label>
+                    <input type="text" class="form-control" placeholder="Printed Name & Signature">
+                    <div>
+                        <input type="text" class="form-control" placeholder="Designation">
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="form-group col">
+                    <label>Approved by:</label>
+                    <input type="text" class="form-control" placeholder="Printed Name & Signature">
+                    <div>
+                        <input type="text" class="form-control" placeholder="Designation">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row bm-4 text-center">
+            <div class="form-group col">
+                <label>Endorsed by:</label>
+                <input type="text" class="form-control" placeholder="Printed Name & Signature">
+            </div>
+            <div class="form-group col">
+                <label>Approved by:</label>
+                <input type="text" class="form-control" placeholder="Property Custodian">
             </div>
         </div>
     </div>

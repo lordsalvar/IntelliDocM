@@ -3,8 +3,11 @@ require_once 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
+    $full_name = $_POST['full_name'] ?? null;  // Capture full name if available
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role'];
+    $email = $_POST['email'];
+    $contact = $_POST['contact'];
 
     // Get the database connection
     $conn = getDbConnection();
@@ -16,16 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        echo "Username already exists";
+        $error_message = "Username already exists. Please try another.";
     } else {
         // Insert the new user
-        $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $password, $role);
+        $stmt = $conn->prepare("INSERT INTO users (username, full_name, password, role, email, contact) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $username, $full_name, $password, $role, $email, $contact);
 
         if ($stmt->execute()) {
-            echo "Registration successful";
+            $success_message = "Registration successful. You can now log in.";
         } else {
-            echo "Error: " . $stmt->error;
+            $error_message = "Error: " . $stmt->error;
         }
     }
 
@@ -47,14 +50,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container mt-5">
         <h2>Register</h2>
+        <?php if (isset($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $error_message; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($success_message)): ?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $success_message; ?>
+            </div>
+        <?php endif; ?>
+
         <form method="POST" action="register.php">
             <div class="form-group">
                 <label>Username:</label>
                 <input type="text" name="username" class="form-control" required>
             </div>
             <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" name="full_name" class="form-control" required>
+            </div>
+            <div class="form-group">
                 <label>Password:</label>
                 <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Contact:</label>
+                <input type="text" name="contact" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Role:</label>

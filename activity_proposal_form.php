@@ -52,14 +52,14 @@ function getClubData($conn, $user_id)
     return $result->fetch_assoc();
 }
 
-function getApplicantName($conn, $user_id)
+function getApplicantDetails($conn, $user_id)
 {
-    $sql = "SELECT full_name AS applicant_name FROM users WHERE id = ?";
+    $sql = "SELECT full_name AS applicant_name, contact AS applicant_contact FROM users WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    return $result->fetch_assoc()['applicant_name'] ?? '';
+    return $result->fetch_assoc() ?: ['applicant_name' => '', 'applicant_contact' => ''];
 }
 
 function getModeratorData($conn, $club_id)
@@ -93,7 +93,9 @@ $user_id = $_SESSION['user_id'];
 $club_data = getClubData($conn, $user_id);
 
 // Fetch applicant name
-$applicant_name = getApplicantName($conn, $user_id);
+$applicant_details = getApplicantDetails($conn, $user_id);
+$applicant_name = $applicant_details['applicant_name'];
+$applicant_contact = $applicant_details['applicant_contact'];
 
 // Fetch moderator name and designation
 $moderator_data = isset($club_data['club_id']) ? getModeratorData($conn, $club_data['club_id']) : ['moderator_name' => '', 'designation' => ''];
@@ -149,15 +151,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $applicant_name = $applicant_name;
     $applicant_signature = sanitize_input($_POST['applicantSignature'] ?? '');
     $applicant_designation = sanitize_input($_POST['applicantDesignation']);
-    $applicant_date_filed = sanitize_input($_POST['applicantDateFiled']);
-    $applicant_contact = sanitize_input($_POST['applicantContact']);
+    $applicant_date_filed = date('Y-m-d');
+    $applicant_contact = $applicant_contact;
     $moderator_name = $moderator_name;
     $moderator_signature = null;
     if (isset($_FILES['moderatorSignature']) && is_uploaded_file($_FILES['moderatorSignature']['tmp_name'])) {
         $moderator_signature = file_get_contents($_FILES['moderatorSignature']['tmp_name']);
     }
-    $moderator_date_signed = sanitize_input($_POST['moderatorDateSigned']);
-    $moderator_contact = sanitize_input($_POST['moderatorContact']);
+    $moderator_date_signed = null;
+    $moderator_contact = null;
     $faculty_signature = sanitize_input($_POST['facultySignature']);
     $faculty_contact = sanitize_input($_POST['facultyContact']);
     $dean_name = $dean_name;
@@ -263,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->bind_param("si", $qrFilePath, $proposal_id);
 
         if ($updateStmt->execute()) {
-            echo "<script>alert('Proposal submitted and QR code for applicant generated successfully!'); window.location.href='client_view.php?id=$id';</script>";
+            echo "<script>alert('Proposal submitted and QR code for applicant generated successfully!')</script>";
         } else {
             echo "<div class='alert alert-danger'>Error generating QR code: " . $updateStmt->error . "</div>";
         }

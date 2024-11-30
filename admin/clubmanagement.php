@@ -382,10 +382,10 @@ function handleAddClub()
     <hr>
     <hr>
     <div class="container mt-3">
-        <h2>Add New Club</h2>
+        <h2>Add New Organization</h2>
         <form id="addClubForm">
             <div class="form-group">
-                <label>Club Name:</label>
+                <label>Organization Name:</label>
                 <input type="text" id="clubName" name="clubName" class="form-control" required>
             </div>
             <div class="form-group">

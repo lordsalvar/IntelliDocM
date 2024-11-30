@@ -1,5 +1,5 @@
 <?php
-require_once '../database.php';
+require_once 'database.php';
 // Client Calendar.php
 
 date_default_timezone_set('Asia/Manila');
@@ -90,7 +90,7 @@ while ($currentDay <= $daysInMonth) {
 
     // Fetch events from the database for the current day
     $eventHtml = "";
-    $sql = "SELECT event_id, event_title, event_description FROM events WHERE event_start_date <= '$currentDate' AND event_end_date >= '$currentDate'";
+    $sql = "SELECT event_title, event_description FROM events WHERE event_start_date <= '$currentDate' AND event_end_date >= '$currentDate'";
     $result = $conn->query($sql);
     if ($result === false) {
         die("SQL error: " . $conn->error);
@@ -100,12 +100,16 @@ while ($currentDay <= $daysInMonth) {
     if ($blocked) {
         $highlightClass = 'bg-white'; // Keep the background white for consistency
         while ($row = $result->fetch_assoc()) {
-            $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-calendar-alt'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
-            $eventHtml .= "<button class='btn btn-danger btn-sm mt-1' onclick=\"event.stopPropagation(); deleteEvent({$row['event_id']})\">Delete</button>";
+            if ($row['event_title'] === 'Blocked Event') {
+                $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-lock'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
+            } else {
+                $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-calendar-alt'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
+            }
         }
     }
 
-    $calendar .= "<td class='align-middle $highlightClass' data-date='$currentDate' data-blocked='" . ($blocked ? "true" : "false") . "'>";
+    $modalFunction = $blocked ? "showEventDetailsModal('$currentDate')" : "showRequestModal('$currentDate')";
+    $calendar .= "<td class='align-middle $highlightClass' onclick=\"$modalFunction\">";
     $calendar .= "<div class='day-number badge badge-pill badge-light py-1 px-2 mb-2'>$currentDay</div>";
     $calendar .= "<div class='mt-2'>$eventHtml</div>";
     $calendar .= "</td>";
@@ -132,6 +136,42 @@ $calendar .= "</div>";
 echo $calendar;
 ?>
 
+<!-- Modal for Requesting Event Block -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="requestModalLabel">Request Date Block</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="requestEventForm">
+                    <div class="mb-3">
+                        <label for="requestTitle" class="form-label">Event Title</label>
+                        <input type="text" class="form-control" id="requestTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requestDescription" class="form-label">Event Description</label>
+                        <textarea class="form-control" id="requestDescription"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requestStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="requestStartDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requestEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="requestEndDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="requestEventBlock()">Request Block</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal for Viewing Event Details -->
 <div class="modal fade" id="viewEventModal" tabindex="-1" aria-labelledby="viewEventModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -150,42 +190,6 @@ echo $calendar;
     </div>
 </div>
 
-<!-- Modal for Adding Event -->
-<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addEventForm">
-                    <div class="mb-3">
-                        <label for="addEventTitle" class="form-label">Event Title</label>
-                        <input type="text" class="form-control" id="addEventTitle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addEventDescription" class="form-label">Event Description</label>
-                        <textarea class="form-control" id="addEventDescription"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addEventStartDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="addEventStartDate" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addEventEndDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="addEventEndDate" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addEvent()">Add Event</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -193,19 +197,7 @@ echo $calendar;
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Attach click event to each calendar cell to open the appropriate modal using event delegation
-        $('table.table tbody').on('click', 'td[data-date]', function() {
-            console.log('Cell clicked'); // Debugging line to ensure the function is being triggered
-            const date = $(this).data('date');
-            const blocked = $(this).data('blocked');
-
-            if (blocked === true || blocked === "true") {
-                showEventDetailsModal(date);
-            } else {
-                showAddEventModal(date);
-            }
-        });
-
+        // Attach click event to each calendar cell to open the appropriate modal
         window.showRequestModal = function(date) {
             $('#requestModalLabel').text('Request Block for ' + date);
             $('#requestStartDate').val(date);
@@ -248,21 +240,13 @@ echo $calendar;
                 }
             });
         }
-
-        window.showAddEventModal = function(date) {
-            $('#addEventModalLabel').text('Add Event for ' + date);
-            $('#addEventStartDate').val(date);
-            $('#addEventEndDate').val(date);
-            $('#addEventForm').data('date', date);
-            $('#addEventModal').modal('show');
-        }
     });
 
-    function addEvent() {
-        const title = document.getElementById('addEventTitle').value.trim();
-        const description = document.getElementById('addEventDescription').value.trim();
-        const startDate = document.getElementById('addEventStartDate').value.trim();
-        const endDate = document.getElementById('addEventEndDate').value.trim();
+    function requestEventBlock() {
+        const title = document.getElementById('requestTitle').value.trim();
+        const description = document.getElementById('requestDescription').value.trim();
+        const startDate = document.getElementById('requestStartDate').value.trim();
+        const endDate = document.getElementById('requestEndDate').value.trim();
 
         // Validate that no fields are empty
         if (!title || !startDate || !endDate) {
@@ -272,7 +256,7 @@ echo $calendar;
 
         $.ajax({
             type: 'POST',
-            url: 'add_event.php',
+            url: 'request_event.php',
             data: {
                 event_title: title,
                 event_description: description,
@@ -284,7 +268,7 @@ echo $calendar;
                     const result = JSON.parse(response);
                     if (result.status === 'success') {
                         alert(result.message);
-                        $('#addEventModal').modal('hide');
+                        $('#requestModal').modal('hide');
                         location.reload();
                     } else {
                         alert('Error: ' + result.message);
@@ -295,38 +279,7 @@ echo $calendar;
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error('AJAX Error:', textStatus, errorThrown);
-                alert('Failed to add event due to server error. Please try again.');
-            }
-        });
-    }
-
-    function deleteEvent(eventId) {
-        if (!confirm('Are you sure you want to delete this event?')) {
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: 'delete_event.php', // Make sure this file exists and is properly implemented
-            data: {
-                event_id: eventId
-            },
-            success: function(response) {
-                try {
-                    const result = JSON.parse(response);
-                    if (result.status === 'success') {
-                        alert(result.message);
-                        location.reload();
-                    } else {
-                        alert('Error: ' + result.message);
-                    }
-                } catch (e) {
-                    alert('Unexpected response from the server: ' + response);
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error('AJAX Error:', textStatus, errorThrown);
-                alert('Failed to delete event due to server error. Please try again.');
+                alert('Failed to send request due to server error. Please try again.');
             }
         });
     }
