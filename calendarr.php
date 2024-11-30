@@ -100,11 +100,8 @@ while ($currentDay <= $daysInMonth) {
     if ($blocked) {
         $highlightClass = 'bg-white'; // Keep the background white for consistency
         while ($row = $result->fetch_assoc()) {
-            if ($row['event_title'] === 'Blocked Event') {
-                $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-lock'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
-            } else {
-                $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-calendar-alt'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
-            }
+            $eventHtml .= "<div class='event text-info mt-2'><i class='fas fa-calendar-alt'></i> <strong>{$row['event_title']}</strong><br><small>{$row['event_description']}</small></div>";
+            $eventHtml .= "<button class='btn btn-danger btn-sm mt-1' onclick=\"event.stopPropagation(); deleteEvent({$row['event_id']})\">Delete</button>";
         }
     }
 
@@ -299,6 +296,37 @@ echo $calendar;
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error('AJAX Error:', textStatus, errorThrown);
                 alert('Failed to add event due to server error. Please try again.');
+            }
+        });
+    }
+
+    function deleteEvent(eventId) {
+        if (!confirm('Are you sure you want to delete this event?')) {
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'delete_event.php', // Make sure this file exists and is properly implemented
+            data: {
+                event_id: eventId
+            },
+            success: function(response) {
+                try {
+                    const result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        alert(result.message);
+                        location.reload();
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (e) {
+                    alert('Unexpected response from the server: ' + response);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX Error:', textStatus, errorThrown);
+                alert('Failed to delete event due to server error. Please try again.');
             }
         });
     }
