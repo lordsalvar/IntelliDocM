@@ -1,0 +1,333 @@
+/* General Styles */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Styles */
+header {
+    padding: 15px 20px;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Container Styles */
+.container {
+    background-color: white;
+    padding: 20px 30px;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+}
+
+/* Form Section Styles */
+h2 {
+    color: #e31b23;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: inline-block;
+    color: #333;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: #e31b23;
+    box-shadow: 0 0 5px rgba(227, 27, 35, 0.5);
+}
+
+textarea {
+    resize: none;
+}
+
+/* Form Section Headers */
+.form-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-left: 5px solid #e31b23;
+    border-radius: 5px;
+}
+
+/* Checkbox and Radio Styles */
+.form-check-input {
+    accent-color: #e31b23;
+}
+
+.form-check-label {
+    margin-left: 5px;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: #e31b23;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #c92327;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;/* General Styles */
+    body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Navbar Styles */
+    header {
+        background-color: #e31b23;
+        padding: 15px 20px;
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Container Styles */
+    .container {
+        background-color: white;
+        padding: 20px 30px;
+        margin: 50px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+    }
+    
+    /* Form Section Styles */
+    h2 {
+        color: #e31b23;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: inline-block;
+        color: #333;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-size: 1rem;
+        color: #333;
+    }
+    
+    .form-control:focus {
+        border-color: #e31b23;
+        box-shadow: 0 0 5px rgba(227, 27, 35, 0.5);
+    }
+    
+    textarea {
+        resize: none;
+    }
+    
+    /* Form Section Headers */
+    .form-section {
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-left: 5px solid #e31b23;
+        border-radius: 5px;
+    }
+    
+    /* Checkbox and Radio Styles */
+    .form-check-input {
+        accent-color: #e31b23;
+    }
+    
+    .form-check-label {
+        margin-left: 5px;
+    }
+    
+    /* Submit Button */
+    button[type="submit"] {
+        background-color: #e31b23;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #c92327;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 600;
+        margin-top: 20px;
+        text-decoration: none;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+        text-decoration: none;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+            margin: 20px;
+        }
+    
+        label {
+            font-size: 0.9rem;
+        }
+    
+        button[type="submit"], .btn-success {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+    }
+    
+    /* Table */
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    
+    .table th {
+        background-color: #e31b23;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    /* Footer */
+    footer {
+        background-color: #e31b23;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+    
+    border-radius: 5px;
+    font-weight: 600;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 20px;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    button[type="submit"], .btn-success {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+/* Table */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #e31b23;
+    color: white;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Footer */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}

@@ -1,10 +1,20 @@
 /* General Styles */
 body {
+    overflow-y: auto; /* Allow vertical scrolling */
     font-family: "Poppins", sans-serif;
     background-color: #f0f4f8;
     color: #333;
     margin: 0;
     padding: 0;
+}
+
+header {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: auto;
 }
 
 /* Container */
@@ -13,19 +23,24 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
-    margin-top: 40px;
+    margin: 50px auto;
+    position: relative;
+    width: 90%; /* Adjust width for responsiveness */
+    max-width: 1200px; /* Optional: Maximum width for larger screens */
 }
 
 /* Header */
 h2 {
-    color: #e31b23;
+    color: #ffffff; /* Use white text for contrast */
     font-weight: 700;
-    margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Table */
 .table {
     margin-top: 20px;
+    margin-bottom: 20px;
     background-color: #e31b23; /* Table background color */
     border-radius: 10px; /* Smoother corners */
     overflow: hidden;
@@ -34,15 +49,19 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Add a subtle shadow for depth */
 }
 
-.table th, .table td {
+.table th,
+.table td {
     text-align: center;
     vertical-align: middle;
     padding: 10px;
+    word-wrap: break-word; /* Prevent overflow for long text */
 }
 
 .table th {
     background-color: #e31b23; /* Header background color */
     color: #ffffff; /* Header text color */
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .table tbody tr:nth-child(odd) {
@@ -63,11 +82,10 @@ h2 {
 }
 
 /* Buttons */
-/* Button Styles */
 .btn-primary.btn-sm {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     text-align: center;
     text-decoration: none;
@@ -86,14 +104,14 @@ h2 {
     background-color: #bf0f1a;
 }
 
-
 /* Footer */
 footer {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
     background-color: #e31b23;
     color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: 20px; /* Add margin for spacing */
 }
 
 /* Responsive Design */
@@ -102,7 +120,8 @@ footer {
         font-size: 1.5rem;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         padding: 8px;
     }
 
