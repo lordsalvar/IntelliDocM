@@ -34,7 +34,8 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Add a subtle shadow for depth */
 }
 
-.table th, .table td {
+.table th,
+.table td {
     text-align: center;
     vertical-align: middle;
     padding: 10px;
@@ -86,7 +87,6 @@ h2 {
     background-color: #bf0f1a;
 }
 
-
 /* Footer */
 footer {
     margin-top: 20px;
@@ -102,7 +102,8 @@ footer {
         font-size: 1.5rem;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         padding: 8px;
     }
 
