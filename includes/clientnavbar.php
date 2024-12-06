@@ -79,11 +79,18 @@ if (substr($basePath, -1) !== '/') {
                     </button>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
+                    <a class="nav-link" href="logout.php" onclick="return confirmLogout()">Logout</a>
                 </li>
             </ul>
         </div>
     </div>
+
+    <script>
+        function confirmLogout() {
+            return confirm("Erika sure ka mo log out naka?");
+        }
+    </script>
+
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
