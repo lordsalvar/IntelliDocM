@@ -203,6 +203,7 @@ function handleAddClub()
 <head>
     <meta charset="UTF-8">
     <title>Club Management</title>
+    <link href="../css/clubManagement.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
@@ -375,12 +376,10 @@ function handleAddClub()
 </head>
 
 <body>
-
-
+<header>
     <?php include '../includes/navbar.php' ?>
-    <hr>
-    <hr>
-    <hr>
+    </header>
+    
     <div class="container mt-3">
         <h2>Add New Organization</h2>
         <form id="addClubForm">
@@ -559,7 +558,9 @@ function handleAddClub()
             </div>
         </div>
     </div>
+    <footer>
     <?php include '../includes/footer.php' ?>
+    </footer>
 </body>
 
 </html>
