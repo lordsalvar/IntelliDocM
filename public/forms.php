@@ -1,11 +1,5 @@
 <?php
 
-session_start();
-if ($_SESSION['role'] !== 'client') {
-    header('Location: login.php');
-    exit();
-}
-require_once '../database.php';
 
 ?>
 <!DOCTYPE html>
