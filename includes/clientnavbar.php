@@ -37,7 +37,7 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/main/IntelliDocM/public/forms.php">Student Activities Forms</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/public/forms.php">Student Activity Form</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -47,7 +47,7 @@ if (substr($basePath, -1) !== '/') {
 
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/main/IntelliDocM/logout.php">Logout</a>
+                        <a class="nav-link text-white" href="logout.php" onclick="return confirmLogout()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -87,7 +87,7 @@ if (substr($basePath, -1) !== '/') {
 
     <script>
         function confirmLogout() {
-            return confirm("Erika sure ka mo log out naka?");
+            return confirm("Are you sure you want to logout?");
         }
     </script>
 
