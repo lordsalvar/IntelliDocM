@@ -7,8 +7,18 @@ body {
     padding: 0;
 }
 
+header {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: auto;
+}
+
 /* Container */
 .container {
+    margin-top: 40px;
     background-color: #e31b23;
     padding: 20px;
     border-radius: 10px;
@@ -73,7 +83,7 @@ h2 {
 .btn-primary.btn-sm {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     text-align: center;
     text-decoration: none;
@@ -113,4 +123,14 @@ h2 {
 
 .modal-footer .btn-danger:hover {
     background-color: #bf0f1a;
+}
+
+/* Footer */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: auto; /* Ensure footer stays at the bottom of content */
 }

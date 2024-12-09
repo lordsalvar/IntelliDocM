@@ -53,7 +53,9 @@ $proposals_result = $stmt->get_result();
 </head>
 
 <body>
-    <?php include 'includes/clientnavbar.php'; ?>
+    <header>
+        <?php include 'includes/clientnavbar.php'; ?>
+    </header>
 
     <div class="container mt-5">
         <h2 class="text-center text-white mb-4">Submitted Proposals for <?= htmlspecialchars($club_name) ?></h2>
@@ -91,7 +93,9 @@ $proposals_result = $stmt->get_result();
         <?php endif; ?>
     </div>
 
+<footer>
     <?php include 'includes/footer.php'; ?>
+        </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
