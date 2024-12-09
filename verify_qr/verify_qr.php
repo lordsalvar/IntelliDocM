@@ -1,6 +1,6 @@
 <?php
 // Include database connection
-include '/main/IntelliDocM/database.php';
+include '../database.php';
 
 // Start session
 session_start();
@@ -87,7 +87,7 @@ if (isset($_GET['proposal_id']) && isset($_GET['signed_by'])) {
         <?php endif; ?>
 
         <div class="text-center mt-4">
-            <a href="/" class="btn btn-secondary">Back to Home</a>
+            <a href="/main/IntelliDocM/client.php" class="btn btn-secondary">Back to Home</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

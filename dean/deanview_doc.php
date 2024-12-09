@@ -16,11 +16,7 @@ $stmt->close();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
     // Generate QR Code content
-    $qrData = json_encode([
-        'proposal_id' => $proposal['proposal_id'],
-        'activity_title' => $proposal['activity_title'],
-        'dean_name' => $proposal['dean_name'],
-    ]);
+    $qrData = "http://192.168.0.106/main/IntelliDocM/verify_qr/dean_verify_qr.php?proposal_id=" . urlencode($proposal['proposal_id']) . "&dean_name=" . urlencode($proposal['dean_name']);
 
     // Define the directory to save QR codes
     $qrDirectory = "../dean_qr_codes";

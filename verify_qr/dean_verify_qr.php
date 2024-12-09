@@ -9,10 +9,11 @@ session_start();
 $verificationResult = null;
 $errorMessage = null;
 
-// Check if proposal_id and moderator_name are provided in the URL
-if (isset($_GET['proposal_id']) && isset($_GET['moderator_name'])) {
+// Check if proposal_id and dean_name are provided in the URL
+if (isset($_GET['proposal_id']) && isset($_GET['dean_name'])) {
     $proposal_id = (int)$_GET['proposal_id'];
-    $moderator_name = htmlspecialchars($_GET['moderator_name']);
+    $dean_name = htmlspecialchars($_GET['dean_name']);
+    $dean_name = "dean";
 
     // Verify the proposal in the database
     $sql = "SELECT * FROM activity_proposals WHERE proposal_id = ?";
@@ -26,9 +27,9 @@ if (isset($_GET['proposal_id']) && isset($_GET['moderator_name'])) {
         $verificationResult = [
             'Proposal ID' => $proposal['proposal_id'],
             'Activity Title' => $proposal['activity_title'],
-            'Moderator Name' => $moderator_name,
-            'Activity Date' => $proposal['activity_date'],
-            'Venue' => $proposal['venue'],
+            'Dean Name' => $dean_name,
+            'Approval Status' => $proposal['status'],
+            'Remarks' => $proposal['rejection_reason'] ?: 'None',
         ];
     } else {
         $errorMessage = "Invalid or unrecognized QR code.";
@@ -43,7 +44,7 @@ if (isset($_GET['proposal_id']) && isset($_GET['moderator_name'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moderator QR Code Verification</title>
+    <title>Dean QR Code Verification</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
@@ -63,7 +64,7 @@ if (isset($_GET['proposal_id']) && isset($_GET['moderator_name'])) {
 <body>
     <div class="container">
         <div class="text-center">
-            <h1 class="my-4">Moderator QR Code Verification</h1>
+            <h1 class="my-4">Dean QR Code Verification</h1>
         </div>
 
         <?php if ($verificationResult): ?>
