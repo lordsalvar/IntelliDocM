@@ -2,7 +2,7 @@
 include '../database.php';
 session_start();
 // Allow only users with the designation 'dean'
-if (!isset($_SESSION['designation']) || ($_SESSION['designation']) !== 'dean') {
+if (!isset($_SESSION['designation']) || ($_SESSION['designation']) !== 'moderator') {
     // Redirect to login page if the user is not a dean
     header('Location: /main/IntelliDocM/login.php'); // Use the absolute path to the login page
     exit();
@@ -77,12 +77,6 @@ $result = $stmt->get_result();
                             <td class="text-center"><?= htmlspecialchars($row['end_time'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['status'] ?? 'Pending') ?></td>
                             <td class="text-center">
-                                <a href="../approvals/approve.php?id=<?= $row['proposal_id'] ?>" class="btn btn-success btn-sm">Approve</a>
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#rejectModal"
-                                    data-id="<?= $row['proposal_id'] ?>">Reject</button>
                                 <a href="modview_doc.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
                             </td>
                         </tr>

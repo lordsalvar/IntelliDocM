@@ -239,11 +239,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $proposal_id = $stmt->insert_id;
 
         // Generate QR Code for Applicant Signature
-        $qrData = json_encode([
-            'proposal_id' => $proposal_id,
-            'applicant_name' => $applicant_name,
-            'activity_title' => $activity_title,
-        ]);
+        $qrData = "http://192.168.0.106/main/IntelliDocM/verify_qr/verify_qr.php?proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
+
 
         // Define the directory to save QR codes
         $qrDirectory = "client_qr_codes";
@@ -266,6 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($updateStmt->execute()) {
             echo "<script>alert('Proposal submitted and QR code for applicant generated successfully!')</script>";
+            echo "<script>window.location.href = '/main/IntelliDocM/client.php';</script>";
         } else {
             echo "<div class='alert alert-danger'>Error generating QR code: " . $updateStmt->error . "</div>";
         }
