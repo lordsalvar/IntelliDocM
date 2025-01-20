@@ -286,29 +286,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Activity Proposal Form</title>
+    <link href="css/act_Pro.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .form-control[readonly],
-        .form-check-input[disabled] {
-            background-color: #e9ecef;
-            color: #6c757d;
-        }
-    </style>
+    
+    
 </head>
 
 <body>
 
-    <!-- Include Navbar -->
-    <?php include 'includes/clientnavbar.php'; ?>
+
 
     <!-- Include Sidebar -->
     <div class="container my-5">
+    <a class="btn btn-secondary mb-3" href="client.php"> ← Back </a>
         <h2 class="text-center">ACTIVITY PROPOSAL FORM</h2>
         <form method="POST" action="">
             <!-- Add CSRF token -->

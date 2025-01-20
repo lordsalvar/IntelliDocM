@@ -8,10 +8,14 @@
 
 <!-- Optional CSS for Background and Text Styling -->
 <style>
-    footer {
+footer {
+    margin-top: 100px;
     background-color: #e31b23;
     color: white;
-    padding: 15px;
     text-align: center;
-    }
+    padding: 0px;
+    position: relative; /* Ensure the footer is at the bottom of the page */
+    bottom: 0;
+    width: 100%;
+}
 </style>
