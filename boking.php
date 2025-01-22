@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
 
     <head>
@@ -13,13 +13,24 @@
     </head>
 
     <body>
-        <div class="container mt-5 bg-white p-4 shadow-sm rounded">
-            <div class="header-container text-center mb-4">
-                <img src="css/img/cjc_logo.png" alt="CJC Logo" class="logo mb-3">
-                <h2>COR JESU COLLEGE, INC.</h2>
-                <p>Sacred Heart Avenue, Digos City, Province of Davao del Sur, Philippines</p>
-                <p>Tel: (082) 553-2433 local 101 | Fax: (082) 553-2333 | Website: <a href="http://www.cjc.edu.ph">www.cjc.edu.ph</a></p>
-            </div>
+        <div class="container mt-5">
+            <!-- Overlay Box -->
+<div class="overlay-box">
+        <p><strong>Index No.:</strong> <u> 7.3 </u></p>
+        <p><strong>Revision No.:</strong> <u> 00 </u></p>
+        <p><strong>Effective Date:</strong> <u> 05/16/24 </u></p>
+        <p><strong>Control No.:</strong> ___________</p>
+    </div>
+    <div class="header-content">
+    <img src="css/img/cjc_logo.png" alt="Logo" class="header-logo">
+    <div class="header-text">
+        <h2 class="text-center text-uppercase">Cor Jesu College, Inc.</h2>
+        <div class="line yellow-line"></div>
+        <div class="line blue-line"></div>
+        <p class="text-center">Sacred Heart Avenue, Digos City, Province of Davao del Sur, Philippines</p>
+        <p class="text-center">Tel. No.: (082) 553-2433 local 101 • Fax No.: (082) 553-2333 • www.cjc.edu.ph</p>
+    </div>
+</div>
 
             <div class="text-center mb-4">
                 <h4 class="text-uppercase">Request for the Use of School Facilities</h4>

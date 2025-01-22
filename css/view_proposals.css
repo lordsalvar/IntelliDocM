@@ -32,7 +32,15 @@ h2 {
 }
 
 /* Table */
+
+/* Table Wrapper for Responsiveness */
+.table-responsive {
+    overflow-x: auto; /* Allow horizontal scrolling for overflow content */
+    border-radius: 10px; /* Rounded corners for the wrapper */
+    background-color: white; /* Ensure a clean look */
+}
 .table {
+    width: 100%;
     margin-top: 20px;
     background-color: #d71818; /* Table background color */
     border-radius: 10px; /* Smoother corners */

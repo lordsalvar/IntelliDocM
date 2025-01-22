@@ -1,61 +1,151 @@
-/* Custom Styles */
+/* General Styles */
 body {
+    font-family: "Poppins", sans-serif;
     background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-.header-container {
-    border-bottom: 2px solid #dc3545;
-    padding-bottom: 20px;
+/* Container Styles */
+.container {
+    position: relative; /* Make the container a positioning context */
+    background-color: white;
+    padding: 20px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1100px; /* Adjust width for larger content */
+    height: auto; /* Adjust height automatically based on content */
+    overflow-y: auto; /* Add scrolling for overflow */
+    max-height: 90vh; /* Prevent it from exceeding viewport height */
 }
 
-.header-container h2 {
-    color: #dc3545;
+/* Overlay Box */
+.overlay-box {
+    position: absolute;
+    top: 40px; /* Adjust vertical position */
+    right: 20px; /* Adjust horizontal position */
+    background-color: white;
+    border: 1px solid #000;
+    padding: 15px; /* Increase padding for a balanced layout */
+    text-align: left;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 220px; /* Adjust width for better alignment */
+    border-radius: 5px; /* Add subtle rounded corners */
+}
+
+/* Adjust paragraphs inside the overlay-box */
+.overlay-box p {
+    margin: 5px 0; /* Add vertical spacing between lines */
+    font-size: 0.9rem; /* Consistent font size */
+    line-height: 1.4; /* Improve readability */
+}
+
+.overlay-box strong {
     font-weight: bold;
 }
 
+.overlay-box u {
+    text-decoration: underline;
+    font-size: 0.9rem; /* Match the font size with other text */
+}
+
+
+/* Header Logo */
+.header-logo {
+    float: left;
+    margin-left: 55px;
+    margin-right: 30px; /* Add spacing between logo and text */
+    height: 120px; /* Adjust height of the logo */
+    width: auto; /* Maintain aspect ratio */
+    border-radius: 50%;
+    border: 2px solid #e31b23;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+.header-content {
+    margin-right: 150px;
+}
+
+.header-text {
+    margin-left: 170px;
+}
+
+.header-text h2 {
+    color: #e31b23;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 45px;
+    font-weight:bold;
+}
+
+.header-text p {
+    color: #e31b23;
+}
+
+.line {
+    width: 115%;
+    height: 5px;
+}
+
+.yellow-line {
+    background-color: #ffd700; /* Yellow */
+}
+
+.blue-line {
+    background-color: #0000ff; /* Blue */
+    margin-top: 1px; /* Overlap with yellow */
+}
+
+/* Form Section Headers */
 .form-section h3 {
-    color: #dc3545;
-    margin-top: 40px;
-    margin-bottom: 20px;
-    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
 }
 
-.btn-success {
-    background-color: #dc3545;
-    border-color: #dc3545;
+/* Form Labels */
+.form-label {
+    font-size: 0.9rem;
 }
 
-.btn-success:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
-
-.form-check-label {
-    font-weight: 500;
-}
-
+/* Input Fields */
 .form-control {
-    border-radius: 0;
+    font-size: 0.8rem;
+    padding: 8px;
 }
 
-.logo {
-    width: 100px;
+/* Facilities List */
+#facilities-list .form-group {
+    margin-bottom: 10px;
 }
 
-@media (max-width: 767px) {
-    .header-container img {
-        width: 80px;
-    }
+/* Checkboxes */
+.form-check-label {
+    font-size: 0.8rem;
+}
 
-    .header-container h2 {
-        font-size: 1.5rem;
-    }
+/* Overlay Box */
+.overlay-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: white;
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: left;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 200px;
+}
 
-    .header-container p {
-        font-size: 0.9rem;
-    }
-
-    .form-section h3 {
-        font-size: 1.2rem;
-    }
+/* Buttons */
+button, .btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
 }

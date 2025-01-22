@@ -15,13 +15,16 @@ require_once '../database.php';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forms</title>
-    <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/forms.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    
 </head>
 
 <body>
-    <?php include '../includes/clientnavbar.php'; ?>
+        <header>
+            <?php include '../includes/clientnavbar.php'; ?>
+        </header>
+
 
     <div class="container mt-5">
         <div class="text-center mb-5">
@@ -48,29 +51,12 @@ require_once '../database.php';
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">Parent Consent Form</h5>
+                        <h5 class="card-title">Available Dates For Facilities</h5>
                         <p class="card-text">
-                            Get parental consent for activity participation.
+                            Get Available Dates For Each Facility.
                         </p>
                         <a
-                            href="parent_consent_form."
-                            class="btn btn-primary">Access Form</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Affidavit of Consent Form -->
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Affidavit of Consent Form
-                        </h5>
-                        <p class="card-text">
-                            Submit your affidavit of consent for activities.
-                        </p>
-                        <a
-                            href="affidavit_consent_form.html"
+                            href="../booking/facilityBooking.php"
                             class="btn btn-primary">Access Form</a>
                     </div>
                 </div>

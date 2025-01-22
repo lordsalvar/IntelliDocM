@@ -37,14 +37,12 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="activity_proposal_form.php">Activity Proposal Form</a>
+                        <a class="nav-link text-white" href="public/forms.php">Student Activities</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
                             Notification
                         </button>
-
-
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/main/IntelliDocM/logout.php">Logout</a>
@@ -66,10 +64,10 @@ if (substr($basePath, -1) !== '/') {
                     <a class="nav-link" href="client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../public/forms.php">Student Activities Forms</a>
+                    <a class="nav-link" href="public/forms.php">Student Activities Forms</a>
                 </li>
                 <li class="nav-item">
-                    <button type="button" class="btn btn-red text-white position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                    <button type="button" class="btn btn-red text-black position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
                         Notification
                         <?php if (!empty($notifications)): ?>
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">

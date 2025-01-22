@@ -53,6 +53,7 @@ $result = $stmt->get_result();
     <hr>
     <div class="container mt-5">
         <h2 class="text-center text-white mb-4">Submitted Proposals</h2>
+        <div class="table-responsive">
 
         <?php if ($result && $result->num_rows > 0): ?>
             <table class="table table-striped table-bordered">
@@ -94,6 +95,7 @@ $result = $stmt->get_result();
         <?php endif; ?>
 
         <?php $conn->close(); ?>
+        </div>
     </div>
 
     <!-- Reject Modal -->
@@ -124,7 +126,7 @@ $result = $stmt->get_result();
 <footer>
     <?php include '../includes/footer.php' ?>
         </footer>
-        
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

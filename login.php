@@ -40,16 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Use normalized designation for comparison
                 if ($role === 'admin') {
-                    header('Location: /main/IntelliDocM/admin/view_proposals.php');
+                    header('Location: admin/view_proposals.php');
                     exit();
                 } elseif ($_SESSION['designation'] === 'moderator') {
-                    header('Location: /main/IntelliDocM/moderator/moderator_view.php');
+                    header('Location: moderator/moderator_view.php');
                     exit();
                 } elseif ($_SESSION['designation'] === 'dean') {
-                    header('Location: /main/IntelliDocM/dean/dean_view.php');
+                    header('Location: dean/dean_view.php');
                     exit();
                 } else {
-                    header('Location: /main/IntelliDocM/client.php');
+                    header('Location: client.php');
                     exit();
                 }
             } else {
