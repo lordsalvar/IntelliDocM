@@ -1,0 +1,25 @@
+/* Apply styles to the container */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Center the row containing the cards */
+.row {
+    display: flex;
+    justify-content: center; /* Center cards horizontally */
+}
+
+/* Optional styling for cards to enhance appearance */
+.card {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    border-radius: 8px; /* Rounded corners */
+    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
