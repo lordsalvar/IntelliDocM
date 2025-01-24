@@ -1,3 +1,24 @@
+<?php
+session_start([
+    'cookie_lifetime' => 3600, // Session expires after 1 hour
+    'cookie_httponly' => true, // Prevent JavaScript access
+    'cookie_secure' => isset($_SERVER['HTTPS']), // HTTPS only
+    'use_strict_mode' => true // Strict session handling
+]);
+
+// Prevent session fixation
+session_regenerate_id(true);
+
+// Check user role
+if ($_SESSION['role'] !== 'client') {
+    header('Location: ../login.php');
+    exit();
+}
+
+// Include database connection
+include '../database.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,7 +73,6 @@
         <h3>Select Facilities</h3>
         <div class="checkbox-container">
             <?php
-            include '../database.php'; // Include your existing database connection file
 
             $conn = getDbConnection(); // Use the global connection defined in your included file
 
@@ -84,10 +104,35 @@
                 echo '<p>No facilities available.</p>';
             }
             ?>
+
         </div>
         <button onclick="showDates()">Show Dates</button>
         <!-- Back Button -->
         <button onclick="location.href='../public/forms.php';" class="back-button">Back to Forms</button>
+
+        <br>
+        <!-- Needs to be updated to a button that calls a modal so everyone is happy.-->
+        <div class="block-request-form">
+            <h3>Request Block Date</h3>
+            <form id="blockRequestForm" method="POST" action="process_block_request.php">
+                <label for="facility">Select Facility:</label>
+                <select name="facility" id="facility" required>
+                    <?php
+                    $facilitiesQuery = "SELECT id, name FROM facilities";
+                    $facilitiesResult = $conn->query($facilitiesQuery);
+                    while ($row = $facilitiesResult->fetch_assoc()) {
+                        echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+                    }
+                    ?>
+                </select>
+
+                <label for="date">Select Date:</label>
+                <input type="date" name="date" id="date" required>
+
+                <button type="submit">Submit Block Request</button>
+            </form>
+        </div>
+
     </div>
 
     <!-- Modal -->

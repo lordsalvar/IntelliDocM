@@ -162,3 +162,16 @@ INSERT INTO facility_availability (facility_id, date, status) VALUES
 (16, '2025-04-04', 'blocked'), (16, '2025-04-11', 'unavailable'), (16, '2025-04-18', 'blocked'),
 -- Atrium
 (17, '2025-05-05', 'blocked'), (17, '2025-05-12', 'unavailable'), (17, '2025-05-19', 'blocked');
+
+
+CREATE TABLE block_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    club_id INT NOT NULL,         -- References the club submitting the block request
+    facility_id INT NOT NULL,     -- References the facility to be blocked
+    date DATE NOT NULL,           -- The date being requested for the block
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending', -- Current request status
+    requested_by INT NOT NULL,    -- The user who submitted the block request
+    FOREIGN KEY (club_id) REFERENCES clubs(id),
+    FOREIGN KEY (facility_id) REFERENCES facilities(id),
+    FOREIGN KEY (requested_by) REFERENCES users(id)
+);
