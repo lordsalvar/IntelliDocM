@@ -19,7 +19,7 @@
         <p><strong>Index No.:</strong> <u> 7.3 </u></p>
         <p><strong>Revision No.:</strong> <u> 00 </u></p>
         <p><strong>Effective Date:</strong> <u> 05/16/24 </u></p>
-        <p><strong>Control No.:</strong> __________</p>
+        <p><strong>Control No.:</strong> ___________</p>
     </div>
     <div class="header-content">
     <img src="css/img/cjc_logo.png" alt="Logo" class="header-logo">
