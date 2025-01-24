@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Invalid password"; // Set error for invalid password
         }
+        {
     } else {
         $error = "Invalid username or password"; // Set error for invalid username
     }
