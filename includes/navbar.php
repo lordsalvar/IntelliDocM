@@ -19,9 +19,17 @@ if (substr($basePath, -1) !== '/') {
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>view_proposals.php">Home</a></li>
                 <li class="nav-item0"><a class="nav-link text-white" href="<?php echo $basePath; ?>clubmanagement.php">Club Management</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>calendar.php">Calendar</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="../logout.php">Logout</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>../calendar/calendar.php">Calendar</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/main/IntelliDocM/logout.php" onclick="return confirmLogout()">Logout</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+    function confirmLogout() {
+        return confirm("Are you sure you want to log out?");
+    }
+</script>

@@ -239,8 +239,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $proposal_id = $stmt->insert_id;
 
         // Generate QR Code for Applicant Signature
-        $qrData = "http://192.168.0.106/main/IntelliDocM/verify_qr/verify_qr.php?proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
-
+        $qrData = json_encode([
+            'proposal_id' => $proposal_id,
+            'applicant_name' => $applicant_name,
+            'activity_title' => $activity_title,
+        ]);
 
         // Define the directory to save QR codes
         $qrDirectory = "client_qr_codes";
@@ -263,7 +266,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($updateStmt->execute()) {
             echo "<script>alert('Proposal submitted and QR code for applicant generated successfully!')</script>";
-            echo "<script>window.location.href = '/main/IntelliDocM/client.php';</script>";
         } else {
             echo "<div class='alert alert-danger'>Error generating QR code: " . $updateStmt->error . "</div>";
         }
@@ -276,48 +278,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <script></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity Proposal Form</title>
+    <!-- Updated Bootstrap to version 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!DOCTYPE html>
-    <html lang="en">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-    <head>
-        <script></script>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Activity Proposal Form</title>
-        <link href="css/act_Pro.css" rel="stylesheet" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-        
-        
-    </head>
+        .form-control[readonly],
+        .form-check-input[disabled] {
+            background-color: #e9ecef;
+            color: #6c757d;
+        }
 
-    <body>
+        .form-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h3 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-primary:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h2 {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .form-check-label {
+            font-weight: 500;
+        }
+
+        .form-control {
+            border-radius: 0;
+        }
+
+        @media (max-width: 767px) {
+            .form-section h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Include Navbar -->
+    <?php include 'includes/clientnavbar.php'; ?>
+
     <div class="container my-5">
-        <a class="btn btn-secondary mb-3" href="client.php">← Back</a>
-<!-- Overlay Box -->
-<div class="overlay-box">
-        <p><strong>Index No.:</strong> <u> 7.3 </u></p>
-        <p><strong>Revision No.:</strong> <u> 00 </u></p>
-        <p><strong>Effective Date:</strong> <u> 05/16/24 </u></p>
-        <p><strong>Control No.:</strong> ___________</p>
-    </div>
-    <div class="header-content">
-    <img src="images/cjc logo.jpg" alt="Logo" class="header-logo">
-    <div class="header-text">
-        <h2 class="text-center text-uppercase">Cor Jesu College, Inc.</h2>
-        <div class="line yellow-line"></div>
-        <div class="line blue-line"></div>
-        <p class="text-center">Sacred Heart Avenue, Digos City, Province of Davao del Sur, Philippines</p>
-        <p class="text-center">Tel. No.: (082) 553-2433 local 101 • Fax No.: (082) 553-2333 • www.cjc.edu.ph</p>
-    </div>
-</div>
+        <div class="header">
+            <h2>ACTIVITY PROPOSAL FORM</h2>
+        </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <!-- Add CSRF token -->
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
-            <h3 class="text-center">ACTIVITY PROPOSAL FORM</h3>
-            <form method="POST" action="">
-                <!-- Add CSRF token -->
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <!-- Organization Details -->
+            <!-- Organization Details -->
+            <div class="form-section">
+                <h3>Organization Details</h3>
                 <div class="mb-4">
                     <label for="organizationName" class="form-label">Name of the Organization/ Class/ College:</label>
                     <input type="text" class="form-control" id="organizationName" name="organizationName"
@@ -332,42 +381,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-6">
                         <label class="form-label">Organization Category:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="academic" name="clubType" value="Academic"
-                                <?php echo ($club_data['club_type'] === 'Academic') ? 'checked disabled' : 'disabled'; ?>>
+                            <input class="form-check-input" type="radio" id="academic" name="clubType" value="Academic"
+                                <?php echo ($club_data['club_type'] === 'Academic') ? 'checked' : ''; ?> disabled>
                             <label class="form-check-label" for="academic">Academic</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="nonAcademic" name="clubType" value="Non-Academic"
-                                <?php echo ($club_data['club_type'] === 'Non-Academic') ? 'checked disabled' : 'disabled'; ?>>
+                            <input class="form-check-input" type="radio" id="nonAcademic" name="clubType" value="Non-Academic"
+                                <?php echo ($club_data['club_type'] === 'Non-Academic') ? 'checked' : ''; ?> disabled>
                             <label class="form-check-label" for="nonAcademic">Non-Academic</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="acco" name="clubType" value="ACCO"
-                                <?php echo ($club_data['club_type'] === 'ACCO') ? 'checked disabled' : 'disabled'; ?>>
+                            <input class="form-check-input" type="radio" id="acco" name="clubType" value="ACCO"
+                                <?php echo ($club_data['club_type'] === 'ACCO') ? 'checked' : ''; ?> disabled>
                             <label class="form-check-label" for="acco">ACCO</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="csg" name="clubType" value="CSG"
-                                <?php echo ($club_data['club_type'] === 'CSG') ? 'checked disabled' : 'disabled'; ?>>
+                            <input class="form-check-input" type="radio" id="csg" name="clubType" value="CSG"
+                                <?php echo ($club_data['club_type'] === 'CSG') ? 'checked' : ''; ?> disabled>
                             <label class="form-check-label" for="csg">CSG</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="collegeLGU" name="clubType" value="College-LGU"
-                                <?php echo ($club_data['club_type'] === 'College-LGU') ? 'checked disabled' : 'disabled'; ?>>
+                            <input class="form-check-input" type="radio" id="collegeLGU" name="clubType" value="College-LGU"
+                                <?php echo ($club_data['club_type'] === 'College-LGU') ? 'checked' : ''; ?> disabled>
                             <label class="form-check-label" for="collegeLGU">College-LGU</label>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Activity Title -->
-
-
+            <!-- Activity Details -->
+            <div class="form-section">
+                <h3>Activity Details</h3>
                 <div class="row mb-4">
-                    <div class="col mb-6">
+                    <div class="col-md-6">
                         <label for="activityTitle" class="form-label">Title of the Activity:</label>
                         <input type="text" class="form-control" id="activityTitle" name="activityTitle" placeholder="Enter activity title" />
                     </div>
-                    <div class="col mb-6">
+                    <div class="col-md-6">
                         <label class="form-label">Type of Activity:</label>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="on-campus" name="activityType[]" value="On-Campus Activity">
@@ -464,50 +514,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="number" class="form-control" id="expectedParticipants" name="expectedParticipants" placeholder="Enter expected number" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Signatures -->
+            <!-- Signatures -->
+            <div class="form-section">
+                <h3>Signatures</h3>
                 <div class="row mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-center">
                         <label class="form-label">Applicant</label>
                         <input type="text" class="form-control mb-2" name="applicantName" placeholder="Applicant Name"
                             value="<?php echo setValue($applicant_name); ?>" <?php echo setReadonly($applicant_name); ?> />
                         <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation"
                             value="<?php echo setValue($club_data['designation']); ?>" <?php echo setReadonly($club_data['designation']); ?> />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-center">
                         <label class="form-label">Moderator</label>
                         <input type="text" class="form-control mb-2" name="moderatorName" placeholder="Moderator Name"
                             value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-center">
                         <label class="form-label">Other Faculty/Staff</label>
                         <input type="text" class="form-control mb-2" name="facultySignature" placeholder="Signature Over Printed Name" />
                         <input type="text" class="form-control mb-2" name="facultyContact" placeholder="Contact Number" />
                     </div>
                 </div>
 
-
-                <div class="text-center">
-                    <label class="form-label">Noted by:</label>
-                    <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature Over Printed Name"
-                        value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
+                <div class="row mb-4">
+                    <div class="col-md-12 text-center">
+                        <label class="form-label">Noted by:</label>
+                        <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature Over Printed Name"
+                            value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
+                    </div>
                 </div>
+            </div>
 
-                <!-- Submit Button -->
-                <div class="text-center">
-                <a class="btn btn-success mb-3" href="boking.php">Booking Form</a>
-                    <button type="submit" class="btn btn-primary">Submit Proposal</button>
-                </div>
-            </form>
-            
-            
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary mb-3">Submit Proposal</button>
+                <a class="btn btn-secondary mb-3" href="/main/IntelliDocM/boking.php">Booking Form</a>
+            </div>
+        </form>
+    </div>
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-
-    </html>
+</html>
 
 <?php
 $conn->close();
