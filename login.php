@@ -34,34 +34,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $role;
             $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
 
-                // Debugging session variables
-                echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
+            // Debugging session variables
+            echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
 
-                // Use normalized designation for comparison
-                if ($role === 'admin') {
-                    header('Location: admin/view_proposals.php');
-                    exit();
-                } elseif ($_SESSION['designation'] === 'moderator') {
-                    header('Location: moderator/moderator_view.php');
-                    exit();
-                } elseif ($_SESSION['designation'] === 'dean') {
-                    header('Location: dean/dean_view.php');
-                    exit();
-                } else {
-                    header('Location: client.php');
-                    exit();
-                }
+            // Use normalized designation for comparison
+            if ($role === 'admin') {
+                header('Location: admin/view_proposals.php');
+                exit();
+            } elseif ($_SESSION['designation'] === 'moderator') {
+                header('Location: moderator/moderator_view.php');
+                exit();
+            } elseif ($_SESSION['designation'] === 'dean') {
+                header('Location: dean/dean_view.php');
+                exit();
             } else {
-                header('Location: /main/IntelliDocM/client.php');
+                header('Location: client.php');
                 exit();
             }
         } else {
-            $error = "Invalid password"; // Set error for invalid password
+            header('Location: /main/IntelliDocM/client.php');
+            exit();
         }
     } else {
-        $error = "Invalid username or password"; // Set error for invalid username
+        $error = "Invalid password"; // Set error for invalid password
     }
+} else {
+    $error = "Invalid username or password"; // Set error for invalid username
 }
+
 ?>
 
 
