@@ -7,19 +7,6 @@ body {
     padding: 0;
 }
 
-/* Navbar Styles */
-header {
-    padding: 15px 20px;
-    color: white;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
 /* Container Styles */
 .container {
     background-color: white;
@@ -28,6 +15,70 @@ header {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
+}
+
+/* Overlay Box Styles */
+/* Align overlay box with header text */
+.overlay-box {
+    position: absolute; /* Keep it positioned relative to a parent element */
+    top: 15%; /* Adjust this to vertically align */
+    right: 100px; /* Adjust horizontal alignment */
+    transform: translateY(-50%); /* Center vertically relative to itself */
+    background-color: white;
+    border: 1px solid #000;
+    padding: 10px;
+    width: 230px;
+    text-align: left;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust paragraphs inside the overlay-box */
+.overlay-box p {
+    margin: 0 20px; /* Add horizontal space between text items */
+    font-size: 0.9rem; /* Optional: Adjust text size */
+}
+
+.header-logo {
+    float: left;
+    margin-left: 60px;
+    height: 120px; /* Adjust the height of the logo */
+    width: auto; /* Maintain aspect ratio */
+    border-radius: 50%; /* Optional: Make the logo circular */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow */
+    border: 2px solid #e31b23; /* Add a border around the logo */
+}
+
+.header-content {
+    margin-right: 150px;
+}
+
+.header-text {
+    margin-left: 170px;
+}
+
+.header-text h2 {
+    color: #e31b23;
+    font-family: "Poppins", sans-serif;
+    font-size: 60px;
+}
+
+.header-text p {
+    color: #e31b23;
+}
+
+.line {
+    width: 115%;
+    height: 5px;
+}
+
+.yellow-line {
+    background-color: #ffd700; /* Yellow */
+}
+
+.blue-line {
+    background-color: #0000ff; /* Blue */
+    margin-top: 1px; /* Overlap with yellow */
 }
 
 /* Form Section Styles */
@@ -185,7 +236,6 @@ button[type="submit"]:hover {
     /* Submit Button */
     button[type="submit"] {
         background-color: #e31b23;
-        border: none;
         color: white;
         padding: 10px 20px;
         font-size: 1rem;

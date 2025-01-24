@@ -34,16 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $role;
             $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
 
-            // Redirect based on user role/designation
-            if ($role === 'admin') {
-                header('Location: /main/IntelliDocM/admin/view_proposals.php');
-                exit();
-            } elseif ($_SESSION['designation'] === 'moderator') {
-                header('Location: /main/IntelliDocM/moderator/moderator_view.php');
-                exit();
-            } elseif ($_SESSION['designation'] === 'dean') {
-                header('Location: /main/IntelliDocM/dean/dean_view.php');
-                exit();
+                // Debugging session variables
+                echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
+
+                // Use normalized designation for comparison
+                if ($role === 'admin') {
+                    header('Location: admin/view_proposals.php');
+                    exit();
+                } elseif ($_SESSION['designation'] === 'moderator') {
+                    header('Location: moderator/moderator_view.php');
+                    exit();
+                } elseif ($_SESSION['designation'] === 'dean') {
+                    header('Location: dean/dean_view.php');
+                    exit();
+                } else {
+                    header('Location: client.php');
+                    exit();
+                }
             } else {
                 header('Location: /main/IntelliDocM/client.php');
                 exit();
