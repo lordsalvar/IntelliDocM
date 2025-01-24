@@ -171,7 +171,7 @@ CREATE TABLE block_requests (
     date DATE NOT NULL,           -- The date being requested for the block
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending', -- Current request status
     requested_by INT NOT NULL,    -- The user who submitted the block request
-    FOREIGN KEY (club_id) REFERENCES clubs(id),
+    FOREIGN KEY (club_id) REFERENCES clubs(club_id),
     FOREIGN KEY (facility_id) REFERENCES facilities(id),
     FOREIGN KEY (requested_by) REFERENCES users(id)
 );
