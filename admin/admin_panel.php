@@ -9,6 +9,10 @@
 </head>
 
 <body>
+    <header>
+    <?php include '../includes/navbar.php' ?>
+    </header>
+
     <div class="container mt-5">
         <h1 class="text-center">Admin Panel - Manage Block Requests</h1>
         <div class="table-responsive mt-4">
@@ -71,6 +75,9 @@
             </table>
         </div>
     </div>
+    <footer>
+    <?php include '../includes/footer.php' ?>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

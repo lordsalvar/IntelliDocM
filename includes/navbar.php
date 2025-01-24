@@ -20,6 +20,7 @@ if (substr($basePath, -1) !== '/') {
                 <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>view_proposals.php">Home</a></li>
                 <li class="nav-item0"><a class="nav-link text-white" href="<?php echo $basePath; ?>clubmanagement.php">Club Management</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>../calendar/calendar.php">Calendar</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="<?php echo $basePath; ?>../admin/admin_panel.php">Block Requests</a></li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/main/IntelliDocM/logout.php" onclick="return confirmLogout()">Logout</a>
                 </li>
