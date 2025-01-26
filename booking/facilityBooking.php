@@ -70,6 +70,10 @@ include '../database.php';
 </head>
 
 <body>
+    <header>
+        <?php include '../includes/clientnavbar.php'; ?>
+    </header>
+
     <div class="page-wrapper">
         <div class="container">
             <h3>Select Facilities</h3>
@@ -107,7 +111,6 @@ include '../database.php';
                 ?>
             </div>
             <button onclick="showDates()" class="btn btn-info mt-3">Show Dates</button>
-            <button onclick="location.href='../public/forms.php';" class="btn btn-success mt-3">Back to Forms</button>
 
             <!-- Button to trigger modal for Block Request Form -->
             <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal">
@@ -182,6 +185,10 @@ include '../database.php';
             </div>
         </div>
     </div>
+
+    <footer>
+        <?php include '../includes/footer.php'; ?>
+    </footer>
 
 
     <script>
