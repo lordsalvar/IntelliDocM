@@ -71,8 +71,8 @@ if (substr($basePath, -1) !== '/') {
                 <li class="nav-item">
                         <a class="nav-link text-white" href="activity_proposal_form.php">Student Forms</a>
                     </li>
-                <li class="nav-item">
-                    <button type="button" class="btn btn-red text-black position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                    <li class="nav-item">
+                    <button type="button" class="btn btn-red text-white position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
                         Notification
                         <?php if (!empty($notifications)): ?>
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">

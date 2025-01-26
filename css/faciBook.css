@@ -1,4 +1,4 @@
-/* Center the container on the page */
+/* Center the container and ensure full page alignment */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: large;
@@ -8,37 +8,28 @@ body {
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align items at the top */
-    min-height: 100vh; /* Full viewport height */
+    align-items: center; /* Center vertically */
+    min-height: 100vh; /* Ensure the body spans the full height */
 }
 
-header {
-    background-color: #e31b23;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    margin-bottom: auto;
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center the container inside the wrapper */
+    width: 15000%; /* Full width */
+    height: 100%; /* Full height */
 }
 
 .container {
-    width: 80% !important;
-    max-width: 1200px; /* Add a max-width for better responsiveness */
+    width: 200%; /* Responsive width */
+    max-width: 1200px; /* Set max-width for consistency */
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 100px !important; 
-    margin-bottom: 0 !important; /* Ensure no extra space below */
 }
-.page-wrapper {
-    margin-top: 50px; /* Adds space above the content */
-    width: 100%; /* Ensure the wrapper spans the full width */
-    margin-bottom: 0; /* Ensure no extra space below */
-    
-    
-}
+
 
 
 /* Styling for headings */
@@ -83,32 +74,6 @@ h3 {
     margin-right: 10px;
 }
 
-/* General button styling that overrides Bootstrap */
-button.btn {
-    font-weight: bold;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto; /* Center button */
-    color: #fff;
-    background-color: #007bff; /* Default primary color */
-    border: none;
-    border-radius: 5px;
-    width: auto; /* Allow the button width to adjust based on text */
-    padding: 10px 20px; /* Reduce padding to fit text */
-    text-align: center;
-    white-space: nowrap; /* Prevent text wrapping */
-    box-sizing: border-box;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-button.btn:hover {
-    background-color: #0056b3; /* Darker hover color */
-    transform: scale(1.05);
-}
-
-
 /* Specific overrides for Bootstrap button variants */
 button.btn-info {
     background-color: #17a2b8; /* Info teal */
@@ -117,16 +82,6 @@ button.btn-info {
 
 button.btn-info:hover {
     background-color: #117a8b; /* Darker teal on hover */
-}
-
-button.btn-success {
-    background-color: #28a745; /* Success green */
-    border: none;
-    padding: 20px;
-}
-
-button.btn-success:hover {
-    background-color: #218838; /* Darker green on hover */
 }
 
 button.btn-danger {
@@ -190,13 +145,4 @@ button.btn-danger:hover {
 
 .available-dates p {
     margin: 5px 0;
-}
-/* Footer */
-footer {
-    background-color: #e31b23;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    margin-top: 10px; /* Reduce spacing above the footer */
 }
