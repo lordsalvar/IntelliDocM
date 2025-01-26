@@ -232,6 +232,18 @@ $conn->close();
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
     </div>
+    <?php if ($proposal): ?>
+
+        <!-- "Book Facilities" Button -->
+        <div class="text-center mt-5">
+            <a href="boking.php?id=<?= htmlspecialchars($proposal['proposal_id']) ?>" class="btn btn-primary btn-lg">
+                Book Facilities
+            </a>
+        </div>
+    <?php endif; ?>
+
+    <br>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
