@@ -76,6 +76,8 @@ h3 {
 
 /* Specific overrides for Bootstrap button variants */
 button.btn-info {
+    margin-left: 500px; /* Adjust the horizontal position */
+    margin-top: 10px; /* Adjust the vertical position */
     background-color: #17a2b8; /* Info teal */
     border: none;
 }
@@ -85,6 +87,8 @@ button.btn-info:hover {
 }
 
 button.btn-danger {
+    margin-left: 20px; /* Adjust the horizontal position */
+    margin-top: 10px; /* Adjust the vertical position */
     background-color: #dc3545; /* Danger red */
     border: none;
 }
@@ -145,4 +149,18 @@ button.btn-danger:hover {
 
 .available-dates p {
     margin: 5px 0;
+}
+
+.modal-header {
+    text-align: center; /* Centers the text in the header */
+    display: flex;
+    justify-content: center;
+    position: relative; /* Allows positioning of the close button */
+}
+
+.modal-header .close {
+    position: absolute;
+    right: 15px; /* Ensures the close button stays on the right */
+    top: 50%; /* Centers it vertically */
+    transform: translateY(-50%);
 }

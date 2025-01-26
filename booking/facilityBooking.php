@@ -110,7 +110,7 @@ include '../database.php';
                 }
                 ?>
             </div>
-            <button onclick="showDates()" class="btn btn-info mt-3">Show Dates</button>
+            <button onclick="showDates()" class="btn btn-info text-white mt-3">Show Dates</button>
 
             <!-- Button to trigger modal for Block Request Form -->
             <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal">
