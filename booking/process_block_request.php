@@ -34,7 +34,8 @@ function getClubData($conn, $user_id)
 
 // Ensure user ID is set in the session
 if (!isset($_SESSION['user_id'])) {
-    die('Error: You must be logged in to make a block request.');
+    echo json_encode(['success' => false, 'title' => 'Error', 'message' => 'You must be logged in to make a block request.']);
+    exit();
 }
 
 $userId = $_SESSION['user_id'];
@@ -43,34 +44,63 @@ $userId = $_SESSION['user_id'];
 $clubData = getClubData($conn, $userId);
 
 if (!$clubData) {
-    die('Error: No club membership found for the logged-in user.');
+    echo json_encode(['success' => false, 'title' => 'Error', 'message' => 'No club membership found for the logged-in user.']);
+    exit();
 }
 
 $clubId = $clubData['club_id']; // Get the club ID from the fetched data
 
 // Get POST data
-$facilityId = $_POST['facility'];
-$date = $_POST['date'];
+$facilities = $_POST['facilities'] ?? [];
+$dates = $_POST['dates'] ?? [];
 
-// Check if a block request already exists for the same facility and date
-$checkSql = "SELECT id FROM block_requests WHERE facility_id = ? AND date = ? AND club_id = ?";
-$checkStmt = $conn->prepare($checkSql);
-$checkStmt->bind_param("isi", $facilityId, $date, $clubId);
-$checkStmt->execute();
-$checkResult = $checkStmt->get_result();
-
-if ($checkResult->num_rows > 0) {
-    die('Error: A block request for this facility and date already exists.');
+// Validate that the number of facilities matches the number of dates
+if (count($facilities) !== count($dates)) {
+    echo json_encode(['success' => false, 'title' => 'Error', 'message' => 'Mismatch between selected facilities and dates.']);
+    exit();
 }
 
-// Insert block request
-$sql = "INSERT INTO block_requests (club_id, facility_id, date, status, requested_by) 
-        VALUES (?, ?, ?, 'pending', ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("iisi", $clubId, $facilityId, $date, $userId);
+// Initialize response arrays
+$successCount = 0;
+$errors = [];
 
-if ($stmt->execute()) {
-    echo "Block request submitted successfully!";
+// Process each facility-date pair
+foreach ($facilities as $index => $facilityId) {
+    $date = $dates[$index];
+
+    // Check if a block request already exists for the same facility and date
+    $checkSql = "SELECT id FROM block_requests WHERE facility_id = ? AND date = ? AND club_id = ?";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bind_param("isi", $facilityId, $date, $clubId);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+
+    if ($checkResult->num_rows > 0) {
+        $errors[] = "A block request for facility ID $facilityId on $date already exists.";
+        continue;
+    }
+
+    // Insert block request
+    $insertSql = "INSERT INTO block_requests (club_id, facility_id, date, status, requested_by) 
+                  VALUES (?, ?, ?, 'pending', ?)";
+    $insertStmt = $conn->prepare($insertSql);
+    $insertStmt->bind_param("iisi", $clubId, $facilityId, $date, $userId);
+
+    if ($insertStmt->execute()) {
+        $successCount++;
+    } else {
+        $errors[] = "Failed to insert block request for facility ID $facilityId on $date: " . $insertStmt->error;
+    }
+}
+
+// Build response
+if ($successCount > 0) {
+    $message = "$successCount block request(s) submitted successfully.";
+    if (!empty($errors)) {
+        $message .= " However, the following errors occurred: " . implode(', ', $errors);
+    }
+    echo json_encode(['success' => true, 'title' => 'Partial Success', 'message' => $message]);
 } else {
-    echo "Error: " . $stmt->error;
+    echo json_encode(['success' => false, 'title' => 'Error', 'message' => implode(', ', $errors)]);
 }
+exit();

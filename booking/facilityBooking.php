@@ -70,15 +70,15 @@ include '../database.php';
 </head>
 
 <body>
-<div class="page-wrapper">
-    <div class="container">
-        <h3>Select Facilities</h3>
-        <div class="checkbox-container">
-            <?php
-            $conn = getDbConnection(); // Use the global connection defined in your included file
+    <div class="page-wrapper">
+        <div class="container">
+            <h3>Select Facilities</h3>
+            <div class="checkbox-container">
+                <?php
+                $conn = getDbConnection(); // Use the global connection defined in your included file
 
-            // Fetch facilities and their blocked/unavailable dates
-            $sql = "SELECT 
+                // Fetch facilities and their blocked/unavailable dates
+                $sql = "SELECT 
                         f.code, 
                         f.name, 
                         GROUP_CONCAT(CASE WHEN fa.status = 'blocked' THEN DATE_FORMAT(fa.date, '%M %d, %Y') END) AS blocked,
@@ -86,82 +86,210 @@ include '../database.php';
                     FROM facilities f
                     LEFT JOIN facility_availability fa ON f.id = fa.facility_id
                     GROUP BY f.id";
-            $result = $conn->query($sql);
+                $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                $facilities = [];
-                while ($row = $result->fetch_assoc()) {
-                    $facilities[$row['code']] = [
-                        'name' => $row['name'],
-                        'blocked' => $row['blocked'] ? explode(',', $row['blocked']) : [],
-                        'unavailable' => $row['unavailable'] ? explode(',', $row['unavailable']) : []
-                    ];
-                    echo '<label><input type="checkbox" name="facility" value="' . htmlspecialchars($row['code']) . '"> ' . htmlspecialchars($row['name']) . '</label>';
+                if ($result->num_rows > 0) {
+                    $facilities = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $facilities[$row['code']] = [
+                            'name' => $row['name'],
+                            'blocked' => $row['blocked'] ? explode(',', $row['blocked']) : [],
+                            'unavailable' => $row['unavailable'] ? explode(',', $row['unavailable']) : []
+                        ];
+                        echo '<label><input type="checkbox" name="facility" value="' . htmlspecialchars($row['code']) . '"> ' . htmlspecialchars($row['name']) . '</label>';
+                    }
+
+                    // Pass facility data to JavaScript
+                    echo '<script>facilityData = ' . json_encode($facilities) . ';</script>';
+                } else {
+                    echo '<p>No facilities available.</p>';
                 }
+                ?>
+            </div>
+            <button onclick="showDates()" class="btn btn-info mt-3">Show Dates</button>
+            <button onclick="location.href='../public/forms.php';" class="btn btn-success mt-3">Back to Forms</button>
 
-                // Pass facility data to JavaScript
-                echo '<script>facilityData = ' . json_encode($facilities) . ';</script>';
-            } else {
-                echo '<p>No facilities available.</p>';
-            }
-            ?>
+            <!-- Button to trigger modal for Block Request Form -->
+            <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal">
+                Request Block Date
+            </button>
         </div>
-        <button onclick="showDates()" class="btn btn-info mt-3">Show Dates</button>
-        <button onclick="location.href='../public/forms.php';" class="btn btn-success mt-3">Back to Forms</button>
 
-        <!-- Button to trigger modal for Block Request Form -->
-        <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal">
-            Request Block Date
-        </button>
+        <!-- Modal for Block Request Form -->
+        <div class="modal fade" id="blockRequestModal" tabindex="-1" aria-labelledby="blockRequestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="blockRequestModalLabel">Block Request Form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="blockRequestForm" method="POST" action="process_block_request.php">
+                            <div id="venueDateContainer">
+                                <!-- Venue and Date Pair -->
+                                <div class="venue-date-pair mb-3" id="venue-date-pair-1">
+                                    <div class="form-group">
+                                        <label for="facility1">Select Facility:</label>
+                                        <select name="facilities[]" id="facility1" class="form-control" required>
+                                            <?php
+                                            $facilitiesQuery = "SELECT id, name FROM facilities";
+                                            $facilitiesResult = $conn->query($facilitiesQuery);
+                                            while ($row = $facilitiesResult->fetch_assoc()) {
+                                                echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="date1">Select Date:</label>
+                                        <input type="date" name="dates[]" id="date1" class="form-control" required>
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeVenueDate(1)">Remove</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary mb-3" onclick="addVenueDate()">Add Another Venue</button>
+                            <button type="submit" class="btn btn-success w-100">Submit Block Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal for Facility Dates -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modalContent">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal for Block Request Form -->
-    <div class="modal fade" id="blockRequestModal" tabindex="-1" aria-labelledby="blockRequestModalLabel" aria-hidden="true">
+    <!-- Success/Error Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="blockRequestModalLabel">Block Request Form</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="resultModalLabel"></h5>
                 </div>
-                <div class="modal-body">
-                    <form id="blockRequestForm" method="POST" action="process_block_request.php">
-                        <div class="form-group">
-                            <label for="facility">Select Facility:</label>
-                            <select name="facility" id="facility" class="form-control" required>
-                                <?php
-                                $facilitiesQuery = "SELECT id, name FROM facilities";
-                                $facilitiesResult = $conn->query($facilitiesQuery);
-                                while ($row = $facilitiesResult->fetch_assoc()) {
-                                    echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="date">Select Date:</label>
-                            <input type="date" name="date" id="date" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-success">Submit Block Request</button>
-                    </form>
+                <div class="modal-body" id="resultModalBody"></div>
+                <div class="modal-footer">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal for Facility Dates -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modalContent">
-                <p>Loading...</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-    <!-- Bootstrap JS and dependencies -->
+    <script>
+        let venueCounter = 1;
+
+        // Function to add a new venue-date pair
+        function addVenueDate() {
+            venueCounter++;
+
+            const container = document.getElementById('venueDateContainer');
+            const newPair = document.createElement('div');
+            newPair.classList.add('venue-date-pair', 'mb-3');
+            newPair.id = `venue-date-pair-${venueCounter}`;
+
+            newPair.innerHTML = `
+            <div class="form-group">
+                <label for="facility${venueCounter}">Select Facility:</label>
+                <select name="facilities[]" id="facility${venueCounter}" class="form-control" required>
+                    <?php
+                    $facilitiesResult->data_seek(0); // Reset the result set
+                    while ($row = $facilitiesResult->fetch_assoc()) {
+                        echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date${venueCounter}">Select Date:</label>
+                <input type="date" name="dates[]" id="date${venueCounter}" class="form-control" required>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeVenueDate(${venueCounter})">Remove</button>
+        `;
+
+            container.appendChild(newPair);
+        }
+
+        // Function to remove a specific venue-date pair
+        function removeVenueDate(counter) {
+            const pair = document.getElementById(`venue-date-pair-${counter}`);
+            if (pair) {
+                pair.remove();
+            }
+        }
+    </script>
+
+
+    <script>
+        // Handle form submission via AJAX
+        const form = document.getElementById('blockRequestForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json(); // Parse JSON response
+
+                // Show the result modal
+                showResultModal(result.title, result.message, result.success);
+
+                if (result.success) {
+                    let countdown = 5; // Countdown duration in seconds
+                    const modalBody = document.getElementById('resultModalBody');
+
+                    const interval = setInterval(() => {
+                        countdown--;
+                        modalBody.textContent = `${result.message} Redirecting in ${countdown} seconds...`;
+
+                        if (countdown <= 0) {
+                            clearInterval(interval);
+                            window.location.href = '../activity_proposal_form.php';
+                        }
+                    }, 1000);
+                }
+            } catch (error) {
+                showResultModal('Error', 'An unexpected error occurred. Please try again.', false);
+            }
+        });
+    </script>
+    <script>
+        function showResultModal(title, message, isSuccess) {
+            const modalTitle = document.getElementById('resultModalLabel');
+            const modalBody = document.getElementById('resultModalBody');
+
+            // Set title and message
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+
+            // Change modal appearance based on success or error
+            if (isSuccess) {
+                modalTitle.classList.remove('text-danger');
+                modalTitle.classList.add('text-success');
+            } else {
+                modalTitle.classList.remove('text-success');
+                modalTitle.classList.add('text-danger');
+            }
+
+            // Show the modal
+            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            resultModal.show();
+        }
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
