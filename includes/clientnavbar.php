@@ -25,7 +25,6 @@ if (substr($basePath, -1) !== '/') {
 
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #e31b23;">
         <div class="container-fluid">
-            <button class="btn btn-outline-light me-2" id="sidebarToggle">☰</button>
             <a class="navbar-brand text-white" href="#">IntelliDoc</a>
             <button class="navbar-toggler text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -37,7 +36,7 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="public/forms.php">Student Activities</a>
+                        <a class="nav-link text-white" href="public/forms.php">Facility Request</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -64,7 +63,7 @@ if (substr($basePath, -1) !== '/') {
                     <a class="nav-link" href="/main/IntelliDocM/client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="public/forms.php">Student Activities Forms</a>
+                    <a class="nav-link" href="public/forms.php">Facility Request</a>
                 </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-red text-black position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">

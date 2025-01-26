@@ -89,7 +89,7 @@ $proposals_result = $stmt->get_result();
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No proposals found for your club.</p>
+            <h5 class="text-center text-white">No proposals found for your club.</h5>
         <?php endif; ?>
     </div>
 
