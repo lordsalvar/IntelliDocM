@@ -36,7 +36,10 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="public/forms.php">Facility Request</a>
+                        <a class="nav-link text-white" href="booking/facilityBooking.php">Facility Request</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="activity_proposal_form.php">Student Forms</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -63,8 +66,11 @@ if (substr($basePath, -1) !== '/') {
                     <a class="nav-link" href="/main/IntelliDocM/client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="public/forms.php">Facility Request</a>
+                    <a class="nav-link" href="booking/facilityBooking.php">Facility Request</a>
                 </li>
+                <li class="nav-item">
+                        <a class="nav-link text-white" href="activity_proposal_form.php">Student Forms</a>
+                    </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-red text-black position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
                         Notification

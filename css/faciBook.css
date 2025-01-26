@@ -12,19 +12,32 @@ body {
     min-height: 100vh; /* Full viewport height */
 }
 
+header {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: auto;
+}
+
 .container {
     width: 80% !important;
-    max-width: 900px; /* Add a max-width for better responsiveness */
+    max-width: 1200px; /* Add a max-width for better responsiveness */
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 100px !important; 
+    margin-bottom: 0 !important; /* Ensure no extra space below */
 }
 .page-wrapper {
     margin-top: 50px; /* Adds space above the content */
     width: 100%; /* Ensure the wrapper spans the full width */
+    margin-bottom: 0; /* Ensure no extra space below */
+    
+    
 }
 
 
@@ -177,4 +190,13 @@ button.btn-danger:hover {
 
 .available-dates p {
     margin: 5px 0;
+}
+/* Footer */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px; /* Reduce spacing above the footer */
 }
