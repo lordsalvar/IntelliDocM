@@ -233,14 +233,15 @@ $conn->close();
         <?php endif; ?>
     </div>
     <?php if ($proposal): ?>
-
         <!-- "Book Facilities" Button -->
         <div class="text-center mt-5">
-            <a href="boking.php?id=<?= htmlspecialchars($proposal['proposal_id']) ?>" class="btn btn-primary btn-lg">
+            <a href="boking.php?proposal_id=<?= urlencode($proposal['proposal_id']) ?>" class="btn btn-primary btn-lg">
                 Book Facilities
             </a>
         </div>
     <?php endif; ?>
+
+
 
     <br>
 
