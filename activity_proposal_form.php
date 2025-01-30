@@ -301,7 +301,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="css/act_Pro.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+    <script>
+        // This function logs the activity when the user submits the proposal form
+        function logSubmitProposal() {
+            // Log the user activity without fetching the proposal title and ID
+            const userActivity = 'User submitted the Activity Proposal Form';
 
+            // Send an AJAX request to log the activity
+            logActivity(userActivity);
+        }
+
+        // Common logActivity function that sends the log to the server via AJAX
+        function logActivity(userActivity) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "system_log/log_activity.php", true); // Ensure this path is correct
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log('Activity logged successfully.'); // Optional: you can handle the response here
+                }
+            };
+            xhr.send("activity=" + encodeURIComponent(userActivity)); // Send the activity log to the server
+        }
+
+        // Ensure this function is triggered before the form is actually submitted
+        document.getElementById('submitProposalForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting immediately
+            logSubmitProposal(); // Log the activity first
+            this.submit(); // After logging, submit the form
+        });
+    </script>
 </head>
 
 <body>
@@ -326,7 +355,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <h3 class="text-center">ACTIVITY PROPOSAL FORM</h3>
-        <form method="POST" action="">
+        <form method="POST" action="" id="submitProposalForm">
             <!-- Add CSRF token -->
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <!-- Organization Details -->
@@ -433,7 +462,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input class="form-check-input" type="checkbox" id="cesa" name="cesa" value="CESA">
                             <label class="form-check-label" for="cesa">Community Engagement & Social Advocacy (CESA)</label>
                         </div>
-                        <input type="text" class="form-control mt-2" name="other_program" placeholder="Others (Please specify)">
                     </div>
                 </div>
             </div>
@@ -505,6 +533,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
             </div>
 
+            <input type="hidden" id="proposal_id" name="proposal_id" value="<?php echo $proposal_id; ?>"> <!-- Add Proposal ID -->
             <!-- Submit Button -->
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Submit Proposal</button>
@@ -514,6 +543,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     </div>
+    <script>
+        // Attach event listener to the form's submit action
+        document.getElementById('submitProposalForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting immediately
+            logSubmitProposal(); // Log the activity
+            this.submit(); // Submit the form after logging
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

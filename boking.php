@@ -328,6 +328,37 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom CSS for additional styling -->
         <link rel="stylesheet" href="css/boking.css">
+        <script>
+            // This function logs the activity when the "Submit Request" button is clicked
+            function logSubmitRequest() {
+                const userActivity = 'User submitted a Facility Booking Request'; // Activity description
+
+                // Send an AJAX request to log the activity
+                logActivity(userActivity);
+            }
+
+            // Common logActivity function that sends the log to the server via AJAX
+            function logActivity(userActivity) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "system_log/log_activity.php", true); // Ensure this path is correct
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log('Activity logged successfully.'); // Optional: you can handle the response here
+                    }
+                };
+                xhr.send("activity=" + encodeURIComponent(userActivity)); // Send the activity log to the server
+            }
+
+            // Attach event listener to the external button
+            document.getElementById('submitButton').addEventListener('click', function(event) {
+                // Prevent the form submission from happening immediately
+                logSubmitRequest(); // Log the activity first
+
+                // Submit the form programmatically after logging
+                document.getElementById('facilityBookingForm').submit(); // Assuming the form has an id of 'facilityBookingForm'
+            });
+        </script>
 
     </head>
 
@@ -355,7 +386,7 @@
                 <h4 class="text-uppercase">Request for the Use of School Facilities</h4>
             </div>
 
-            <form method="POST" action="boking.php">
+            <form method="POST" action="boking.php" id="facilityBookingForm">
 
                 <input type="hidden" name="proposal_id" value="<?= htmlspecialchars($proposalId) ?>">
                 <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
@@ -456,7 +487,8 @@
                         <div class="form-group mt-4">
                             <div class="d-flex justify-content-between">
                                 <a class="btn btn-secondary" href="studentActivities.php" role="button">Back</a>
-                                <button type="submit" class="btn btn-primary mt-4">Submit Request</button>
+                                <button type="submit" class="btn btn-primary mt-4"
+                                    id="submitButton">Submit Request</button>
                             </div>
                         </div>
 
@@ -518,6 +550,12 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
         <!-- Custom Script to generate facilities list -->
+        <script>
+            document.getElementById('submitButton').addEventListener('click', function(event) {
+                logSubmitRequest(); // Log activity
+                document.getElementById('facilityBookingForm').submit(); // Submit the form
+            });
+        </script>
 
 
         <script>
@@ -528,7 +566,7 @@
                 <?php elseif ($hasNoRequests): ?>
                     $('#noRequestsModal').modal('show');
                     setTimeout(function() {
-                        window.location.href = 'facility_request_page.php'; // Redirect after 5 seconds
+                        window.location.href = '/main/IntelliDocM/booking/facilityBooking.php'; // Redirect after 5 seconds
                     }, 5000);
                 <?php endif; ?>
             });
