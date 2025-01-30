@@ -8,11 +8,15 @@
         <!-- Updated to Bootstrap 5 for better design options -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom CSS for additional styling -->
-        <link rel="stylesheet" href="css/booking.css">
+        <link rel="stylesheet" href="css/noBE_Booking.css">
 
     </head>
 
     <body>
+    <header>
+        <?php include 'includes/clientnavbar.php'; ?>
+    </header>
+    
         <div class="container mt-5">
             <!-- Overlay Box -->
 <div class="overlay-box">
@@ -22,7 +26,7 @@
         <p><strong>Control No.:</strong> ___________</p>
     </div>
     <div class="header-content">
-    <img src="img/cjc logo.jpg" alt="Logo" class="header-logo">
+    <img src="css/img/cjc_logo.png" alt="Logo" class="header-logo">
     <div class="header-text">
         <h2 class="text-center text-uppercase">Cor Jesu College, Inc.</h2>
         <div class="line yellow-line"></div>
@@ -118,11 +122,13 @@
 
                 <!-- Submit Button -->
                 <div class="form-row mt-4">
-                    <div class="d-flex justify-content-between">
-                        <a class="btn btn-secondary" href="studentActivities.php" role="button">Back</a>
+                    <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-success mb-3">Submit Proposal</button>
                     </div>
                 </div>
+                <footer>
+            <?php include 'includes/footer.php'; ?>
+        </footer>
             </form>
         </div>
 

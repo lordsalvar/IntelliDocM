@@ -11,6 +11,15 @@ body {
     min-height: 100vh;
 }
 
+header {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: auto;
+}
+
 /* Container Styles */
 .container {
     position: relative; /* Make the container a positioning context */
@@ -148,4 +157,14 @@ body {
 button, .btn {
     font-size: 0.8rem;
     padding: 5px 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: auto; /* Add margin for spacing */
 }
