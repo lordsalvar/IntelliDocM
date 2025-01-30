@@ -363,6 +363,10 @@
     </head>
 
     <body>
+    <header>
+        <?php include 'includes/clientnavbar.php'; ?>
+    </header>
+
         <div class="container mt-5">
             <!-- Overlay Box -->
             <div class="overlay-box">
@@ -541,6 +545,9 @@
                                 </div>
                             </div>
                         <?php endif; ?>
+                        <footer>
+                            <?php include 'includes/footer.php'; ?>
+                        </footer>
             </form>
         </div>
 
