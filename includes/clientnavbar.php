@@ -36,10 +36,10 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="booking/facilityBooking.php">Facility Request</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/booking/facilityBooking.php">Facility Request</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="activity_proposal_form.php">Student Forms</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/activity_proposal_form.php">Student Forms</a>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
@@ -47,7 +47,7 @@ if (substr($basePath, -1) !== '/') {
                         </button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="logout.php" onclick="return confirmLogout()">Logout</a>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/logout.php" onclick="return confirmLogout()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -66,12 +66,12 @@ if (substr($basePath, -1) !== '/') {
                     <a class="nav-link" href="/main/IntelliDocM/client.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="booking/facilityBooking.php">Facility Request</a>
+                    <a class="nav-link" href="/main/IntelliDocM/booking/facilityBooking.php">Facility Request</a>
                 </li>
                 <li class="nav-item">
-                        <a class="nav-link text-white" href="activity_proposal_form.php">Student Forms</a>
-                    </li>
-                    <li class="nav-item">
+                    <a class="nav-link text-white" href="/main/IntelliDocM/activity_proposal_form.php">Student Forms</a>
+                </li>
+                <li class="nav-item">
                     <button type="button" class="btn btn-red text-white position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
                         Notification
                         <?php if (!empty($notifications)): ?>
@@ -82,7 +82,7 @@ if (substr($basePath, -1) !== '/') {
                     </button>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="logout.php" onclick="return confirmLogout()">Logout</a>
+                    <a class="nav-link" href="/main/IntelliDocM/logout.php" onclick="return confirmLogout()">Logout</a>
                 </li>
             </ul>
         </div>

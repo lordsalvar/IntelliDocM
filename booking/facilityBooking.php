@@ -6,6 +6,11 @@ session_start([
     'use_strict_mode' => true // Strict session handling
 ]);
 
+
+include '../system_log/activity_log.php';
+include '../database.php';
+
+
 // Prevent session fixation
 session_regenerate_id(true);
 
@@ -14,9 +19,13 @@ if ($_SESSION['role'] !== 'client') {
     header('Location: ../login.php');
     exit();
 }
+$username = $_SESSION['username'];
+$userActivity = 'User visited Facility Request Page';
+
+logActivity($username, $userActivity);
 
 // Include database connection
-include '../database.php';
+
 ?>
 
 <!DOCTYPE html>

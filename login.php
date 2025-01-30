@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'database.php';
+include 'system_log/activity_log.php';
 
 $error = ''; // Initialize error message
 
@@ -8,6 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    $userActivity = 'User logged in';  // Example activity description
+
+    // Log the activity
+    logActivity($username, $userActivity);
     // Get the database connection
     $conn = getDbConnection();
 

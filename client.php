@@ -1,13 +1,18 @@
 <?php
+session_start();
 require_once 'database.php';
 require_once 'includes/notifications.php';
+include 'system_log/activity_log.php';
 
 // Start session and validate the user's login
-session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
     header('Location: login.php');
     exit();
 }
+
+$username = $_SESSION['username'];
+$userActivity = 'User visited the dashboard';
+logActivity($username, $userActivity);
 
 // Fetch user's club membership
 $user_id = $_SESSION['user_id'];
@@ -93,9 +98,9 @@ $proposals_result = $stmt->get_result();
         <?php endif; ?>
     </div>
 
-<footer>
-    <?php include 'includes/footer.php'; ?>
-        </footer>
+    <footer>
+        <?php include 'includes/footer.php'; ?>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

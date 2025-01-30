@@ -175,3 +175,13 @@ CREATE TABLE block_requests (
     FOREIGN KEY (facility_id) REFERENCES facilities(id),
     FOREIGN KEY (requested_by) REFERENCES users(id)
 );
+
+
+CREATE TABLE activity_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    activity_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_activity TEXT NOT NULL
+);
+    

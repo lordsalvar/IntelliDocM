@@ -1,4 +1,5 @@
 <?php
+require_once 'phpqrcode/qrlib.php';
 include 'database.php';
 session_start([
     'cookie_lifetime' => 3600, // Session expires after 1 hour
@@ -43,8 +44,35 @@ function getUserContact($conn, $user_id)
     return $result->fetch_assoc()['contact'] ?? '';
 }
 
+function getUserDesignation($conn, $user_id)
+{
+    $sql = "SELECT cm.designation 
+            FROM club_memberships cm 
+            WHERE cm.user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc()['designation'] ?? '';
+}
+
+$userDesignation = getUserDesignation($conn, $userId);
+
+
 // Fetch the contact number
 $userContact = getUserContact($conn, $userId);
+
+function getUserFullName($conn, $user_id)
+{
+    $sql = "SELECT full_name FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc()['full_name'] ?? '';
+}
+
+$userFullName = getUserFullName($conn, $userId);
 
 
 // Ensure user ID is set in the session
@@ -55,6 +83,43 @@ if (!isset($_SESSION['user_id'])) {
 
 // Get the proposal ID from the URL
 $proposalId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+
+// Fetch the club data dynamically
+$clubData = getClubData($conn, $userId);
+
+if (!$clubData) {
+    echo json_encode(['success' => false, 'title' => 'Error', 'message' => 'No club membership found for the logged-in user.']);
+    exit();
+}
+
+$clubId = $clubData['club_id']; // Get the club ID from the fetched data
+
+function getApprovedFacilities($conn, $club_id)
+{
+    $sql = "SELECT f.id, f.name 
+            FROM block_requests br
+            JOIN facilities f ON br.facility_id = f.id
+            WHERE br.club_id = ? 
+            AND br.status = 'Approved'"; // Only fetch facilities with approved requests
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $club_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $facilities = [];
+    while ($row = $result->fetch_assoc()) {
+        $facilities[] = $row;
+    }
+
+    return $facilities;
+}
+
+
+$approvedFacilities = getApprovedFacilities($conn, $clubId);
+
+
 
 // Function to fetch the title of the specific activity proposal
 function getProposalTitleById($conn, $proposalId)
@@ -73,15 +138,59 @@ function getProposalTitleById($conn, $proposalId)
 $activityTitle = getProposalTitleById($conn, $proposalId);
 
 
-// Fetch the club data dynamically
-$clubData = getClubData($conn, $userId);
 
-if (!$clubData) {
-    echo json_encode(['success' => false, 'title' => 'Error', 'message' => 'No club membership found for the logged-in user.']);
-    exit();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die('Invalid CSRF token');
+    }
+
+    // Collect form data
+    $userId = $_SESSION['user_id'];
+    $clubName = $_POST['organization_nature'];
+    $contactNumber = $_POST['contact_number'];
+    $purpose = $_POST['purpose_request'];
+    $dateOfUse = $_POST['date_of_use'];
+
+    // Insert booking details into the database
+    $stmt = $conn->prepare("
+        INSERT INTO bookings (user_id, club_name, contact_number, purpose, date_of_use)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("issss", $userId, $clubName, $contactNumber, $purpose, $dateOfUse);
+    if ($stmt->execute()) {
+        $bookingId = $stmt->insert_id;
+
+        // Generate QR code data
+        $qrData = "http://192.168.0.106/main/IntelliDocM/verify_qr/verify_booking.php?booking_id=" . urlencode($bookingId);
+
+        // Define directory to save QR codes
+        $qrDirectory = "client_qr_codes";
+        if (!is_dir($qrDirectory)) {
+            mkdir($qrDirectory, 0777, true);
+        }
+
+        // Define file path for the QR code
+        $qrFilePath = $qrDirectory . "/booking_qr_" . $bookingId . ".png";
+
+        // Generate and save QR code
+        QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+        // Update the database with the QR code path
+        $updateStmt = $conn->prepare("UPDATE bookings SET qr_code_path = ? WHERE id = ?");
+        $updateStmt->bind_param("si", $qrFilePath, $bookingId);
+        $updateStmt->execute();
+        $updateStmt->close();
+
+        echo "<script>alert('Booking submitted successfully! QR code generated.')</script>";
+        echo "<script>window.location.href = '/main/IntelliDocM/client.php';</script>";
+    } else {
+        echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
+    }
+    $stmt->close();
 }
-
-$clubId = $clubData['club_id']; // Get the club ID from the fetched data
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,28 +254,43 @@ $clubId = $clubData['club_id']; // Get the club ID from the fetched data
                 </div>
             </div>
 
-            <!-- Facilities Requested -->
             <div class="form-section">
-                <h3>Facilities Requested <small class="text-muted">(Please check)</small></h3>
-                <div id="facilities-list"></div>
-                <!-- 'Others' Option -->
-                <div class="form-group">
-                    <div class="row g-2 align-items-center mb-3">
-                        <div class="col-auto">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="others" name="facilities[]" value="Others">
-                                <label class="form-check-label" for="others">Others</label>
+                <h3>Facilities Requested <small class="text-muted">(Only Approved)</small></h3>
+                <div id="facilities-list">
+                    <?php if (!empty($approvedFacilities)): ?>
+                        <?php foreach ($approvedFacilities as $facility): ?>
+                            <div class="form-group">
+                                <div class="row g-2 align-items-center mb-3">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                id="<?= htmlspecialchars($facility['name'] ?? '') ?>"
+                                                name="facilities[]"
+                                                value="<?= htmlspecialchars($facility['name'] ?? '') ?>">
+                                            <label class="form-check-label"
+                                                for="<?= htmlspecialchars($facility['name'] ?? '') ?>">
+                                                <?= htmlspecialchars($facility['name'] ?? '') ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="Building or Room Number"
+                                            name="building_or_room[<?= htmlspecialchars($facility['name'] ?? '') ?>]">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="time" class="form-control" placeholder="Time of Use"
+                                            name="time_of_use[<?= htmlspecialchars($facility['name'] ?? '') ?>]">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Specify Other Facility" name="others_building">
-                        </div>
-                        <div class="col">
-                            <input type="time" class="form-control" placeholder="Time of Use" name="others_time">
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No approved facilities found.</p>
+                    <?php endif; ?>
                 </div>
             </div>
+
+
 
             <!-- Approval Section -->
             <div class="form-section mt-5">
@@ -174,8 +298,10 @@ $clubId = $clubData['club_id']; // Get the club ID from the fetched data
                 <div class="row mb-4 text-center">
                     <div class="col-md-4 mb-4">
                         <label class="form-label">Requested by:</label>
-                        <input type="text" class="form-control mb-2" placeholder="Printed Name & Signature" name="requested_by">
-                        <input type="text" class="form-control" placeholder="Designation" name="requested_by_designation">
+                        <input type="text" class="form-control mb-2" name="requested_by"
+                            value="<?= htmlspecialchars($userFullName) ?>" readonly>
+                        <input type="text" class="form-control mb-2" name="requested_by_designation"
+                            value="<?= htmlspecialchars($userDesignation) ?>" readonly>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label class="form-label">Cleared by:</label>
