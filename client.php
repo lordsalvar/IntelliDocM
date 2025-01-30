@@ -55,6 +55,32 @@ $proposals_result = $stmt->get_result();
     <title>Client</title>
     <link href="css/client.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        // Log activity when the user clicks "View Document"
+        function logDocumentViewActivity(documentTitle, documentId) {
+            const username = '<?php echo $_SESSION['username']; ?>'; // Get the username from PHP session
+
+            const userActivity = `User viewed document: ${documentTitle} (ID: ${documentId})`;
+
+            // Send AJAX request to log the activity
+            logActivity(userActivity, documentTitle, documentId, username);
+        }
+
+        // Log activity function to send the AJAX request
+        function logActivity(userActivity, documentTitle, documentId, username) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "system_log/log_activity.php", true); // Ensure this points to your PHP logging handler
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Handle response if needed
+                    console.log('Activity logged successfully.');
+                }
+            };
+            xhr.send("activity=" + encodeURIComponent(userActivity) + "&document_title=" + encodeURIComponent(documentTitle) + "&document_id=" + encodeURIComponent(documentId) + "&username=" + encodeURIComponent(username));
+        }
+    </script>
+
 </head>
 
 <body>
@@ -87,7 +113,9 @@ $proposals_result = $stmt->get_result();
                             <td class="text-center"><?= htmlspecialchars($row['end_time'] ?? '') ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['status'] ?? 'Pending') ?></td>
                             <td class="text-center">
-                                <a href="client_view.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm">View Document</a>
+                                <a href="client_view.php?id=<?= $row['proposal_id'] ?>" class="btn btn-primary btn-sm" onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title'] ?? '') ?>', <?= $row['proposal_id'] ?>)">
+                                    View Document
+                                </a>
                             </td>
                         </tr>
                     <?php endwhile; ?>

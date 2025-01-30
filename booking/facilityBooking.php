@@ -24,7 +24,6 @@ $userActivity = 'User visited Facility Request Page';
 
 logActivity($username, $userActivity);
 
-// Include database connection
 
 ?>
 
@@ -66,6 +65,54 @@ logActivity($username, $userActivity);
 
             modalContent.innerHTML = output || "<p>No blocked or unavailable dates found for the selected facilities.</p>";
             openModal();
+
+            // Log the activity using AJAX
+            logActivity('User clicked Show Dates button with selected facilities: ' + selectedFacilities.join(', '));
+        }
+
+        function logBlockDateRequest() {
+            // Log the activity without checking facilities since no facilities are selected yet
+            const userActivity = 'User clicked Request Block Date button';
+
+            // Send AJAX request to log the activity
+            logActivity(userActivity);
+        }
+
+        // Log activity when the "Add Another Venue" button is clicked
+        function logAddVenueActivity() {
+            const userActivity = 'User clicked Add Another Venue button in Block Request Form';
+
+            // Send AJAX request to log the activity
+            logActivity(userActivity);
+        }
+
+
+        function logSubmitBlockRequest() {
+            const selectedFacilities = Array.from(document.querySelectorAll('select[name="facilities[]"]')).map(select => select.value);
+            const selectedDates = Array.from(document.querySelectorAll('input[name="dates[]"]')).map(input => input.value);
+
+            const userActivity = `User submitted Block Request Form with facilities: ${selectedFacilities.join(', ')} and dates: ${selectedDates.join(', ')}`;
+
+            // Send AJAX request to log the activity
+            logActivity(userActivity);
+        }
+
+        function logRemoveVenueActivity() {
+
+        }
+
+        function logActivity(userActivity) {
+            // AJAX request to log activity
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "../system_log/log_activity.php", true); // Make sure log_activity.php is your logging handler file
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Handle response if needed
+                    console.log('Activity logged successfully.');
+                }
+            };
+            xhr.send("activity=" + encodeURIComponent(userActivity)); // Send the activity data to the server
         }
 
         function openModal() {
@@ -122,7 +169,7 @@ logActivity($username, $userActivity);
             <button onclick="showDates()" class="btn btn-info text-white mt-3">Show Dates</button>
 
             <!-- Button to trigger modal for Block Request Form -->
-            <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal">
+            <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal" onclick="logBlockDateRequest()">
                 Request Block Date
             </button>
         </div>
@@ -161,7 +208,10 @@ logActivity($username, $userActivity);
                                     <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeVenueDate(1)">Remove</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-secondary mb-3" onclick="addVenueDate()">Add Another Venue</button>
+                            <button type="button" class="btn btn-secondary mb-3" onclick="logAddVenueActivity(); addVenueDate();">
+                                Add Another Venue
+                            </button>
+
                             <button type="submit" class="btn btn-success w-100">Submit Block Request</button>
                         </form>
                     </div>
@@ -239,6 +289,10 @@ logActivity($username, $userActivity);
             const pair = document.getElementById(`venue-date-pair-${counter}`);
             if (pair) {
                 pair.remove();
+                const userActivity = 'User clicked Remove Venue button in Block Request Form';
+
+                // Send AJAX request to log the activity
+                logActivity(userActivity);
             }
         }
     </script>
@@ -249,6 +303,7 @@ logActivity($username, $userActivity);
         const form = document.getElementById('blockRequestForm');
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); // Prevent default form submission
+            logSubmitBlockRequest(); // Log activity before form submission
 
             const formData = new FormData(form);
 

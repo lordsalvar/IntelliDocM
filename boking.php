@@ -1,6 +1,7 @@
 <?php
 require_once 'phpqrcode/qrlib.php';
 include 'database.php';
+include 'system_log/activity_log.php';
 session_start([
     'cookie_lifetime' => 3600, // Session expires after 1 hour
     'cookie_httponly' => true, // Prevent JavaScript access
@@ -11,6 +12,10 @@ session_start([
 // Prevent session fixation
 session_regenerate_id(true);
 
+$username = $_SESSION['username'];
+$userActivity = 'User visited Booking Form Page';
+
+logActivity($username, $userActivity);
 // Check user role
 if ($_SESSION['role'] !== 'client') {
     header('Location: login.php');
@@ -120,7 +125,19 @@ function getApprovedFacilities($conn, $club_id)
 $approvedFacilities = getApprovedFacilities($conn, $clubId);
 
 
+function checkPendingRequests($conn, $club_id)
+{
+    $sql = "SELECT id FROM block_requests WHERE club_id = ? AND status = 'Pending'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $club_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->num_rows > 0;  // Returns true if there are pending requests
+}
 
+$hasPendingRequests = checkPendingRequests($conn, $clubId);
+
+$hasNoRequests = empty($approvedFacilities);
 // Function to fetch the title of the specific activity proposal
 function getProposalTitleById($conn, $proposalId)
 {
@@ -254,42 +271,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="form-section">
-                <h3>Facilities Requested <small class="text-muted">(Only Approved)</small></h3>
-                <div id="facilities-list">
-                    <?php if (!empty($approvedFacilities)): ?>
-                        <?php foreach ($approvedFacilities as $facility): ?>
-                            <div class="form-group">
-                                <div class="row g-2 align-items-center mb-3">
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input"
-                                                id="<?= htmlspecialchars($facility['name'] ?? '') ?>"
-                                                name="facilities[]"
-                                                value="<?= htmlspecialchars($facility['name'] ?? '') ?>">
-                                            <label class="form-check-label"
-                                                for="<?= htmlspecialchars($facility['name'] ?? '') ?>">
-                                                <?= htmlspecialchars($facility['name'] ?? '') ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" placeholder="Building or Room Number"
-                                            name="building_or_room[<?= htmlspecialchars($facility['name'] ?? '') ?>]">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="time" class="form-control" placeholder="Time of Use"
-                                            name="time_of_use[<?= htmlspecialchars($facility['name'] ?? '') ?>]">
+
+
+            <div id="facilities-list">
+                <?php if (!empty($approvedFacilities)): ?>
+                    <?php foreach ($approvedFacilities as $facility): ?>
+                        <div class="form-group">
+                            <div class="row g-2 align-items-center mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                            id="<?= htmlspecialchars($facility['name']) ?>"
+                                            name="facilities[]"
+                                            value="<?= htmlspecialchars($facility['name']) ?>">
+                                        <label class="form-check-label"
+                                            for="<?= htmlspecialchars($facility['name']) ?>">
+                                            <?= htmlspecialchars($facility['name']) ?>
+                                        </label>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Building or Room Number"
+                                        name="building_or_room[<?= htmlspecialchars($facility['name']) ?>]">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="time" class="form-control" placeholder="Time of Use"
+                                        name="time_of_use[<?= htmlspecialchars($facility['name']) ?>]">
+                                </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No approved facilities found.</p>
-                    <?php endif; ?>
-                </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No approved facilities found.</p>
+                <?php endif; ?>
             </div>
-
 
 
             <!-- Approval Section -->
@@ -334,6 +349,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="submit" class="btn btn-success mb-3">Submit Proposal</button>
                 </div>
             </div>
+
+            <!-- Modal for Pending Requests -->
+            <?php if ($hasPendingRequests): ?>
+                <div class="modal fade" id="pendingRequestsModal" tabindex="-1" aria-labelledby="pendingRequestsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pendingRequestsModalLabel">Pending Block Request</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                You have a pending block request. Please wait until it is approved.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Modal for No Requests -->
+            <?php if ($hasNoRequests): ?>
+                <div class="modal fade" id="noRequestsModal" tabindex="-1" aria-labelledby="noRequestsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="noRequestsModalLabel">No Block Requests Found</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                You have not sent any block requests yet. You will be redirected to the facility request page.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         </form>
     </div>
 
@@ -343,60 +398,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <!-- Custom Script to generate facilities list -->
+
+
     <script>
         $(document).ready(function() {
-            const facilities = [
-                "Ladouix Hall",
-                "Boulay Bldg.",
-                "Gymnasium",
-                "Miserero Bldg.",
-                "Polycarp Bldg.",
-                "Coindre Bldg.",
-                "Piazza",
-                "Xavier Hall",
-                "Open Court w/ Lights",
-                "ITVET",
-                "Nursing Room/Hall",
-                "Power Campus",
-                "Camp Raymond Bldg.",
-                "Norbert Bldg.",
-                "H.E Hall",
-                "Atrium"
-            ];
-
-            const facilitiesListDiv = $('#facilities-list');
-
-            facilities.forEach(function(facility, index) {
-                // Generate unique IDs and names
-                const facilityId = 'facility-' + index;
-                const sanitizedFacility = facility.replace(/\s+/g, '_').replace(/[^\w]/g, '').toLowerCase();
-                const buildingName = sanitizedFacility + '_building';
-                const timeName = sanitizedFacility + '_time';
-
-                // Create the form group HTML
-                const formGroupHTML = `
-                        <div class="form-group">
-                            <div class="row g-2 align-items-center mb-3">
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="${facilityId}" name="facilities[]" value="${facility}">
-                                        <label class="form-check-label" for="${facilityId}">${facility}</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" placeholder="Building or Room Number" name="${buildingName}">
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="time" class="form-control" placeholder="Time of Use" name="${timeName}">
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                // Append the form group to the facilities list div
-                facilitiesListDiv.append(formGroupHTML);
-            });
+            // Show the appropriate modal based on conditions
+            <?php if ($hasPendingRequests): ?>
+                $('#pendingRequestsModal').modal('show');
+            <?php elseif ($hasNoRequests): ?>
+                $('#noRequestsModal').modal('show');
+                setTimeout(function() {
+                    window.location.href = 'facility_request_page.php'; // Redirect after 5 seconds
+                }, 5000);
+            <?php endif; ?>
         });
     </script>
+
 </body>
 
 </html>
