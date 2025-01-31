@@ -16,7 +16,7 @@
     <header>
         <?php include 'includes/clientnavbar.php'; ?>
     </header>
-    
+
         <div class="container mt-5">
             <!-- Overlay Box -->
 <div class="overlay-box">
@@ -131,7 +131,8 @@
         </footer>
             </form>
         </div>
-
+        
+        
         <!-- Include jQuery before the script -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- Include Popper.js and Bootstrap JS -->
