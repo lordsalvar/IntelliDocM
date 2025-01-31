@@ -9,6 +9,16 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
+}
+
+header {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: auto;
 }
 
 /* Container Styles */
@@ -19,6 +29,7 @@ body {
     margin: 0 auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
     max-width: 1100px; /* Adjust width for larger content */
     height: auto; /* Adjust height automatically based on content */
     overflow-y: auto; /* Add scrolling for overflow */
@@ -148,4 +159,14 @@ body {
 button, .btn {
     font-size: 0.8rem;
     padding: 5px 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: auto; /* Add margin for spacing */
 }
