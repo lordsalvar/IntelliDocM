@@ -360,6 +360,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+    <header>
+        <?php include 'includes/clientnavbar.php'; ?>
+    </header>
+    
     <div class="container mt-5">
         <!-- Overlay Box -->
         <div class="overlay-box">
@@ -588,6 +592,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 </div>
             </div>
+            <footer>
+                <?php include 'includes/footer.php'; ?>
+            </footer>
         </form>
     </div>
 
