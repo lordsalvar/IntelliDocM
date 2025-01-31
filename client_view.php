@@ -12,7 +12,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
-$conn->close();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -232,15 +232,49 @@ $conn->close();
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
     </div>
-    <?php if ($proposal): ?>
 
-        <!-- "Book Facilities" Button -->
+    <?php
+    // -- Only run this if $proposal was found (and thus $proposalId is set).
+    //    But you can wrap it in a check if needed.
+
+    // 2) Run a simple query to check if there's at least one record in the bookings table
+    //    for this proposal.
+    $proposalId = $proposal['proposal_id'] ?? 0;
+    $sql = "SELECT COUNT(*) AS total FROM bookings WHERE proposal_id = '$proposalId'";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $bookingCount = (int) $row['total'];
+
+    // 3) If a booking is found for this proposal, show 'View Document', otherwise 'Book Facilities'
+    if ($bookingCount > 0) {
+        // Already has a booking record
+    ?>
         <div class="text-center mt-5">
-            <a href="boking.php?id=<?= htmlspecialchars($proposal['proposal_id']) ?>" class="btn btn-primary btn-lg">
+            <a
+                href="view_boking.php?proposal_id=<?= urlencode($proposalId) ?>"
+                class="btn btn-success btn-lg">
+                View Document
+            </a>
+        </div>
+    <?php
+    } else {
+        // No booking record yet
+    ?>
+        <div class="text-center mt-5">
+            <a
+                href="boking.php?proposal_id=<?= urlencode($proposalId) ?>"
+                class="btn btn-primary btn-lg">
                 Book Facilities
             </a>
         </div>
-    <?php endif; ?>
+    <?php
+    }
+
+    // 4) Close the connection at the very end
+    mysqli_close($conn);
+    ?>
+
+
 
     <br>
 
