@@ -37,10 +37,8 @@ $facilitiesResult = $stmt2->get_result();
 $facilities = $facilitiesResult->fetch_all(MYSQLI_ASSOC);
 $stmt2->close();
 
-// (Optional) Close the connection now that we have all data
-$conn->close();
+$conn->close(); // Close DB connection now that we have all data
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,8 +47,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Request for Use of School Facilities - Cor Jesu College</title>
     <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet" />
     <!-- Custom CSS (optional) -->
     <link rel="stylesheet" href="css/boking.css" />
@@ -93,7 +90,6 @@ $conn->close();
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nature of Department/Group/Organization</label>
-                        <!-- "club_name" from the bookings table -->
                         <input
                             type="text"
                             class="form-control"
@@ -139,8 +135,7 @@ $conn->close();
                                             value="<?= htmlspecialchars($facility['facility_id']) ?>"
                                             checked
                                             disabled />
-                                        <label
-                                            class="form-check-label"
+                                        <label class="form-check-label"
                                             for="facility_<?= $facility['facility_id'] ?>">
                                             <?= htmlspecialchars($facility['facility_name']) ?>
                                         </label>
@@ -194,13 +189,11 @@ $conn->close();
             <div class="form-section mt-5">
                 <h3>Approval</h3>
                 <div class="row mb-4">
-                    <!-- 1) REQUESTED BY SIGNATURE -->
                     <div class="col-md-4">
                         <label class="form-label">Requested by:</label>
                         <?php if (!empty($booking['requested_by_signature'])): ?>
                             <p>
-                                <img
-                                    src="/main/IntelliDocM/client_qr_codes/<?= basename($booking['requested_by_signature']) ?>"
+                                <img src="/main/IntelliDocM/client_qr_codes/<?= basename($booking['requested_by_signature']) ?>"
                                     alt="Requested By Signature"
                                     style="max-width:120px; height:auto;" />
                             </p>
@@ -209,13 +202,12 @@ $conn->close();
                         <?php endif; ?>
                     </div>
 
-                    <!-- 2) SSC SIGNATURE -->
+                    <!-- 1) SSC Signature -->
                     <div class="col-md-4">
                         <label class="form-label">SSC Signature:</label>
                         <?php if (!empty($booking['ssc_signature'])): ?>
                             <p>
-                                <img
-                                    src="/main/IntelliDocM/qr_codes/<?= basename($booking['ssc_signature']) ?>"
+                                <img src="<?= htmlspecialchars($booking['ssc_signature']) ?>"
                                     alt="SSC Signature"
                                     style="max-width:120px; height:auto;" />
                             </p>
@@ -224,13 +216,12 @@ $conn->close();
                         <?php endif; ?>
                     </div>
 
-                    <!-- 3) MODERATOR/DEAN SIGNATURE -->
+                    <!-- 2) Moderator/Dean Signature -->
                     <div class="col-md-4">
                         <label class="form-label">Moderator/Dean Signature:</label>
                         <?php if (!empty($booking['moderator_signature'])): ?>
                             <p>
-                                <img
-                                    src="/main/IntelliDocM/qr_codes/<?= basename($booking['moderator_signature']) ?>"
+                                <img src="<?= htmlspecialchars($booking['moderator_signature']) ?>"
                                     alt="Moderator Signature"
                                     style="max-width:120px; height:auto;" />
                             </p>
@@ -241,13 +232,12 @@ $conn->close();
                 </div>
 
                 <div class="row mb-4">
-                    <!-- 4) SECURITY SIGNATURE -->
+                    <!-- 3) Security In-charge -->
                     <div class="col-md-6">
                         <label class="form-label">Security In-charge:</label>
                         <?php if (!empty($booking['security_signature'])): ?>
                             <p>
-                                <img
-                                    src="/main/IntelliDocM/qr_codes/<?= basename($booking['security_signature']) ?>"
+                                <img src="<?= htmlspecialchars($booking['security_signature']) ?>"
                                     alt="Security Signature"
                                     style="max-width:120px; height:auto;" />
                             </p>
@@ -256,13 +246,12 @@ $conn->close();
                         <?php endif; ?>
                     </div>
 
-                    <!-- 5) PROPERTY CUSTODIAN SIGNATURE -->
+                    <!-- 4) Property Custodian -->
                     <div class="col-md-6">
                         <label class="form-label">Property Custodian:</label>
                         <?php if (!empty($booking['property_custodian_signature'])): ?>
                             <p>
-                                <img
-                                    src="/main/IntelliDocM/qr_codes/<?= basename($booking['property_custodian_signature']) ?>"
+                                <img src="<?= htmlspecialchars($booking['property_custodian_signature']) ?>"
                                     alt="Property Custodian Signature"
                                     style="max-width:120px; height:auto;" />
                             </p>
@@ -273,6 +262,13 @@ $conn->close();
                 </div>
             </div>
         </form>
+
+        <!-- 5) "Sign Document" Button -->
+        <div class="text-center mt-4">
+            <button type="button" id="signDocumentBtn" class="btn btn-success btn-lg">
+                Sign Document
+            </button>
+        </div>
     </div>
 
     <!-- Bootstrap JS (Optional) -->
@@ -281,6 +277,27 @@ $conn->close();
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('signDocumentBtn').addEventListener('click', function() {
+            // Make an AJAX call to sign_document.php
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'sign_document.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('All signatures have been generated!');
+                    window.location.reload(); // Refresh the page to show updated QR codes
+                } else {
+                    alert('Error signing the document: ' + xhr.responseText);
+                }
+            };
+
+            // Send the proposal_id so sign_document.php knows which booking to update
+            xhr.send('proposal_id=<?= urlencode($proposalId) ?>');
+        });
+    </script>
 </body>
 
 </html>
