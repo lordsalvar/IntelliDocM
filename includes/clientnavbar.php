@@ -23,7 +23,7 @@ if (substr($basePath, -1) !== '/') {
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #e31b23;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #bc000b;">
         <div class="container-fluid">
             <a class="navbar-brand text-white" href="#">IntelliDoc</a>
             <button class="navbar-toggler text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">

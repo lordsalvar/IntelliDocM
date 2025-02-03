@@ -10,7 +10,7 @@
 <style>
 footer {
     margin-top: 100px;
-    background-color: #e31b23;
+    background-color: #bc000b;
     color: white;
     text-align: center;
     padding: 0px;
