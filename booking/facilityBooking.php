@@ -58,7 +58,7 @@ logActivity($username, $userActivity);
                         output += `<p><strong>Blocked Dates:</strong> ${facilityData[facility].blocked.join(', ')}</p>`;
                     }
                     if (facilityData[facility].unavailable.length > 0) {
-                        output += `<p><strong>Unavailable Dates:</strong> ${facilityData[facility].unavailable.join(', ')}</p>`;
+                        output += `<p><strong>Booked Dates:</strong> ${facilityData[facility].unavailable.join(', ')}</p>`;
                     }
                 }
             });
