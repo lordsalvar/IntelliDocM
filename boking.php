@@ -514,7 +514,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Submit Button -->
                     <div class="form-group mt-4">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-primary mt-4" id="submitButton">
                                 Submit Request
                             </button>
