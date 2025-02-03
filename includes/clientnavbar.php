@@ -42,9 +42,7 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/activity_proposal_form.php">Student Forms</a>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="btn btn-red text-white" data-bs-toggle="modal" data-bs-target="#notificationModal">
-                            Notification
-                        </button>
+                        <a class="nav-link text-white" href="/main/IntelliDocM/notifications.php">Notifications</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/main/IntelliDocM/logout.php" onclick="return confirmLogout()">Logout</a>
