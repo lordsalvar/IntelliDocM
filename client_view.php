@@ -223,7 +223,7 @@ $stmt->close();
                     <div class="qr-code-container text-center">
                         <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
                     </div>
-                    <p class="text-success mt-2">Date Signed</p>
+                    <p class="text-success mt-2">Date Signed: <?php echo date("Y-m-d"); ?></p>
                 <?php else: ?>
                     <p class="text-warning mt-2">Awaiting approval.</p>
                 <?php endif; ?>
@@ -261,11 +261,15 @@ $stmt->close();
         // No booking record yet
     ?>
         <div class="text-center mt-5">
-            <a
-                href="boking.php?proposal_id=<?= urlencode($proposalId) ?>"
-                class="btn btn-primary btn-lg">
-                Book Facilities
-            </a>
+            <?php if ($proposal['status'] === 'Approved'): ?>
+                <a href="boking.php?proposal_id=<?= urlencode($proposalId) ?>" class="btn btn-primary btn-lg">
+                    Book Facilities
+                </a>
+            <?php else: ?>
+                <button class="btn btn-secondary btn-lg" disabled>
+                    Pending
+                </button>
+            <?php endif; ?>
         </div>
     <?php
     }
