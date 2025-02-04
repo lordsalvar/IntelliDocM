@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'database.php';
-require_once 'includes/notifications.php';
 include 'system_log/activity_log.php';
 
 // Start session and validate the user's login
@@ -27,9 +26,6 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $club_result = $stmt->get_result();
 $club_name = $club_result->fetch_assoc()['club_name'] ?? null;
-
-// Fetch unread notifications
-$notifications = getUnreadNotifications($user_id, $conn);
 
 // If no club is found, display a message
 if (!$club_name) {

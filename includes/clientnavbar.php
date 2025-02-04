@@ -1,5 +1,4 @@
 <?php
-include 'notifModal.php';
 // Calculate the base path relative to the current script
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
 
