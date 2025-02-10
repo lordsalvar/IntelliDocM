@@ -1,44 +1,70 @@
 <?php
-// 1) Include your database connection
 include 'database.php';
+$conn = getDbConnection();
 
-// 2) Get the proposal_id from the URL, e.g. view_booking.php?proposal_id=123
 $proposalId = isset($_GET['proposal_id']) ? (int) $_GET['proposal_id'] : 0;
 
-// 3) Fetch the booking record that matches this proposal_id
-$sql = "SELECT * FROM bookings WHERE proposal_id = ? LIMIT 1";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $proposalId);
-$stmt->execute();
-$result = $stmt->get_result();
-$booking = $result->fetch_assoc();
-$stmt->close();
-
-if (!$booking) {
-    // If no record found in "bookings" for this proposal_id
-    $conn->close();
-    die("No booking found for proposal_id = " . htmlspecialchars($proposalId));
+if ($proposalId === 0) {
+    die("Invalid proposal ID.");
 }
 
-// We'll need the booking ID to look up the booked facilities
-$bookingId = $booking['id'];
+// ✅ 1) Fetch the user who made the booking request
+$sqlFetch = "SELECT user_id, purpose FROM bookings WHERE proposal_id = ?";
+$fetchStmt = $conn->prepare($sqlFetch);
+$fetchStmt->bind_param("i", $proposalId);
+$fetchStmt->execute();
+$result = $fetchStmt->get_result();
+$booking = $result->fetch_assoc();
+$fetchStmt->close();
 
-// 4) Fetch all booked facilities for the found booking ID
-$sqlFacilities = "
-    SELECT bf.*, f.name AS facility_name
-    FROM booked_facilities bf
-    JOIN facilities f ON bf.facility_id = f.id
-    WHERE bf.booking_id = ?
-";
-$stmt2 = $conn->prepare($sqlFacilities);
-$stmt2->bind_param("i", $bookingId);
-$stmt2->execute();
-$facilitiesResult = $stmt2->get_result();
-$facilities = $facilitiesResult->fetch_all(MYSQLI_ASSOC);
-$stmt2->close();
+if ($booking) {
+    $user_id = $booking['user_id']; // Get the user who made the booking request
+    $purpose = $booking['purpose']; // Get the purpose of the booking
 
-$conn->close(); // Close DB connection now that we have all data
+    // ✅ 2) Fetch booked facility names using `id`
+    $sqlFacilities = "
+        SELECT f.name AS facility_name
+        FROM booked_facilities bf
+        INNER JOIN facilities f ON bf.facility_id = f.id
+        WHERE bf.booking_id = (SELECT id FROM bookings WHERE proposal_id = ?)
+    ";
+    $stmtFacilities = $conn->prepare($sqlFacilities);
+    $stmtFacilities->bind_param("i", $proposalId);
+    $stmtFacilities->execute();
+    $facilitiesResult = $stmtFacilities->get_result();
+    $facilityNames = [];
+
+    while ($row = $facilitiesResult->fetch_assoc()) {
+        $facilityNames[] = $row['facility_name'];
+    }
+
+    $stmtFacilities->close();
+
+    // ✅ Debugging Output: Check if facilities are found
+    file_put_contents('debug_log.txt', "Facilities found: " . json_encode($facilityNames) . "\n", FILE_APPEND);
+
+    $facilityList = !empty($facilityNames) ? implode(", ", $facilityNames) : "No facilities found";
+
+    // ✅ 3) Insert Notification for the User
+    $message = empty($facilityNames)
+        ? "Your booking request has been approved."
+        : "Your booking request for '$facilityList' has been approved for '$purpose'.";
+
+    $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
+    $insertNotificationStmt = $conn->prepare($insertNotificationSql);
+    $insertNotificationStmt->bind_param("is", $user_id, $message);
+    $insertNotificationStmt->execute();
+    $insertNotificationStmt->close();
+}
+
+// ✅ 4) Redirect back to the admin panel with a success message
+header("Location: admin_panel.php?msg=Booking Approved Successfully");
+exit();
+
+$conn->close();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

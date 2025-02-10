@@ -33,17 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updateStmt->bind_param("ssi", $status, $rejectionReason, $id);
     $updateStmt->execute();
 
-    // Insert notification for the user
-    if (isset($proposal['user_id'], $proposal['activity_title'])) {
+    // ✅ Insert notification for the user when approved/rejected
+    if (isset($proposal['id'], $proposal['activity_title'])) {
+        insertNotification($proposal['user_id'], $message);
         $message = ($status === 'Approved')
             ? "Your activity proposal '{$proposal['activity_title']}' has been approved."
             : "Your activity proposal '{$proposal['activity_title']}' has been rejected. Reason: $rejectionReason";
 
-        $insertNotificationSql = "INSERT INTO notifications (proposal_id, user_id, message) VALUES (?, ?, ?)";
+        $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
         $insertNotificationStmt = $conn->prepare($insertNotificationSql);
-        $insertNotificationStmt->bind_param("iis", $id, $proposal['user_id'], $message);
+        $insertNotificationStmt->bind_param("is", $user_id, $message);
         $insertNotificationStmt->execute();
+        $insertNotificationStmt->close();
     }
+
 
     header("Location: /main/IntelliDocM/admin/view_proposals.php");
     exit;

@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $bookingId = $stmt->insert_id;
 
         // Generate QR code for requested_by_signature
-        $qrData = "http://localhost/main/IntelliDocM/verify_qr/verify_booking.php?booking_id=" . urlencode($bookingId);
+        $qrData = "http://10.6.8.72/main/IntelliDocM/verify_qr/verify_booking_qr.php?proposal_id=" . urlencode($bookingId);
         $qrDirectory = "client_qr_codes";
         if (!is_dir($qrDirectory)) {
             mkdir($qrDirectory, 0777, true);
@@ -363,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <?php include 'includes/clientnavbar.php'; ?>
     </header>
-    
+
     <div class="container mt-5">
         <!-- Overlay Box -->
         <div class="overlay-box">

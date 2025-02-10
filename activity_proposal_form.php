@@ -251,7 +251,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $proposal_id = $stmt->insert_id;
 
         // Generate QR Code for Applicant Signature
-        $qrData = "http://192.168.0.106/main/IntelliDocM/verify_qr/verify_qr.php?proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
+        $qrData = "http://10.6.8.72/main/IntelliDocM/verify_qr/verify_qr.php?proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
 
 
         // Define the directory to save QR codes

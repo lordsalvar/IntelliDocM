@@ -80,7 +80,7 @@ function generateSignatureQR($bookingId, $role, $directory)
 {
     // Build the data you'd want to embed in the QR
     // e.g. pass booking_id and role to the verify page
-    $qrData = "http://localhost/main/IntelliDocM/verify_qr/verify_booking.php?booking_id="
+    $qrData = "http://10.6.8.72/main/IntelliDocM/verify_admin_booking_qr.php?proposal_id="
         . urlencode($bookingId) . "&role=" . urlencode($role);
 
     // Generate file path

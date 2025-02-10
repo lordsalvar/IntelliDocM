@@ -1,0 +1,673 @@
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 5
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 5
+Notifications fetched: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 5
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 5
+Notifications fetched: []
+Fetching notifications for user_id: 5
+Notifications fetched: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Facilities found: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Facilities found: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 2
+Notifications fetched: [{"id":8,"message":"Your booking request has been approved.","created_at":"2025-02-04 12:39:25"},{"id":7,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:56:11"},{"id":6,"message":"Your booking request has been approved, but no facilities were found.","created_at":"2025-02-04 08:53:56"},{"id":5,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:38"},{"id":4,"message":"Your booking request for 'unknown facilities' has been approved for 'valenitines day'.","created_at":"2025-02-04 08:50:20"},{"id":3,"message":"Your block request for 'Ladouix Hall' on 2025-12-28 has been approved.","created_at":"2025-02-04 08:36:22"},{"id":2,"message":"Your block request for Facility ID 9 on 2025-12-25 has been approved.","created_at":"2025-02-04 08:25:45"},{"id":1,"message":"Your activity proposal 'valenitines day' has been approved.","created_at":"2025-02-04 08:05:01"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 6
+Notifications fetched: [{"id":9,"message":"Your block request for 'Norbert Bldg.' on 2025-02-10 has been approved.","created_at":"2025-02-04 14:26:54"}]
+Facilities found: ["Norbert Bldg."]
+Fetching notifications for user_id: 6
+Notifications fetched: [{"id":10,"message":"Your booking request for 'Norbert Bldg.' has been approved for 'Tutorial'.","created_at":"2025-02-04 14:30:35"},{"id":9,"message":"Your block request for 'Norbert Bldg.' on 2025-02-10 has been approved.","created_at":"2025-02-04 14:26:54"}]
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 7
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 9
+Notifications fetched: []
+Fetching notifications for user_id: 9
+Notifications fetched: []
+Fetching notifications for user_id: 9
+Notifications fetched: []
+Fetching notifications for user_id: 9
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 9
+Notifications fetched: []
+Facilities found: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 13
+Notifications fetched: []
+Fetching notifications for user_id: 13
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Facilities found: ["Gymnasium"]
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 12
+Notifications fetched: [{"id":16,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-04 14:58:42"},{"id":15,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-04 14:57:55"},{"id":14,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-04 14:57:36"},{"id":13,"message":"Your block request for 'Gymnasium' on 2025-02-06 has been approved.","created_at":"2025-02-04 14:54:21"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 15
+Notifications fetched: [{"id":18,"message":"Your block request for 'Gymnasium' on 2025-04-13 has been approved.","created_at":"2025-02-04 15:25:44"}]
+Fetching notifications for user_id: 15
+Notifications fetched: [{"id":18,"message":"Your block request for 'Gymnasium' on 2025-04-13 has been approved.","created_at":"2025-02-04 15:25:44"}]
+Fetching notifications for user_id: 15
+Notifications fetched: [{"id":18,"message":"Your block request for 'Gymnasium' on 2025-04-13 has been approved.","created_at":"2025-02-04 15:25:44"}]
+Fetching notifications for user_id: 15
+Notifications fetched: [{"id":18,"message":"Your block request for 'Gymnasium' on 2025-04-13 has been approved.","created_at":"2025-02-04 15:25:44"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 18
+Notifications fetched: [{"id":19,"message":"Your block request for 'Gymnasium' on 2025-03-24 has been approved.","created_at":"2025-02-04 15:58:09"}]
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 18
+Notifications fetched: [{"id":20,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-04 16:01:12"},{"id":19,"message":"Your block request for 'Gymnasium' on 2025-03-24 has been approved.","created_at":"2025-02-04 15:58:09"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 21
+Notifications fetched: [{"id":22,"message":"Your booking request for 'Gymnasium' has been approved for 'general assembly'.","created_at":"2025-02-04 16:19:13"},{"id":21,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:15:16"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 25
+Notifications fetched: [{"id":24,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:33:07"},{"id":23,"message":"Your block request for 'H.E Hall' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:31:10"}]
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 25
+Notifications fetched: [{"id":25,"message":"Your booking request for 'Gymnasium' has been approved for 'skillympics'.","created_at":"2025-02-04 16:33:52"},{"id":24,"message":"Your block request for 'Gymnasium' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:33:07"},{"id":23,"message":"Your block request for 'H.E Hall' on 2025-02-05 has been approved.","created_at":"2025-02-04 16:31:10"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 27
+Notifications fetched: [{"id":26,"message":"Your block request for 'Camp Raymond Bldg.' on 2025-02-10 has been approved.","created_at":"2025-02-04 16:45:12"}]
+Facilities found: ["Camp Raymond Bldg."]
+Fetching notifications for user_id: 27
+Notifications fetched: [{"id":27,"message":"Your booking request for 'Camp Raymond Bldg.' has been approved for 'Mag ampo'.","created_at":"2025-02-04 16:46:31"},{"id":26,"message":"Your block request for 'Camp Raymond Bldg.' on 2025-02-10 has been approved.","created_at":"2025-02-04 16:45:12"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 30
+Notifications fetched: [{"id":28,"message":"Your block request for 'Open Court w\/ Lights' on 2025-02-05 has been approved.","created_at":"2025-02-04 17:54:08"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: ["Ladouix Hall"]
+Fetching notifications for user_id: 35
+Notifications fetched: [{"id":31,"message":"Your booking request for 'Ladouix Hall' has been approved for 'photoshoot'.","created_at":"2025-02-05 14:58:22"},{"id":30,"message":"Your block request for 'Ladouix Hall' on 2025-01-05 has been approved.","created_at":"2025-02-05 14:53:53"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 38
+Notifications fetched: [{"id":32,"message":"Your block request for 'Ladouix Hall' on 2025-02-20 has been approved.","created_at":"2025-02-05 15:15:39"}]
+Facilities found: []
+Fetching notifications for user_id: 38
+Notifications fetched: [{"id":33,"message":"Your booking request has been approved.","created_at":"2025-02-05 15:16:29"},{"id":32,"message":"Your block request for 'Ladouix Hall' on 2025-02-20 has been approved.","created_at":"2025-02-05 15:15:39"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 43
+Notifications fetched: []
+Fetching notifications for user_id: 42
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 41
+Notifications fetched: [{"id":35,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-05 15:27:31"},{"id":34,"message":"Your block request for 'Gymnasium' on 2025-02-19 has been approved.","created_at":"2025-02-05 15:25:17"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: ["Open Court w\/ Lights"]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: []
+Fetching notifications for user_id: 47
+Notifications fetched: [{"id":39,"message":"Your booking request has been approved.","created_at":"2025-02-05 15:50:13"},{"id":38,"message":"Your block request for 'Piazza' on 2025-02-20 has been approved.","created_at":"2025-02-05 15:49:31"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 47
+Notifications fetched: [{"id":39,"message":"Your booking request has been approved.","created_at":"2025-02-05 15:50:13"},{"id":38,"message":"Your block request for 'Piazza' on 2025-02-20 has been approved.","created_at":"2025-02-05 15:49:31"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 50
+Notifications fetched: []
+Facilities found: ["Ladouix Hall"]
+Fetching notifications for user_id: 50
+Notifications fetched: [{"id":42,"message":"Your booking request for 'Ladouix Hall' has been approved for 'Mini Olymopics'.","created_at":"2025-02-05 16:07:29"},{"id":40,"message":"Your block request for 'Ladouix Hall' on 2025-10-21 has been approved.","created_at":"2025-02-05 16:06:43"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 51
+Notifications fetched: [{"id":41,"message":"Your block request for 'Nursing Room\/Hall' on 2025-11-30 has been approved.","created_at":"2025-02-05 16:06:46"}]
+Fetching notifications for user_id: 50
+Notifications fetched: [{"id":42,"message":"Your booking request for 'Ladouix Hall' has been approved for 'Mini Olymopics'.","created_at":"2025-02-05 16:07:29"},{"id":40,"message":"Your block request for 'Ladouix Hall' on 2025-10-21 has been approved.","created_at":"2025-02-05 16:06:43"}]
+Facilities found: ["Nursing Room\/Hall"]
+Fetching notifications for user_id: 51
+Notifications fetched: [{"id":43,"message":"Your booking request for 'Nursing Room\/Hall' has been approved for 'Laboratory Activity'.","created_at":"2025-02-05 16:12:52"},{"id":41,"message":"Your block request for 'Nursing Room\/Hall' on 2025-11-30 has been approved.","created_at":"2025-02-05 16:06:46"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: []
+Fetching notifications for user_id: 52
+Notifications fetched: [{"id":45,"message":"Your booking request has been approved.","created_at":"2025-02-05 16:18:31"},{"id":44,"message":"Your block request for 'Nursing Room\/Hall' on 2025-04-04 has been approved.","created_at":"2025-02-05 16:17:18"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 52
+Notifications fetched: [{"id":45,"message":"Your booking request has been approved.","created_at":"2025-02-05 16:18:31"},{"id":44,"message":"Your block request for 'Nursing Room\/Hall' on 2025-04-04 has been approved.","created_at":"2025-02-05 16:17:18"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 53
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 55
+Notifications fetched: [{"id":47,"message":"Your booking request for 'Gymnasium' has been approved for 'IT WEEK'.","created_at":"2025-02-05 16:32:45"},{"id":46,"message":"Your block request for 'Gymnasium' on 2025-05-13 has been approved.","created_at":"2025-02-05 16:32:24"}]
+Fetching notifications for user_id: 55
+Notifications fetched: [{"id":47,"message":"Your booking request for 'Gymnasium' has been approved for 'IT WEEK'.","created_at":"2025-02-05 16:32:45"},{"id":46,"message":"Your block request for 'Gymnasium' on 2025-05-13 has been approved.","created_at":"2025-02-05 16:32:24"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 61
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 61
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 58
+Notifications fetched: [{"id":48,"message":"Your block request for 'Norbert Bldg.' on 2025-02-08 has been approved.","created_at":"2025-02-05 16:36:37"}]
+Fetching notifications for user_id: 58
+Notifications fetched: [{"id":48,"message":"Your block request for 'Norbert Bldg.' on 2025-02-08 has been approved.","created_at":"2025-02-05 16:36:37"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 68
+Notifications fetched: [{"id":56,"message":"Your booking request for 'Gymnasium' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-05 18:06:16"},{"id":55,"message":"Your block request for 'Gymnasium' on 2025-03-06 has been approved.","created_at":"2025-02-05 18:02:40"}]
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Fetching notifications for user_id: 1
+Notifications fetched: []
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 71
+Notifications fetched: [{"id":58,"message":"Your booking request for 'Gymnasium' has been approved for 'Mini Olymopics'.","created_at":"2025-02-06 14:38:31"},{"id":57,"message":"Your block request for 'Gymnasium' on 2025-02-07 has been approved.","created_at":"2025-02-06 14:35:03"}]
+Facilities found: ["Gymnasium","Coindre Bldg. (CR)"]
+Fetching notifications for user_id: 74
+Notifications fetched: [{"id":63,"message":"Your booking request for 'Gymnasium, Coindre Bldg. (CR)' has been approved for 'Mini Olymopics'.","created_at":"2025-02-06 15:04:13"},{"id":62,"message":"Your block request for 'Coindre Bldg. (CR)' on 2025-02-15 has been approved.","created_at":"2025-02-06 15:00:28"},{"id":61,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-06 15:00:24"}]
+Fetching notifications for user_id: 74
+Notifications fetched: [{"id":63,"message":"Your booking request for 'Gymnasium, Coindre Bldg. (CR)' has been approved for 'Mini Olymopics'.","created_at":"2025-02-06 15:04:13"},{"id":62,"message":"Your block request for 'Coindre Bldg. (CR)' on 2025-02-15 has been approved.","created_at":"2025-02-06 15:00:28"},{"id":61,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-06 15:00:24"}]
+Fetching notifications for user_id: 74
+Notifications fetched: [{"id":63,"message":"Your booking request for 'Gymnasium, Coindre Bldg. (CR)' has been approved for 'Mini Olymopics'.","created_at":"2025-02-06 15:04:13"},{"id":62,"message":"Your block request for 'Coindre Bldg. (CR)' on 2025-02-15 has been approved.","created_at":"2025-02-06 15:00:28"},{"id":61,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-06 15:00:24"}]
+Facilities found: []
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 74
+Notifications fetched: [{"id":63,"message":"Your booking request for 'Gymnasium, Coindre Bldg. (CR)' has been approved for 'Mini Olymopics'.","created_at":"2025-02-06 15:04:13"},{"id":62,"message":"Your block request for 'Coindre Bldg. (CR)' on 2025-02-15 has been approved.","created_at":"2025-02-06 15:00:28"},{"id":61,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-06 15:00:24"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Facilities found: []
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Fetching notifications for user_id: 77
+Notifications fetched: [{"id":65,"message":"Your block request for 'Open Court w\/ Lights' on 2025-07-25 has been approved.","created_at":"2025-02-06 15:26:05"},{"id":64,"message":"Your booking request has been approved.","created_at":"2025-02-06 15:17:58"}]
+Facilities found: ["Open Court w\/ Lights"]
+Fetching notifications for user_id: 82
+Notifications fetched: [{"id":69,"message":"Your booking request for 'Open Court w\/ Lights' has been approved for 'CSP Intramurals 2025'.","created_at":"2025-02-06 16:03:27"},{"id":68,"message":"Your block request for 'Open Court w\/ Lights' on 2025-03-01 has been approved.","created_at":"2025-02-06 16:01:35"}]
+Facilities found: ["H.E Hall"]
+Fetching notifications for user_id: 86
+Notifications fetched: [{"id":72,"message":"Your booking request for 'H.E Hall' has been approved for 'skillympics'.","created_at":"2025-02-06 16:42:51"},{"id":71,"message":"Your block request for 'H.E Hall' on 0025-04-13 has been approved.","created_at":"2025-02-06 16:40:18"}]
+Facilities found: ["Norbert Bldg."]
+Fetching notifications for user_id: 89
+Notifications fetched: [{"id":76,"message":"Your booking request for 'Norbert Bldg.' has been approved for 'Intramurals Debate'.","created_at":"2025-02-06 16:59:35"},{"id":75,"message":"Your block request for 'Norbert Bldg.' on 2025-02-14 has been approved.","created_at":"2025-02-06 16:55:49"}]
+Fetching notifications for user_id: 89
+Notifications fetched: [{"id":76,"message":"Your booking request for 'Norbert Bldg.' has been approved for 'Intramurals Debate'.","created_at":"2025-02-06 16:59:35"},{"id":75,"message":"Your block request for 'Norbert Bldg.' on 2025-02-14 has been approved.","created_at":"2025-02-06 16:55:49"}]
+Fetching notifications for user_id: 89
+Notifications fetched: [{"id":76,"message":"Your booking request for 'Norbert Bldg.' has been approved for 'Intramurals Debate'.","created_at":"2025-02-06 16:59:35"},{"id":75,"message":"Your block request for 'Norbert Bldg.' on 2025-02-14 has been approved.","created_at":"2025-02-06 16:55:49"}]
+Facilities found: ["Gymnasium"]
+Fetching notifications for user_id: 92
+Notifications fetched: [{"id":78,"message":"Your booking request for 'Gymnasium' has been approved for 'skillympics'.","created_at":"2025-02-06 17:17:25"},{"id":77,"message":"Your block request for 'Gymnasium' on 2025-03-18 has been approved.","created_at":"2025-02-06 17:14:50"}]
+Facilities found: ["Atrium"]
+Fetching notifications for user_id: 95
+Notifications fetched: [{"id":80,"message":"Your booking request for 'Atrium' has been approved for 'debate'.","created_at":"2025-02-06 17:29:59"},{"id":79,"message":"Your block request for 'Atrium' on 2025-03-07 has been approved.","created_at":"2025-02-06 17:29:14"}]
+Facilities found: []
+Fetching notifications for user_id: 101
+Notifications fetched: [{"id":85,"message":"Your block request for 'Ladouix Hall' on 2025-04-02 has been approved.","created_at":"2025-02-07 16:33:28"},{"id":84,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-07 16:33:24"}]
+Facilities found: []
+Fetching notifications for user_id: 101
+Notifications fetched: [{"id":88,"message":"Your booking request has been approved.","created_at":"2025-02-07 16:36:12"},{"id":85,"message":"Your block request for 'Ladouix Hall' on 2025-04-02 has been approved.","created_at":"2025-02-07 16:33:28"},{"id":84,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-07 16:33:24"}]
+Facilities found: []
+Fetching notifications for user_id: 101
+Notifications fetched: [{"id":88,"message":"Your booking request has been approved.","created_at":"2025-02-07 16:36:12"},{"id":85,"message":"Your block request for 'Ladouix Hall' on 2025-04-02 has been approved.","created_at":"2025-02-07 16:33:28"},{"id":84,"message":"Your block request for 'Gymnasium' on 2025-02-14 has been approved.","created_at":"2025-02-07 16:33:24"}]
+Facilities found: []
+Facilities found: []
+Facilities found: []
