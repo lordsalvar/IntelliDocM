@@ -1,0 +1,70 @@
+/* Print settings for excluding header and footer while maintaining document layout */
+
+body, html {
+    -webkit-print-color-adjust: exact; /* Ensures colors are printed as they appear on screen */
+    print-color-adjust: exact; /* Standard syntax for color adjustment */
+    background: #fff; /* Set background to white for printing */
+    color: #333; /* Ensure text color is black for print */
+    font-family: "Poppins", sans-serif;
+    font-size: 16px; /* Maintain the same font size as on the screen */
+}
+
+/* Hide header and footer elements when printing */
+header, footer {
+    display: none !important; /* Force these elements to not display */
+}
+
+/* Ensure the main content container is styled appropriately for print */
+.container {
+    background-color: white;
+    padding: 20px 30px;
+    margin: 5000px auto; /* Increased top and bottom margin for better spacing */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1400px;
+}
+
+/* Maintain visibility and formatting of all internal content */
+.overlay-box, .header-logo, .header-content, .form-section, #facilities-list {
+    visibility: visible; /* Ensure all content is visible */
+}
+
+ /* Adjust the positioning of the overlay box for printing */
+ .overlay-box {
+    position: absolute;
+    top: 20px;  /* Adjust 'top' as necessary to align correctly on the page */
+    right: 5px;  /* Adjust 'right' to keep it in the corner or wherever it needs to be */
+    width: auto;  /* Optionally adjust the width */
+    border: 1px solid #000; /* Ensure border is visible in print */
+    background-color: #fff; /* Optional: set a background color for visibility */
+    box-shadow: none; /* Remove shadow for print */
+    z-index: 900;
+}
+
+.header-logo {
+    display: block;
+    margin: 0 auto 10px; /* Center the logo and add margin below */
+    width: auto; /* Adjust logo size for print */
+    height: 120px;
+}
+
+.header-text, .form-section {
+    text-align: center; /* Center text for a clean look */
+}
+
+/* Style input fields and checkboxes to appear clearly */
+input[type="text"], input[type="date"], input[type="time"], textarea, .form-check-input {
+    border: 1px solid #ccc; /* Ensure inputs are clearly bordered */
+    padding: 8px; /* Maintain padding for inputs */
+}
+
+/* Hide buttons and any interactive elements during print */
+button, .btn {
+    display: none; /* Ensure buttons do not print */
+}
+
+@media print {
+    button[onclick="window.print();"], .btn {
+        display: none; /* Hide the print button when printing */
+    }
+}

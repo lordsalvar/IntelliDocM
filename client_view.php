@@ -22,31 +22,33 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposal Document</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .form-control[readonly],
-        .form-check-input[disabled] {
-            background-color: #e9ecef;
-            color: #6c757d;
-        }
-
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-    </style>
+    <link rel="stylesheet" href="css/print.css" media="print">
+    <link rel="stylesheet" href="css/client_view.css">
 </head>
 
 <body>
-    <a href="javascript:history.back()" class="btn btn-secondary back-button">
-        &larr; Back
-    </a>
+    <header>
+        <?php include 'includes/clientnavbar.php'; ?>
+    </header>
+
     <div class="container my-5">
+        <!-- Overlay Box -->
+        <div class="overlay-box">
+            <p><strong>Index No.:</strong> <u> 7.3 </u></p>
+            <p><strong>Revision No.:</strong> <u> 00 </u></p>
+            <p><strong>Effective Date:</strong> <u> 05/16/24 </u></p>
+            <p><strong>Control No.:</strong> ___________</p>
+        </div>
+        <div class="header-content">
+            <img src="css/img/cjc_logo.png" alt="Logo" class="header-logo">
+            <div class="header-text">
+                <h2 class="text-center text-uppercase">Cor Jesu College, Inc.</h2>
+                <div class="line yellow-line"></div>
+                <div class="line blue-line"></div>
+                <p class="text-center">Sacred Heart Avenue, Digos City, Province of Davao del Sur, Philippines</p>
+                <p class="text-center">Tel. No.: (082) 553-2433 local 101 • Fax No.: (082) 553-2333 • www.cjc.edu.ph</p>
+            </div>
+        </div>
         <h2 class="text-center mb-4">Proposal Document</h2>
 
         <?php if ($proposal): ?>
@@ -227,10 +229,17 @@ $stmt->close();
                 <?php else: ?>
                     <p class="text-warning mt-2">Awaiting approval.</p>
                 <?php endif; ?>
-            </div>
+                <div class="form-row mt-4">
+                    <div class="d-flex justify-content-center">
+                        <button onclick="window.print();" class="btn btn-primary mb-3">Print Document</button>
+                    </div>
+                </div>
         <?php else: ?>
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
+        <footer>
+            <?php include 'includes/footer.php'; ?>
+        </footer>
     </div>
 
     <?php

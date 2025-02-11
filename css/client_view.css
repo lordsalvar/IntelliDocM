@@ -1,0 +1,240 @@
+/* General Styles */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container Styles */
+.container {
+    background-color: white;
+    padding: 20px 30px;
+    margin: 5000px auto; /* Increased top and bottom margin for better spacing */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1400px;
+}
+
+/* Overlay Box Styles */
+.overlay-box {
+    position: absolute;
+    top: 150px; /* Adjusted for vertical alignment */
+    right: 100px; /* Right alignment */
+    transform: translateY(-50%); /* Center vertically relative to its height */
+    background-color: white;
+    border: 1px solid #000;
+    padding: 10px;
+    width: 230px;
+    text-align: left;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust paragraphs inside the overlay-box */
+.overlay-box p {
+    margin: 0 20px;
+    font-size: 0.9rem;
+}
+
+header {
+    position: relative; /* Needed for absolute positioning of child */
+    z-index: 1040; /* Lower than overlay-box */
+}
+
+/* Header Logo Styles */
+.header-logo {
+    float: left;
+    margin-left: 60px;
+    height: 120px;
+    width: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e31b23;
+}
+
+/* Header Content Styles */
+.header-content {
+    margin-right: 150px;
+}
+
+.header-text {
+    margin-left: 170px;
+}
+
+.header-text h2 {
+    color: #e31b23;
+    font-family: "Poppins", sans-serif;
+    font-size: 60px;
+}
+
+.header-text p {
+    color: #e31b23;
+}
+
+/* Decorative Line Styles */
+.line {
+    width: 115%;
+    height: 5px;
+}
+
+.yellow-line {
+    background-color: #ffd700;
+}
+
+.blue-line {
+    background-color: #0000ff;
+    margin-top: 1px;
+}
+
+/* Form Section Headers */
+h2 {
+    color: #e31b23;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Label Styles */
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: inline-block;
+    color: #333;
+}
+
+/* Input Field Styles */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: #e31b23;
+    box-shadow: 0 0 5px rgba(227, 27, 35, 0.5);
+}
+
+/* Textarea Styles */
+textarea {
+    resize: none;
+}
+
+/* Form Section Styles */
+.form-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-left: 5px solid #e31b23;
+    border-radius: 5px;
+}
+
+/* Checkbox and Radio Button Styles */
+.form-check-input {
+    accent-color: #e31b23;
+}
+
+.form-check-label {
+    margin-left: 5px;
+}
+
+/* Submit Button Styles */
+button[type="submit"] {
+    background-color: #e31b23;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #c92327;
+}
+
+/* Success Button Styles */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    text-decoration: none;
+}
+
+.form-control[readonly],
+.form-check-input[disabled] {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 20px;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    button[type="submit"], .btn-success {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #e31b23;
+    color: white;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #e31b23;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
