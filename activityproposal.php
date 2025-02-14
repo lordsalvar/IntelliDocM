@@ -271,7 +271,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Activity Proposal Form</title>
     <link href="css/act_Pro.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         // Log activity before submission
         function logSubmitProposal() {
@@ -423,27 +424,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Facility Bookings (Improved UI) -->
-            <h4 class="mb-3">Facility Bookings (Optional)</h4>
+            <!-- Facility Bookings (Improved UI with icon buttons) -->
+
             <div id="facilityBookingsContainer">
                 <!-- First (default) booking block -->
                 <div class="card mb-3 facility-booking" data-index="0">
                     <div class="card-body">
                         <h5 class="card-title">Facility Booking #<span class="booking-number">1</span></h5>
-
                         <!-- Facility Selection -->
                         <div class="mb-3">
                             <label for="facilitySelect_0" class="form-label fw-bold">Select Facility:</label>
-                            <select class="form-select" id="facilitySelect_0" name="facilityBookings[0][facility]">
-                                <option value="">-- Select Facility --</option>
-                                <?php foreach ($facilities as $facility): ?>
-                                    <option value="<?php echo $facility['id']; ?>">
-                                        <?php echo htmlspecialchars($facility['name']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div class="input-group">
+                                <select class="form-select form-select-sm" id="facilitySelect_0" name="facilityBookings[0][facility]">
+                                    <option value="">-- Select Facility --</option>
+                                    <?php foreach ($facilities as $facility): ?>
+                                        <option value="<?php echo $facility['id']; ?>">
+                                            <?php echo htmlspecialchars($facility['name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button type="button" id="addBooking" class="btn btn-primary btn-sm" title="Add Another Facility Booking">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </div>
                         </div>
-
                         <!-- Time Slots -->
                         <div class="time-slots" data-index="0">
                             <!-- One time slot row -->
@@ -461,24 +465,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <input type="time" class="form-control" name="facilityBookings[0][slots][0][end]">
                                 </div>
                                 <div class="col-md-3 text-end">
-                                    <button type="button" class="removeSlot btn btn-danger btn-sm mt-4">Remove Slot</button>
+                                    <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="0" title="Add Time Slot">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="button" class="addSlot btn btn-secondary btn-sm mt-3" data-index="0">
-                            Add Time Slot
-                        </button>
                     </div>
                     <div class="card-footer text-end">
-                        <button type="button" class="removeBooking btn btn-outline-danger btn-sm">
-                            Remove Facility Booking
+                        <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <button type="button" id="addBooking" class="btn btn-primary mb-4">Add Another Facility Booking</button>
 
             <!-- Venue and Time -->
             <div class="row mb-4" id="venue-address-container">
@@ -546,7 +551,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Submit Button -->
+            <!-- Final Submit Button -->
             <div class="text-center">
                 <button type="submit" class="btn btn-success" onclick="logSubmitProposal()">
                     Submit Proposal
@@ -571,7 +576,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 blockDiv.innerHTML = `
           <div class="card-body">
             <h5 class="card-title">Facility Booking #<span class="booking-number">${bookingIndex + 1}</span></h5>
-
             <div class="mb-3">
               <label for="facilitySelect_${bookingIndex}" class="form-label fw-bold">Select Facility:</label>
               <select class="form-select" id="facilitySelect_${bookingIndex}" name="facilityBookings[${bookingIndex}][facility]">
@@ -583,7 +587,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endforeach; ?>
               </select>
             </div>
-
             <div class="time-slots" data-index="0">
               <div class="row g-2 align-items-end time-slot" data-index="0">
                 <div class="col-md-3">
@@ -599,20 +602,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <input type="time" class="form-control" name="facilityBookings[${bookingIndex}][slots][0][end]">
                 </div>
                 <div class="col-md-3 text-end">
-                  <button type="button" class="removeSlot btn btn-danger btn-sm mt-4">
-                    Remove Slot
+                <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="${bookingIndex}" title="Add Time Slot">
+              <i class="fas fa-plus"></i>
+            </button>
+                  <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
+                    <i class="fas fa-trash"></i>
                   </button>
                 </div>
               </div>
             </div>
-
-            <button type="button" class="addSlot btn btn-secondary btn-sm mt-3" data-index="${bookingIndex}">
-              Add Time Slot
-            </button>
+            
           </div>
           <div class="card-footer text-end">
-            <button type="button" class="removeBooking btn btn-outline-danger btn-sm">
-              Remove Facility Booking
+            <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
+              <i class="fas fa-times"></i>
             </button>
           </div>
         `;
@@ -622,14 +625,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Remove a facility booking block
             document.getElementById("facilityBookingsContainer").addEventListener("click", function(e) {
-                if (e.target && e.target.classList.contains("removeBooking")) {
+                if (e.target && e.target.closest(".removeBooking")) {
                     e.target.closest(".facility-booking").remove();
                 }
             });
 
             // Add a new time slot within a facility booking block
             document.getElementById("facilityBookingsContainer").addEventListener("click", function(e) {
-                if (e.target && e.target.classList.contains("addSlot")) {
+                if (e.target && e.target.closest(".addSlot")) {
                     const block = e.target.closest(".facility-booking");
                     const bookingIdx = block.dataset.index;
                     const timeSlotsContainer = block.querySelector(".time-slots");
@@ -653,8 +656,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <input type="time" class="form-control" name="facilityBookings[${bookingIdx}][slots][${slotIndex}][end]">
             </div>
             <div class="col-md-3 text-end">
-              <button type="button" class="removeSlot btn btn-danger btn-sm mt-4">
-                Remove Slot
+              <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           `;
@@ -664,7 +667,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Remove a time slot
             document.getElementById("facilityBookingsContainer").addEventListener("click", function(e) {
-                if (e.target && e.target.classList.contains("removeSlot")) {
+                if (e.target && e.target.closest(".removeSlot")) {
                     e.target.closest(".time-slot").remove();
                 }
             });
