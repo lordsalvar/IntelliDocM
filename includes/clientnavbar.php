@@ -35,7 +35,7 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="/main/IntelliDocM/client.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/main/IntelliDocM/booking/facilityBooking.php">Facility Request</a>
+                        <a class="nav-link text-white" href="booking/calendar.php">Calendar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/main/IntelliDocM/activity_proposal_form.php">Student Forms</a>
