@@ -424,79 +424,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Facility Bookings (Improved UI with icon buttons) -->
-
-            <div id="facilityBookingsContainer">
-                <!-- First (default) booking block -->
-                <div class="card mb-3 facility-booking" data-index="0">
-                    <div class="card-body">
-                        <h5 class="card-title">Facility Booking #<span class="booking-number">1</span></h5>
-                        <!-- Facility Selection -->
-                        <div class="mb-3">
-                            <label for="facilitySelect_0" class="form-label fw-bold">Select Facility:</label>
-                            <div class="input-group">
-                                <select class="form-select form-select-sm" id="facilitySelect_0" name="facilityBookings[0][facility]">
-                                    <option value="">-- Select Facility --</option>
-                                    <?php foreach ($facilities as $facility): ?>
-                                        <option value="<?php echo $facility['id']; ?>">
-                                            <?php echo htmlspecialchars($facility['name']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="button" id="addBooking" class="btn btn-primary btn-sm" title="Add Another Facility Booking">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Time Slots -->
-                        <div class="time-slots" data-index="0">
-                            <!-- One time slot row -->
-                            <div class="row g-2 align-items-end time-slot" data-index="0">
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Date:</label>
-                                    <input type="date" class="form-control" name="facilityBookings[0][slots][0][date]">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Start Time:</label>
-                                    <input type="time" class="form-control" name="facilityBookings[0][slots][0][start]">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">End Time:</label>
-                                    <input type="time" class="form-control" name="facilityBookings[0][slots][0][end]">
-                                </div>
-                                <div class="col-md-3 text-end">
-                                    <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="0" title="Add Time Slot">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                    <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card-footer text-end">
-                        <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Venue and Time -->
-            <div class="row mb-4" id="venue-address-container">
-                <div class="col-md-6">
-                    <label for="venue" class="form-label">Venue of the Activity:</label>
-                    <input type="text" class="form-control" id="venue" name="venue" placeholder="Enter venue" />
-                </div>
-                <div class="col-md-6">
-                    <label for="address" class="form-label">Address of the Venue:</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" />
-                </div>
-            </div>
-
             <div class="row mb-4">
                 <div class="row">
                     <div class="col-md-6">
@@ -508,55 +435,126 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="date" class="form-control" id="end-date" name="end_date" />
                     </div>
                 </div>
-                <div class="col-md-3 mt-3">
-                    <label for="startTime" class="form-label">Starting Time:</label>
-                    <input type="time" class="form-control" id="startTime" name="startTime" />
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label for="endTime" class="form-label">Finishing Time:</label>
-                    <input type="time" class="form-control" id="endTime" name="endTime" />
-                </div>
-            </div>
 
-            <!-- Participants -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <label for="targetParticipants" class="form-label">Target Participants:</label>
-                    <input type="text" class="form-control" id="targetParticipants" name="targetParticipants" placeholder="Enter target participants" />
-                </div>
-                <div class="col-md-6">
-                    <label for="expectedParticipants" class="form-label">Expected Number of Participants:</label>
-                    <input type="number" class="form-control" id="expectedParticipants" name="expectedParticipants" placeholder="Enter expected number" />
-                </div>
-            </div>
 
-            <!-- Signatures -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <label class="form-label">Applicant</label>
-                    <input type="text" class="form-control mb-2" name="applicantName" placeholder="Applicant Name"
-                        value="<?php echo setValue($applicant_name); ?>" <?php echo setReadonly($applicant_name); ?> />
-                    <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation"
-                        value="<?php echo setValue($club_data['designation']); ?>" <?php echo setReadonly($club_data['designation']); ?> />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Moderator</label>
-                    <input type="text" class="form-control mb-2" name="moderatorName" placeholder="Moderator Name"
-                        value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Noted by:</label>
-                    <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature"
-                        value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
-                </div>
-            </div>
 
-            <!-- Final Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-success" onclick="logSubmitProposal()">
-                    Submit Proposal
-                </button>
-            </div>
+                <!-- Facility Bookings (Improved UI with icon buttons) -->
+
+                <div id="facilityBookingsContainer">
+                    <!-- First (default) booking block -->
+                    <div class="card mb-3 facility-booking mt-3" data-index="0">
+                        <div class="card-body">
+                            <h5 class="card-title">Facility Booking #<span class="booking-number">1</span></h5>
+                            <!-- Facility Selection -->
+                            <div class="mb-3">
+                                <label for="facilitySelect_0" class="form-label fw-bold">Select Facility:</label>
+                                <div class="input-group">
+                                    <select class="form-select form-select-sm" id="facilitySelect_0" name="facilityBookings[0][facility]">
+                                        <option value="">-- Select Facility --</option>
+                                        <?php foreach ($facilities as $facility): ?>
+                                            <option value="<?php echo $facility['id']; ?>">
+                                                <?php echo htmlspecialchars($facility['name']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="button" id="addBooking" class="btn btn-primary btn-sm" title="Add Another Facility Booking">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Time Slots -->
+                            <div class="time-slots" data-index="0">
+                                <!-- One time slot row -->
+                                <div class="row g-2 align-items-end time-slot" data-index="0">
+                                    <div class="col-md-2">
+                                        <label class="form-label fw-bold">Date:</label>
+                                        <input type="date" class="form-control" name="facilityBookings[0][slots][0][date]">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label fw-bold">Room or Building</label>
+                                        <input type="room_bulding" class="form-control" name="facilityBookings[0][slots][0][date]">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label fw-bold">Start Time:</label>
+                                        <input type="time" class="form-control" name="facilityBookings[0][slots][0][start]">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold">End Time:</label>
+                                        <input type="time" class="form-control" name="facilityBookings[0][slots][0][end]">
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="0" title="Add Time Slot">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button type="button" class="removeSlot btn btn-danger col-md-2 btn-sm mt-4" title="Remove Slot">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-end">
+                            <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Venue and Time -->
+                <div class="row mb-4" id="venue-address-container">
+                    <div class="col-md-6">
+                        <label for="venue" class="form-label">Venue of the Activity:</label>
+                        <input type="text" class="form-control" id="venue" name="venue" placeholder="Enter venue" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="address" class="form-label">Address of the Venue:</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" />
+                    </div>
+                </div>
+
+
+                <!-- Participants -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="targetParticipants" class="form-label">Target Participants:</label>
+                        <input type="text" class="form-control" id="targetParticipants" name="targetParticipants" placeholder="Enter target participants" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="expectedParticipants" class="form-label">Expected Number of Participants:</label>
+                        <input type="number" class="form-control" id="expectedParticipants" name="expectedParticipants" placeholder="Enter expected number" />
+                    </div>
+                </div>
+
+                <!-- Signatures -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Applicant</label>
+                        <input type="text" class="form-control mb-2" name="applicantName" placeholder="Applicant Name"
+                            value="<?php echo setValue($applicant_name); ?>" <?php echo setReadonly($applicant_name); ?> />
+                        <input type="text" class="form-control mb-2" name="applicantDesignation" placeholder="Designation"
+                            value="<?php echo setValue($club_data['designation']); ?>" <?php echo setReadonly($club_data['designation']); ?> />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Moderator</label>
+                        <input type="text" class="form-control mb-2" name="moderatorName" placeholder="Moderator Name"
+                            value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Noted by:</label>
+                        <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature"
+                            value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
+                    </div>
+                </div>
+
+                <!-- Final Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success" onclick="logSubmitProposal()">
+                        Submit Proposal
+                    </button>
+                </div>
         </form>
     </div>
 
