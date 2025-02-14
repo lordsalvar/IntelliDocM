@@ -6,7 +6,7 @@ function logActivity($username, $userActivity)
 
     // Database connection (replace with your actual credentials)
     $dbHost = 'localhost';
-    $dbName = 'db';
+    $dbName = 'dbdb';
     $dbUser = 'root';
     $dbPass = '';
 

@@ -18,9 +18,6 @@ if ($_SESSION['role'] !== 'client') {
 }
 
 
-
-
-// Include database connection
 include 'system_log/activity_log.php';
 include 'database.php';
 include 'phpqrcode/qrlib.php';
