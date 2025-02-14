@@ -79,10 +79,10 @@ if (isset($_GET['delete'])) {
 // -------------------------
 // Pagination & Search Setup
 // -------------------------
-$limit     = 10; // Facilities per page
-$page      = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$page      = max($page, 1);
-$start     = ($page - 1) * $limit;
+$limit       = 10; // Facilities per page
+$page        = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$page        = max($page, 1);
+$start       = ($page - 1) * $limit;
 $searchParam = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $searchSQL = '';
@@ -104,203 +104,226 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Facility Management</title>
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        /* Global Styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #6d5dfc, #1493ff);
-            color: #333;
-        }
-        a {
-            text-decoration: none;
-        }
-        /* Navbar */
-        .navbar {
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .navbar-brand {
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        /* Card */
-        .card {
-            border-radius: 20px;
-            border: none;
-            margin-top: 30px;
-            background-color: #fff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            background-color: #f8f9fa;
-        }
-        /* Buttons & Inputs */
-        .btn-custom {
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
-        .btn-custom:hover {
-            transform: scale(1.02);
-        }
-        .search-bar {
-            max-width: 260px;
-        }
-        .search-bar .form-control {
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-        }
-        .search-bar .btn {
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-        /* Table Styles */
-        .table thead th {
-            background-color: #343a40;
-            color: #fff;
-            border-top: none;
-        }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0,0,0,.03);
-        }
-        .table-hover tbody tr:hover {
-            background-color: rgba(0,0,0,0.05);
-            transition: background-color 0.3s;
-        }
-        /* Pagination */
-        .pagination .page-item .page-link {
-            border-radius: 50px;
-            margin: 0 3px;
-        }
-        /* Modals */
-        .modal-content {
-            border-radius: 15px;
-        }
-        .modal-header {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            background-color: #f8f9fa;
-        }
-        .modal-footer {
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Facility Management</title>
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6d5dfc, #1493ff);
+      color: #333;
+      position: relative;
+      padding-bottom: 60px; /* for Back-to-Top button spacing */
+    }
+    a {
+      text-decoration: none;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+    /* Navbar */
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    /* Card */
+    .card {
+      border-radius: 20px;
+      border: none;
+      margin-top: 30px;
+      background-color: #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+    /* Buttons & Inputs */
+    .btn-custom {
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+    .btn-custom:hover {
+      transform: scale(1.02);
+    }
+    .search-bar {
+      max-width: 260px;
+    }
+    .search-bar .form-control {
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+    }
+    .search-bar .btn {
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+    /* Table Styles */
+    .table thead th {
+      background-color: #343a40;
+      color: #fff;
+      border-top: none;
+      padding: 12px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    .table-hover tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s;
+    }
+    /* Pagination */
+    .pagination .page-item .page-link {
+      border-radius: 50px;
+      margin: 0 3px;
+      transition: background-color 0.3s;
+    }
+    .pagination .page-item .page-link:hover {
+      background-color: #e2e6ea;
+    }
+    /* Modals */
+    .modal-content {
+      border-radius: 15px;
+    }
+    .modal-header {
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      background-color: #f8f9fa;
+    }
+    .modal-footer {
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Facility Management</a>
-    </div>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Facility Management</a>
+  </div>
 </nav>
 
 <div class="container">
-    <!-- CARD WRAPPER -->
-    <div class="card shadow">
-        <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
-            <h4 class="fw-bold m-0">Manage Facilities</h4>
-            <!-- Search & Add -->
-            <form class="d-flex align-items-center" method="GET" action="facilitymanagement.php">
-                <div class="input-group search-bar me-2">
-                    <input type="text" class="form-control" name="search" placeholder="Search facility..." value="<?php echo htmlspecialchars($searchParam); ?>">
-                    <button class="btn btn-outline-secondary btn-custom" type="submit"><i class="bi bi-search"></i></button>
-                </div>
-                <button type="button" class="btn btn-success btn-sm btn-custom" data-bs-toggle="modal" data-bs-target="#addFacilityModal">
-                    <i class="bi bi-plus-lg"></i> Add
-                </button>
-            </form>
+  <!-- CARD WRAPPER -->
+  <div class="card shadow">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+      <h4 class="fw-bold m-0">Manage Facilities</h4>
+      <!-- Search & Add -->
+      <form class="d-flex align-items-center" method="GET" action="facilitymanagement.php">
+        <div class="input-group search-bar me-2">
+          <input type="text" class="form-control" name="search" placeholder="Search facility..." value="<?php echo htmlspecialchars($searchParam); ?>">
+          <button class="btn btn-outline-secondary btn-custom" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
         </div>
-
-        <div class="card-body">
-            <!-- Session Message -->
-            <?php if (isset($_SESSION['message'])): ?>
-                <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
-                    <?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-
-            <!-- Facilities Table -->
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 60px;">ID</th>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th class="text-center" style="width: 150px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php if ($result && $result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td class="text-center"><?php echo $row['id']; ?></td>
-                                <td><?php echo htmlspecialchars($row['name']); ?></td>
-                                <td><?php echo htmlspecialchars($row['code']); ?></td>
-                                <td><?php echo htmlspecialchars($row['description']); ?></td>
-                                <td class="text-center">
-                                    <button class="btn btn-warning btn-sm btn-custom me-1" data-bs-toggle="modal" data-bs-target="#editFacilityModal" 
-                                        data-facility-id="<?php echo $row['id']; ?>"
-                                        data-facility-name="<?php echo htmlspecialchars($row['name']); ?>"
-                                        data-facility-code="<?php echo htmlspecialchars($row['code']); ?>"
-                                        data-facility-description="<?php echo htmlspecialchars($row['description']); ?>">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <a href="facilitymanagement.php?delete=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm btn-custom"
-                                       onclick="return confirm('Are you sure you want to delete this facility?');">
-                                       <i class="bi bi-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="text-center">No facilities found.</td>
-                        </tr>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination Controls -->
-            <?php if ($totalPages > 1): ?>
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center mt-3">
-                    <li class="page-item <?php echo ($page <= 1 ? 'disabled' : ''); ?>">
-                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($searchParam); ?>" aria-label="Previous">
-                            &laquo;
-                        </a>
-                    </li>
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <li class="page-item <?php echo ($page == $i ? 'active' : ''); ?>">
-                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($searchParam); ?>"><?php echo $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?php echo ($page >= $totalPages ? 'disabled' : ''); ?>">
-                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($searchParam); ?>" aria-label="Next">
-                            &raquo;
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <?php endif; ?>
-        </div>
+        <button type="button" class="btn btn-success btn-sm btn-custom" data-bs-toggle="modal" data-bs-target="#addFacilityModal">
+          <i class="bi bi-plus-lg"></i> Add
+        </button>
+      </form>
     </div>
+
+    <div class="card-body">
+      <!-- Session Message -->
+      <?php if (isset($_SESSION['message'])): ?>
+        <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+          <?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <?php endif; ?>
+
+      <!-- Facilities Table -->
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 60px;">ID</th>
+              <th>Name</th>
+              <th>Code</th>
+              <th>Description</th>
+              <th class="text-center" style="width: 150px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if ($result && $result->num_rows > 0): ?>
+              <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                  <td class="text-center"><?php echo $row['id']; ?></td>
+                  <td><?php echo htmlspecialchars($row['name']); ?></td>
+                  <td><?php echo htmlspecialchars($row['code']); ?></td>
+                  <td><?php echo htmlspecialchars($row['description']); ?></td>
+                  <td class="text-center">
+                    <button class="btn btn-warning btn-sm btn-custom me-1" data-bs-toggle="modal" data-bs-target="#editFacilityModal" 
+                      data-facility-id="<?php echo $row['id']; ?>"
+                      data-facility-name="<?php echo htmlspecialchars($row['name']); ?>"
+                      data-facility-code="<?php echo htmlspecialchars($row['code']); ?>"
+                      data-facility-description="<?php echo htmlspecialchars($row['description']); ?>"
+                      data-bs-toggle="tooltip" title="Edit Facility">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <a href="facilitymanagement.php?delete=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm btn-custom"
+                      data-bs-toggle="tooltip" title="Delete Facility"
+                      onclick="return confirm('Are you sure you want to delete this facility?');">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+              <?php endwhile; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="5" class="text-center">No facilities found.</td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <?php if ($totalPages > 1): ?>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mt-3">
+            <li class="page-item <?php echo ($page <= 1 ? 'disabled' : ''); ?>">
+              <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($searchParam); ?>" aria-label="Previous">&laquo;</a>
+            </li>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+              <li class="page-item <?php echo ($page == $i ? 'active' : ''); ?>">
+                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($searchParam); ?>"><?php echo $i; ?></a>
+              </li>
+            <?php endfor; ?>
+            <li class="page-item <?php echo ($page >= $totalPages ? 'disabled' : ''); ?>">
+              <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($searchParam); ?>" aria-label="Next">&raquo;</a>
+            </li>
+          </ul>
+        </nav>
+      <?php endif; ?>
+    </div>
+  </div>
 </div>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="btn btn-primary btn-custom"><i class="bi bi-arrow-up"></i></button>
 
 <!-- ADD FACILITY MODAL -->
 <div class="modal fade" id="addFacilityModal" tabindex="-1" aria-labelledby="addFacilityModalLabel" aria-hidden="true">
@@ -314,16 +337,16 @@ $result = $conn->query($sql);
         </div>
         <div class="modal-body">
           <div class="mb-3">
-              <label for="facilityName" class="form-label">Facility Name</label>
-              <input type="text" class="form-control" id="facilityName" name="name" required>
+            <label for="facilityName" class="form-label">Facility Name</label>
+            <input type="text" class="form-control" id="facilityName" name="name" required>
           </div>
           <div class="mb-3">
-              <label for="facilityCode" class="form-label">Code</label>
-              <input type="text" class="form-control" id="facilityCode" name="code" required>
+            <label for="facilityCode" class="form-label">Code</label>
+            <input type="text" class="form-control" id="facilityCode" name="code" required>
           </div>
           <div class="mb-3">
-              <label for="facilityDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="facilityDescription" name="description" rows="3"></textarea>
+            <label for="facilityDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="facilityDescription" name="description" rows="3"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -348,16 +371,16 @@ $result = $conn->query($sql);
         </div>
         <div class="modal-body">
           <div class="mb-3">
-              <label for="editFacilityName" class="form-label">Facility Name</label>
-              <input type="text" class="form-control" id="editFacilityName" name="name" required>
+            <label for="editFacilityName" class="form-label">Facility Name</label>
+            <input type="text" class="form-control" id="editFacilityName" name="name" required>
           </div>
           <div class="mb-3">
-              <label for="editFacilityCode" class="form-label">Code</label>
-              <input type="text" class="form-control" id="editFacilityCode" name="code" required>
+            <label for="editFacilityCode" class="form-label">Code</label>
+            <input type="text" class="form-control" id="editFacilityCode" name="code" required>
           </div>
           <div class="mb-3">
-              <label for="editFacilityDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="editFacilityDescription" name="description" rows="3"></textarea>
+            <label for="editFacilityDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="editFacilityDescription" name="description" rows="3"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -372,15 +395,30 @@ $result = $conn->query($sql);
 <!-- Bootstrap 5 JS (for modals) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Auto-fill data into Edit Facility Modal
-    const editModal = document.getElementById('editFacilityModal');
-    editModal.addEventListener('show.bs.modal', function (event) {
-      const button = event.relatedTarget;
-      document.getElementById('editFacilityId').value = button.getAttribute('data-facility-id');
-      document.getElementById('editFacilityName').value = button.getAttribute('data-facility-name');
-      document.getElementById('editFacilityCode').value = button.getAttribute('data-facility-code');
-      document.getElementById('editFacilityDescription').value = button.getAttribute('data-facility-description');
-    });
+  // Initialize tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+
+  // Auto-fill data into Edit Facility Modal
+  const editModal = document.getElementById('editFacilityModal');
+  editModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    document.getElementById('editFacilityId').value = button.getAttribute('data-facility-id');
+    document.getElementById('editFacilityName').value = button.getAttribute('data-facility-name');
+    document.getElementById('editFacilityCode').value = button.getAttribute('data-facility-code');
+    document.getElementById('editFacilityDescription').value = button.getAttribute('data-facility-description');
+  });
+
+  // Back to Top Button
+  const backToTopBtn = document.getElementById('backToTop');
+  window.onscroll = function() {
+    backToTopBtn.style.display = (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) ? "block" : "none";
+  };
+  backToTopBtn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 </script>
 </body>
 </html>

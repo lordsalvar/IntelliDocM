@@ -1,15 +1,13 @@
 <?php
 session_start([
-    'cookie_lifetime' => 3600, // Session expires after 1 hour
-    'cookie_httponly' => true, // Prevent JavaScript access
-    'cookie_secure' => isset($_SERVER['HTTPS']), // HTTPS only
-    'use_strict_mode' => true // Strict session handling
+    'cookie_lifetime' => 3600,
+    'cookie_httponly' => true,
+    'cookie_secure' => isset($_SERVER['HTTPS']),
+    'use_strict_mode' => true
 ]);
-
 
 include '../system_log/activity_log.php';
 include '../database.php';
-
 
 // Prevent session fixation
 session_regenerate_id(true);
@@ -21,349 +19,195 @@ if ($_SESSION['role'] !== 'client') {
 }
 $username = $_SESSION['username'];
 $userActivity = 'User visited Facility Request Page';
-
 logActivity($username, $userActivity);
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../css/faciBook.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <title>Facility Booking</title>
-    <script>
-        let facilityData = {};
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../css/faciBook.css" rel="stylesheet" />
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css' rel='stylesheet' /> 
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Facility Booking - Calendar View</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6d5dfc, #1493ff);
+      color: #333;
+      min-height: 100vh;
+      padding-top: 70px;
+      padding-bottom: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+    /* Header Section for Facility Filters */
+    .header-section {
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .checkbox-container label {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    /* Calendar Container */
+    #calendar {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      min-height: 600px; /* Ensure the container is visible */
+    }
+  </style>
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+  <script>
+    // Global facility data object (populated by PHP)
+    let facilityData = {};
 
-        function showDates() {
-            const checkboxes = document.querySelectorAll('input[name="facility"]:checked');
-            const selectedFacilities = Array.from(checkboxes).map(checkbox => checkbox.value);
-            const modalContent = document.getElementById("modalContent");
+    // Utility: Convert a date string (e.g. "January 15, 2021") to ISO (YYYY-MM-DD)
+    function convertToISO(dateStr) {
+      let d = new Date(dateStr);
+      if (!isNaN(d)) {
+        return d.toISOString().split('T')[0];
+      }
+      return dateStr;
+    }
 
-            if (selectedFacilities.length === 0) {
-                modalContent.innerHTML = "<p>Please select at least one facility.</p>";
-                openModal();
-                return;
-            }
+    let calendar; // FullCalendar instance
 
-            let output = "";
-            selectedFacilities.forEach(facility => {
-                if (facilityData[facility]) {
-                    output += `<h4>${facilityData[facility].name}</h4>`;
-                    if (facilityData[facility].blocked.length > 0) {
-                        output += `<p><strong>Blocked Dates:</strong> ${facilityData[facility].blocked.join(', ')}</p>`;
-                    }
-                    if (facilityData[facility].unavailable.length > 0) {
-                        output += `<p><strong>Booked Dates:</strong> ${facilityData[facility].unavailable.join(', ')}</p>`;
-                    }
-                }
+    // Render calendar with given events
+    function renderCalendar(events) {
+      const calendarEl = document.getElementById('calendar');
+      // If a calendar already exists, destroy it before re-rendering
+      if (calendar) {
+        calendar.destroy();
+      }
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: events,
+        height: 600
+      });
+      calendar.render();
+    }
+
+    // Update the calendar based on selected facilities
+    function updateCalendar() {
+      const checkboxes = document.querySelectorAll('input[name="facility"]:checked');
+      const selectedFacilities = Array.from(checkboxes).map(cb => cb.value);
+      let events = [];
+      selectedFacilities.forEach(facility => {
+        if (facilityData[facility]) {
+          let facilityName = facilityData[facility].name;
+          // Add blocked dates (red)
+          if (facilityData[facility].blocked && facilityData[facility].blocked.length > 0) {
+            facilityData[facility].blocked.forEach(dateStr => {
+              events.push({
+                title: facilityName + " (Blocked)",
+                start: convertToISO(dateStr),
+                color: '#dc3545'
+              });
             });
-
-            modalContent.innerHTML = output || "<p>No blocked or unavailable dates found for the selected facilities.</p>";
-            openModal();
-
-            // Log the activity using AJAX
-            logActivity('User clicked Show Dates button with selected facilities: ' + selectedFacilities.join(', '));
+          }
+          // Add booked dates (amber)
+          if (facilityData[facility].unavailable && facilityData[facility].unavailable.length > 0) {
+            facilityData[facility].unavailable.forEach(dateStr => {
+              events.push({
+                title: facilityName + " (Booked)",
+                start: convertToISO(dateStr),
+                color: '#ffc107'
+              });
+            });
+          }
         }
+      });
+      renderCalendar(events);
+      logActivity('User updated calendar with facilities: ' + selectedFacilities.join(', '));
+    }
 
-        function logBlockDateRequest() {
-            // Log the activity without checking facilities since no facilities are selected yet
-            const userActivity = 'User clicked Request Block Date button';
+    // Basic logging function via AJAX
+    function logActivity(activity) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "../system_log/log_activity.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("activity=" + encodeURIComponent(activity));
+    }
 
-            // Send AJAX request to log the activity
-            logActivity(userActivity);
-        }
-
-        // Log activity when the "Add Another Venue" button is clicked
-        function logAddVenueActivity() {
-            const userActivity = 'User clicked Add Another Venue button in Block Request Form';
-
-            // Send AJAX request to log the activity
-            logActivity(userActivity);
-        }
-
-
-        function logSubmitBlockRequest() {
-            const selectedFacilities = Array.from(document.querySelectorAll('select[name="facilities[]"]')).map(select => select.value);
-            const selectedDates = Array.from(document.querySelectorAll('input[name="dates[]"]')).map(input => input.value);
-
-            const userActivity = `User submitted Block Request Form with facilities: ${selectedFacilities.join(', ')} and dates: ${selectedDates.join(', ')}`;
-
-            // Send AJAX request to log the activity
-            logActivity(userActivity);
-        }
-
-        function logRemoveVenueActivity() {
-
-        }
-
-        function logActivity(userActivity) {
-            // AJAX request to log activity
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "../system_log/log_activity.php", true); // Make sure log_activity.php is your logging handler file
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle response if needed
-                    console.log('Activity logged successfully.');
-                }
-            };
-            xhr.send("activity=" + encodeURIComponent(userActivity)); // Send the activity data to the server
-        }
-
-        function openModal() {
-            document.getElementById("myModal").style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById("myModal").style.display = "none";
-        }
-    </script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render an initial empty calendar
+      renderCalendar([]);
+    });
+  </script>
 </head>
-
 <body>
-    <header>
-        <?php include '../includes/clientnavbar.php'; ?>
-    </header>
+  <header>
+    <?php include '../includes/clientnavbar.php'; ?>
+  </header>
 
-    <div class="page-wrapper">
-        <div class="container">
-            <h3>Select Facilities</h3>
-            <div class="checkbox-container">
-                <?php
-                $conn = getDbConnection(); // Use the global connection defined in your included file
-
-                // Fetch facilities and their blocked/unavailable dates
-                $sql = "SELECT 
-                        f.code, 
-                        f.name, 
-                        GROUP_CONCAT(CASE WHEN fa.status = 'blocked' THEN DATE_FORMAT(fa.date, '%M %d, %Y') END) AS blocked,
-                        GROUP_CONCAT(CASE WHEN fa.status = 'unavailable' THEN DATE_FORMAT(fa.date, '%M %d, %Y') END) AS unavailable
-                    FROM facilities f
-                    LEFT JOIN facility_availability fa ON f.id = fa.facility_id
-                    GROUP BY f.id";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    $facilities = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $facilities[$row['code']] = [
-                            'name' => $row['name'],
-                            'blocked' => $row['blocked'] ? explode(',', $row['blocked']) : [],
-                            'unavailable' => $row['unavailable'] ? explode(',', $row['unavailable']) : []
-                        ];
-                        echo '<label><input type="checkbox" name="facility" value="' . htmlspecialchars($row['code']) . '"> ' . htmlspecialchars($row['name']) . '</label>';
-                    }
-
-                    // Pass facility data to JavaScript
-                    echo '<script>facilityData = ' . json_encode($facilities) . ';</script>';
-                } else {
-                    echo '<p>No facilities available.</p>';
-                }
-                ?>
-            </div>
-            <button onclick="showDates()" class="btn btn-info text-white mt-3">Show Dates</button>
-
-            <!-- Button to trigger modal for Block Request Form -->
-            <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#blockRequestModal" onclick="logBlockDateRequest()">
-                Request Block Date
-            </button>
-        </div>
-
-        <!-- Modal for Block Request Form -->
-        <div class="modal fade" id="blockRequestModal" tabindex="-1" aria-labelledby="blockRequestModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="blockRequestModalLabel">Block Request Form</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="blockRequestForm" method="POST" action="process_block_request.php">
-                            <div id="venueDateContainer">
-                                <!-- Venue and Date Pair -->
-                                <div class="venue-date-pair mb-3" id="venue-date-pair-1">
-                                    <div class="form-group">
-                                        <label for="facility1">Select Facility:</label>
-                                        <select name="facilities[]" id="facility1" class="form-control" required>
-                                            <?php
-                                            $facilitiesQuery = "SELECT id, name FROM facilities";
-                                            $facilitiesResult = $conn->query($facilitiesQuery);
-                                            while ($row = $facilitiesResult->fetch_assoc()) {
-                                                echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="date1">Select Date:</label>
-                                        <input type="date" name="dates[]" id="date1" class="form-control" required>
-                                    </div>
-                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeVenueDate(1)">Remove</button>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-secondary mb-3" onclick="logAddVenueActivity(); addVenueDate();">
-                                Add Another Venue
-                            </button>
-
-                            <button type="submit" class="btn btn-success w-100">Submit Block Request</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Modal for Facility Dates -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <div id="modalContent">
-                    <p>Loading...</p>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <!-- Facility Selection Header -->
+    <div class="header-section">
+      <h3>Select Facilities to Filter Dates</h3>
+      <div class="checkbox-container">
+        <?php
+          $conn = getDbConnection(); // Using your included database connection
+          $sql = "SELECT 
+                    f.code, 
+                    f.name, 
+                    GROUP_CONCAT(CASE WHEN fa.status = 'blocked' THEN DATE_FORMAT(fa.date, '%M %d, %Y') END) AS blocked,
+                    GROUP_CONCAT(CASE WHEN fa.status = 'unavailable' THEN DATE_FORMAT(fa.date, '%M %d, %Y') END) AS unavailable
+                  FROM facilities f
+                  LEFT JOIN facility_availability fa ON f.id = fa.facility_id
+                  GROUP BY f.id";
+          $result = $conn->query($sql);
+          if ($result->num_rows > 0) {
+            $facilities = [];
+            while ($row = $result->fetch_assoc()) {
+              $facilities[$row['code']] = [
+                'name' => $row['name'],
+                'blocked' => $row['blocked'] ? explode(',', $row['blocked']) : [],
+                'unavailable' => $row['unavailable'] ? explode(',', $row['unavailable']) : []
+              ];
+              echo '<label class="mr-3"><input type="checkbox" name="facility" value="' . htmlspecialchars($row['code']) . '" onchange="updateCalendar()"> ' . htmlspecialchars($row['name']) . '</label>';
+            }
+            echo '<script>facilityData = ' . json_encode($facilities) . ';</script>';
+          } else {
+            echo '<p>No facilities available.</p>';
+          }
+        ?>
+      </div>
     </div>
 
-    <!-- Success/Error Modal -->
-    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="resultModalLabel"></h5>
-                </div>
-                <div class="modal-body" id="resultModalBody"></div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Full Calendar Container -->
+    <div id="calendar"></div>
+  </div>
 
-    <footer>
-        <?php include '../includes/footer.php'; ?>
-    </footer>
+  <footer>
+    <?php include '../includes/footer.php'; ?>
+  </footer>
 
-
-    <script>
-        let venueCounter = 1;
-
-        // Function to add a new venue-date pair
-        function addVenueDate() {
-            venueCounter++;
-
-            const container = document.getElementById('venueDateContainer');
-            const newPair = document.createElement('div');
-            newPair.classList.add('venue-date-pair', 'mb-3');
-            newPair.id = `venue-date-pair-${venueCounter}`;
-
-            newPair.innerHTML = `
-            <div class="form-group">
-                <label for="facility${venueCounter}">Select Facility:</label>
-                <select name="facilities[]" id="facility${venueCounter}" class="form-control" required>
-                    <?php
-                    $facilitiesResult->data_seek(0); // Reset the result set
-                    while ($row = $facilitiesResult->fetch_assoc()) {
-                        echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="date${venueCounter}">Select Date:</label>
-                <input type="date" name="dates[]" id="date${venueCounter}" class="form-control" required>
-            </div>
-            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeVenueDate(${venueCounter})">Remove</button>
-        `;
-
-            container.appendChild(newPair);
-        }
-
-        // Function to remove a specific venue-date pair
-        function removeVenueDate(counter) {
-            const pair = document.getElementById(`venue-date-pair-${counter}`);
-            if (pair) {
-                pair.remove();
-                const userActivity = 'User clicked Remove Venue button in Block Request Form';
-
-                // Send AJAX request to log the activity
-                logActivity(userActivity);
-            }
-        }
-    </script>
-
-
-    <script>
-        // Handle form submission via AJAX
-        const form = document.getElementById('blockRequestForm');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent default form submission
-            logSubmitBlockRequest(); // Log activity before form submission
-
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const result = await response.json(); // Parse JSON response
-
-                // Show the result modal
-                showResultModal(result.title, result.message, result.success);
-
-                if (result.success) {
-                    let countdown = 5; // Countdown duration in seconds
-                    const modalBody = document.getElementById('resultModalBody');
-
-                    const interval = setInterval(() => {
-                        countdown--;
-                        modalBody.textContent = `${result.message} Redirecting in ${countdown} seconds...`;
-
-                        if (countdown <= 0) {
-                            clearInterval(interval);
-                            window.location.href = '../activity_proposal_form.php';
-                        }
-                    }, 1000);
-                }
-            } catch (error) {
-                showResultModal('Error', 'An unexpected error occurred. Please try again.', false);
-            }
-        });
-    </script>
-    <script>
-        function showResultModal(title, message, isSuccess) {
-            const modalTitle = document.getElementById('resultModalLabel');
-            const modalBody = document.getElementById('resultModalBody');
-
-            // Set title and message
-            modalTitle.textContent = title;
-            modalBody.textContent = message;
-
-            // Change modal appearance based on success or error
-            if (isSuccess) {
-                modalTitle.classList.remove('text-danger');
-                modalTitle.classList.add('text-success');
-            } else {
-                modalTitle.classList.remove('text-success');
-                modalTitle.classList.add('text-danger');
-            }
-
-            // Show the modal
-            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
-            resultModal.show();
-        }
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Bootstrap 4 JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
+<?php
+$conn->close();
+?>

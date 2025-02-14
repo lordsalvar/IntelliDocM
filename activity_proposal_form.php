@@ -517,17 +517,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         value="<?php echo setValue($moderator_name); ?>" <?php echo setReadonly($moderator_name); ?> />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Other Faculty/Staff</label>
-                    <input type="text" class="form-control mb-2" name="facultySignature" placeholder="Signature Over Printed Name" />
-                    <input type="text" class="form-control mb-2" name="facultyContact" placeholder="Contact Number" />
+                <label class="form-label">Noted by:</label>
+                <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature"
+                    value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
                 </div>
             </div>
 
 
             <div class="text-center">
-                <label class="form-label">Noted by:</label>
-                <input type="text" class="form-control mb-2" name="dean_name" placeholder="College Dean Signature Over Printed Name"
-                    value="<?php echo setValue($dean_name); ?>" <?php echo setReadonly($dean_name); ?> />
+                
             </div>
 
             <input type="hidden" id="proposal_id" name="proposal_id" value="<?php echo $proposal_id; ?>"> <!-- Add Proposal ID -->
