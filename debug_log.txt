@@ -671,3 +671,5 @@ Notifications fetched: [{"id":88,"message":"Your booking request has been approv
 Facilities found: []
 Facilities found: []
 Facilities found: []
+Fetching notifications for user_id: 2
+Fetching notifications for user_id: 2
