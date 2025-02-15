@@ -250,7 +250,14 @@ $dean_name = $dean_data['dean_name'];
                                         <div class="row g-3">
                                             <div class="col-md-3">
                                                 <label class="form-label">Date</label>
-                                                <input type="date" class="form-control" name="facilityBookings[0][slots][0][date]">
+                                                <input type="date"
+                                                    class="form-control"
+                                                    name="facilityBookings[0][slots][0][date]"
+                                                    required
+                                                    min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                                                    max="<?php echo date('Y-m-d', strtotime('+6 months')); ?>"
+                                                    value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                                                    data-date-validation="true">
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Start Time:</label>

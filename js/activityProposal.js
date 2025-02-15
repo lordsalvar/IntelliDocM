@@ -52,59 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // "Add Booking" button
     document.getElementById("addBooking").addEventListener("click", function() {
-        bookingIndex++;
-        const container = document.getElementById("facilityBookingsContainer");
-        const blockDiv = document.createElement("div");
-        blockDiv.classList.add("card", "mb-3", "facility-booking");
-        blockDiv.dataset.index = bookingIndex;
-
-        blockDiv.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">Facility Booking #<span class="booking-number">${bookingIndex + 1}</span></h5>
-                <div class="mb-3">
-                    <label for="facilitySelect_${bookingIndex}" class="form-label fw-bold">Select Facility:</label>
-                    <select class="form-select facility-select" id="facilitySelect_${bookingIndex}" name="facilityBookings[${bookingIndex}][facility]" data-index="${bookingIndex}">
-                        <option value="">-- Select Facility --</option>
-                        ${generateFacilityOptions()}
-                    </select>
-                </div>
-                <div class="room-selection"></div>
-                <div class="time-slots" data-index="${bookingIndex}">
-                    <div class="row g-2 align-items-end time-slot" data-index="0">
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Date:</label>
-                            <input type="date" class="form-control" name="facilityBookings[${bookingIndex}][slots][0][date]">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Room or Building</label>
-                            <input type="text" class="form-control room-or-building" name="facilityBookings[${bookingIndex}][slots][0][room]" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Start Time:</label>
-                            <input type="time" class="form-control" name="facilityBookings[${bookingIndex}][slots][0][start]">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">End Time:</label>
-                            <input type="time" class="form-control" name="facilityBookings[${bookingIndex}][slots][0][end]">
-                        </div>
-                        <div class="col-md-3 text-end">
-                            <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="${bookingIndex}" title="Add Time Slot">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-end">
-                <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        container.appendChild(blockDiv);
+        addBooking();
     });
 
     // Generate facility options
@@ -230,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
-    
+    ``
     // 5) Toggle Venue & Address Fields Based on Activity Type
     const onCampusCheckbox = document.getElementById('on-campus');
     const offCampusCheckbox = document.getElementById('off-campus');
@@ -468,4 +416,195 @@ async function checkBookingConflicts(facilityId, roomId, date, startTime, endTim
             }
         }
     });
+
+    // Add this after existing initialization code
+    initializeDateValidation();
+
+    function initializeDateValidation() {
+        // Set date constraints for all date inputs
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        const today = new Date().toISOString().split('T')[0];
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 6);
+        const maxDateStr = maxDate.toISOString().split('T')[0];
+
+        dateInputs.forEach(input => {
+            // Set min and max dates
+            input.min = today;
+            input.max = maxDateStr;
+
+            // Add validation on change
+            input.addEventListener('change', function() {
+                validateDate(this);
+            });
+        });
+
+        // Add validation for dynamically added date inputs
+        const container = document.getElementById('facilityBookingsContainer');
+        if (container) {
+            container.addEventListener('change', function(e) {
+                if (e.target.type === 'date') {
+                    validateDate(e.target);
+                }
+            });
+        }
+    }
+
+    function validateDate(input) {
+        const selectedDate = new Date(input.value);
+        selectedDate.setHours(0, 0, 0, 0); // Reset time component
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time component
+        
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 6);
+        maxDate.setHours(23, 59, 59, 999); // Set to end of day
+        
+        // Check if date is in the past
+        if (selectedDate < today) {
+            alert('Cannot select past dates. Please select a future date.');
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            input.value = tomorrow.toISOString().split('T')[0];
+            return false;
+        }
+        
+        // Check if date is too far in the future
+        if (selectedDate > maxDate) {
+            alert('Cannot book more than 6 months in advance.');
+            input.value = maxDate.toISOString().split('T')[0];
+            return false;
+        }
+
+        // Check if it's a Sunday
+        if (selectedDate.getDay() === 0) {
+            alert('Sunday bookings are not allowed.');
+            input.value = '';
+            return false;
+        }
+
+        return true;
+    }
+
+    // Update the addTimeSlot function to include date validation
+    const originalAddTimeSlot = addTimeSlot;
+    addTimeSlot = function(container) {
+        originalAddTimeSlot(container);
+        const newSlot = container.lastElementChild;
+        const dateInput = newSlot.querySelector('input[type="date"]');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            const maxDate = new Date();
+            maxDate.setMonth(maxDate.getMonth() + 6);
+            dateInput.min = today;
+            dateInput.max = maxDate.toISOString().split('T')[0];
+            dateInput.addEventListener('change', function() {
+                validateDate(this);
+            });
+        }
+    };
+
+    function addBooking() {
+        bookingIndex++;
+        const container = document.getElementById("facilityBookingsContainer");
+        
+        const newBookingHtml = `
+            <div class="card mb-3 facility-booking mt-3" data-index="${bookingIndex}">
+                <div class="card-body">
+                    <div class="booking-header">
+                        <h5 class="card-title">Booking #<span class="booking-number">${bookingIndex + 1}</span></h5>
+                        <div class="booking-actions">
+                            <button type="button" class="remove-booking btn btn-outline-danger btn-sm" title="Remove Booking">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="facilitySelect_${bookingIndex}" class="form-label">Select Facility</label>
+                                <select class="form-select facility-select" id="facilitySelect_${bookingIndex}" 
+                                    name="facilityBookings[${bookingIndex}][facility]" data-index="${bookingIndex}">
+                                    <option value="">-- Select Facility --</option>
+                                    ${generateFacilityOptions()}
+                                </select>
+                            </div>
+                            <div class="room-selection mb-3">
+                                <!-- Room options will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Slots Container -->
+                    <div class="time-slots-container">
+                        <h6 class="slots-header">Time Slots</h6>
+                        <div class="time-slots" data-index="${bookingIndex}">
+                            <div class="time-slot-card" data-index="0">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Date</label>
+                                        <input type="date"
+                                            class="form-control"
+                                            name="facilityBookings[${bookingIndex}][slots][0][date]"
+                                            required
+                                            min="${getTomorrow()}"
+                                            max="${getMaxDate()}"
+                                            value="${getTomorrow()}"
+                                            data-date-validation="true">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Start Time:</label>
+                                        <input type="time" class="form-control time-input"
+                                            name="facilityBookings[${bookingIndex}][slots][0][start]"
+                                            data-display-format="12"
+                                            onchange="updateTimeDisplay(this)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">End Time:</label>
+                                        <input type="time" class="form-control time-input"
+                                            name="facilityBookings[${bookingIndex}][slots][0][end]"
+                                            data-display-format="12"
+                                            onchange="updateTimeDisplay(this)">
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <div class="slot-actions">
+                                            <button type="button" class="addSlot btn btn-outline-primary btn-sm" title="Add Time Slot">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            <button type="button" class="removeSlot btn btn-outline-danger btn-sm" title="Remove Slot">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="conflict-container mt-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', newBookingHtml);
+        
+        // Initialize the new booking's elements
+        const newBooking = container.lastElementChild;
+        initializeDateValidation(newBooking);
+        initializeFacilitySelect(newBooking);
+    }
+
+    // Helper functions for dates
+    function getTomorrow() {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow.toISOString().split('T')[0];
+    }
+
+    function getMaxDate() {
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 6);
+        return maxDate.toISOString().split('T')[0];
+    }
 });
