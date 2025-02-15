@@ -147,176 +147,22 @@ button[type="submit"]:hover {
     background-color: #c92327;
 }
 
+button[type="submit"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.conflict-warning {
+    font-size: 0.9em;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-left: 4px solid #ffc107;
+}
+
 .btn-success {
     background-color: #28a745;
     color: white;
-    padding: 10px 20px;/* General Styles */
-    body {
-        font-family: "Poppins", sans-serif;
-        background-color: #f8f9fa;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
-    
-    /* Navbar Styles */
-    header {
-        background-color: #e31b23;
-        padding: 15px 20px;
-        color: white;
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: bold;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Container Styles */
-    .container {
-        background-color: white;
-        padding: 20px 30px;
-        margin: 50px auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-    }
-    
-    /* Form Section Styles */
-    h2 {
-        color: #e31b23;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    label {
-        font-weight: 600;
-        margin-bottom: 8px;
-        display: inline-block;
-        color: #333;
-    }
-    
-    .form-control {
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        font-size: 1rem;
-        color: #333;
-    }
-    
-    .form-control:focus {
-        border-color: #e31b23;
-        box-shadow: 0 0 5px rgba(227, 27, 35, 0.5);
-    }
-    
-    textarea {
-        resize: none;
-    }
-    
-    /* Form Section Headers */
-    .form-section {
-        margin-bottom: 30px;
-        padding: 15px;
-        background-color: #f8f9fa;
-        border-left: 5px solid #e31b23;
-        border-radius: 5px;
-    }
-    
-    /* Checkbox and Radio Styles */
-    .form-check-input {
-        accent-color: #e31b23;
-    }
-    
-    .form-check-label {
-        margin-left: 5px;
-    }
-    
-    /* Submit Button */
-    button[type="submit"] {
-        background-color: #e31b23;
-        color: white;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    button[type="submit"]:hover {
-        background-color: #c92327;
-    }
-    
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-weight: 600;
-        margin-top: 20px;
-        text-decoration: none;
-    }
-    
-    .btn-success:hover {
-        background-color: #218838;
-        text-decoration: none;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .container {
-            padding: 15px;
-            margin: 20px;
-        }
-    
-        label {
-            font-size: 0.9rem;
-        }
-    
-        button[type="submit"], .btn-success {
-            font-size: 0.9rem;
-            padding: 8px 16px;
-        }
-    }
-    
-    /* Table */
-    .table {
-        width: 100%;
-        margin-top: 20px;
-        border-collapse: collapse;
-    }
-    
-    .table th, .table td {
-        border: 1px solid #ccc;
-        padding: 8px 12px;
-        text-align: left;
-    }
-    
-    .table th {
-        background-color: #e31b23;
-        color: white;
-        font-weight: bold;
-    }
-    
-    .table tbody tr:nth-child(even) {
-        background-color: #f8f9fa;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f1f1f1;
-    }
-    
-    /* Footer */
-    footer {
-        background-color: #e31b23;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-        margin-top: 20px;
-        font-size: 0.9rem;
-    }
-    
+    padding: 10px 20px;
     border-radius: 5px;
     font-weight: 600;
     margin-top: 20px;
@@ -380,4 +226,220 @@ footer {
     padding: 10px 0;
     margin-top: 20px;
     font-size: 0.9rem;
+}
+
+/* Suggested Slot Styles */
+.suggested-slot {
+    font-size: 0.8em;
+    padding: 2px 8px;
+    margin: 2px;
+    white-space: nowrap;
+}
+
+.suggested-slot:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.suggestion-box {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #28a745;
+}
+
+/* Booking Section Styles */
+.booking-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.section-title {
+    color: #2c3e50;
+    border-bottom: 2px solid #e31b23;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.time-slots-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+.slots-header {
+    color: #495057;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.time-slot-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.time-slot-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slot-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.slot-actions button {
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.facility-select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color: white;
+}
+
+.room-selection {
+    transition: all 0.3s ease;
+}
+
+.conflict-container {
+    border-radius: 4px;
+}
+
+.conflict-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.suggested-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.suggested-slot {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.suggested-slot:hover {
+    background-color: #c3e6cb;
+    transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .booking-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .slot-actions {
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .time-slot-card {
+        padding: 10px;
+    }
+}
+
+.checking-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.existing-booking {
+    margin: 8px 0;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+.suggestions-container {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 10px;
+}
+
+.suggested-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.suggested-slot {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85em;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.suggested-slot:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.booking-status {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 8px;
+}
+
+.booking-status.pending {
+    background-color: #ffeeba;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.booking-status.confirmed {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }

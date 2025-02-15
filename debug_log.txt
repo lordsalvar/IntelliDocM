@@ -673,3 +673,6 @@ Facilities found: []
 Facilities found: []
 Fetching notifications for user_id: 2
 Fetching notifications for user_id: 2
+Fetching notifications for user_id: 2
+Fetching notifications for user_id: 2
+Fetching notifications for user_id: 2

@@ -1,16 +1,21 @@
 <?php
 // config.php
 
-// Start a secure session with strict settings
-session_start([
-    'cookie_lifetime' => 3600,           // 1 hour
-    'cookie_httponly' => true,           // JavaScript cannot access session cookie
-    'cookie_secure' => isset($_SERVER['HTTPS']), // Only send cookie over HTTPS if available
-    'use_strict_mode' => true,           // Strict session handling
-]);
+// Check if a session hasn't been started yet
+if (session_status() === PHP_SESSION_NONE) {
+    session_start([
+        'cookie_lifetime' => 3600,           // 1 hour
+        'cookie_httponly' => true,           // JavaScript cannot access session cookie
+        'cookie_secure' => isset($_SERVER['HTTPS']), // Only send cookie over HTTPS if available
+        'use_strict_mode' => true,           // Strict session handling
+    ]);
+}
 
 // Prevent session fixation
-session_regenerate_id(true);
+if (!isset($_SESSION['initialized'])) {
+    session_regenerate_id(true);
+    $_SESSION['initialized'] = true;
+}
 
 // Create a CSRF token if one does not exist
 if (empty($_SESSION['csrf_token'])) {
@@ -18,4 +23,4 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 // Include the database connection
-include_once 'database.php';
+require_once 'database.php';

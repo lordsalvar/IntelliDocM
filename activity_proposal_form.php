@@ -4,6 +4,7 @@
 include_once 'config.php';
 include_once 'functions.php';
 include_once 'system_log/activity_log.php';
+include_once 'functions.php';  // Ensure this file is included
 
 // Ensure the user is a client; otherwise, redirect
 if ($_SESSION['role'] !== 'client') {
@@ -13,25 +14,17 @@ if ($_SESSION['role'] !== 'client') {
 
 // Log the activity of visiting the proposal form
 $username = $_SESSION['username'];
-$userActivity = 'User visited Activity Proposal Form';
-logActivity($username, $userActivity);
+// $userActivity = 'User visited Activity Proposal Form';
+// logActivity($username, $userActivity);
 
 // Fetch facilities and their rooms from the database
-$facilities = [];
-$facilityQuery = "SELECT f.id, f.name, r.id AS room_id, r.room_number AS room_name 
-                  FROM facilities f 
-                  LEFT JOIN rooms r ON f.id = r.facility_id";
-if ($result = $conn->query($facilityQuery)) {
-    while ($row = $result->fetch_assoc()) {
-        $facilities[$row['id']]['name'] = $row['name'];
-        if ($row['room_id']) {
-            $facilities[$row['id']]['rooms'][] = ['id' => $row['room_id'], 'name' => $row['room_name']];
-        }
-    }
-    $result->free();
-} else {
-    die("Error fetching facilities: " . $conn->error);
-}
+
+
+$facilities = getFacilitiesWithRooms($conn);
+
+// Set a default facility as selected (for example, the first facility in the list)
+$selectedFacility = isset($_GET['facility']) ? (int)$_GET['facility'] : key($facilities);
+
 
 // Fetch club and applicant details
 $user_id = $_SESSION['user_id'];
@@ -48,6 +41,14 @@ $dean_name = $dean_data['dean_name'];
 <html lang="en">
 
 <head>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Your code that gets elements (including roomOrBuildingInput) goes here.
+            // For example:
+            const roomOrBuildingInput = document.getElementById("yourRoomInputId");
+            // .... rest of your code
+        });
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Activity Proposal Form</title>
@@ -58,6 +59,8 @@ $dean_name = $dean_data['dean_name'];
 </head>
 
 <body>
+
+
     <div class="container my-5">
         <a class="btn btn-secondary mb-3" href="client.php">← Back</a>
         <!-- Overlay Box -->
@@ -84,6 +87,8 @@ $dean_name = $dean_data['dean_name'];
         <form method="POST" action="process_proposal.php" id="submitProposalForm" enctype="multipart/form-data">
             <!-- CSRF token -->
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <!-- Add submission identifier -->
+            <input type="hidden" name="submission_id" value="<?php echo uniqid('form_', true); ?>">
 
             <!-- Organization Details -->
             <div class="mb-4">
@@ -204,61 +209,81 @@ $dean_name = $dean_data['dean_name'];
                 </div>
 
                 <!-- Facility Bookings -->
-                <div id="facilityBookingsContainer">
+                <div id="facilityBookingsContainer" class="booking-section">
+                    <h4 class="section-title">Facility Bookings</h4>
                     <!-- Default facility booking block -->
                     <div class="card mb-3 facility-booking mt-3" data-index="0">
                         <div class="card-body">
-                            <h5 class="card-title">Facility Booking #<span class="booking-number">1</span></h5>
-                            <div class="mb-3">
-                                <label for="facilitySelect_0" class="form-label fw-bold">Select Facility:</label>
-                                <div class="input-group">
-                                    <select class="form-select form-select-sm facility-select" id="facilitySelect_0" name="facilityBookings[0][facility]" data-index="0">
-                                        <option value="">-- Select Facility --</option>
-                                        <?php foreach ($facilities as $facilityId => $facility): ?>
-                                            <option value="<?php echo $facilityId; ?>">
-                                                <?php echo htmlspecialchars($facility['name']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button type="button" id="addBooking" class="btn btn-primary btn-sm" title="Add Another Facility Booking">
-                                        <i class="fas fa-plus-circle"></i>
+                            <div class="booking-header">
+                                <h5 class="card-title">Booking #<span class="booking-number">1</span></h5>
+                                <div class="booking-actions">
+                                    <button type="button" id="addBooking" class="btn btn-primary btn-sm" title="Add Another Booking">
+                                        <i class="fas fa-plus-circle"></i> Add Booking
                                     </button>
                                 </div>
                             </div>
-                            <!-- Time Slots -->
-                            <div class="time-slots" data-index="0">
-                                <div class="row g-2 align-items-end time-slot" data-index="0">
-                                    <div class="col-md-2">
-                                        <label class="form-label fw-bold">Date:</label>
-                                        <input type="date" class="form-control" name="facilityBookings[0][slots][0][date]">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="facilitySelect_0" class="form-label">Select Facility</label>
+                                        <select class="form-select facility-select" id="facilitySelect_0" name="facilityBookings[0][facility]" data-index="0">
+                                            <option value="">-- Select Facility --</option>
+                                            <?php foreach ($facilities as $facilityId => $facility): ?>
+                                                <option value="<?php echo $facilityId; ?>">
+                                                    <?php echo htmlspecialchars($facility['name']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label fw-bold">Room or Building</label>
-                                        <input type="text" class="form-control room-or-building" name="facilityBookings[0][slots][0][room]" readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label fw-bold">Start Time:</label>
-                                        <input type="time" class="form-control" name="facilityBookings[0][slots][0][start]">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold">End Time:</label>
-                                        <input type="time" class="form-control" name="facilityBookings[0][slots][0][end]">
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="addSlot btn btn-secondary btn-sm mt-4" data-index="0" title="Add Time Slot">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                        <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <div class="room-selection mb-3">
+                                        <!-- Room options will be dynamically added here -->
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer text-end">
-                            <button type="button" class="removeBooking btn btn-outline-danger btn-sm" title="Remove Facility Booking">
-                                <i class="fas fa-times"></i>
-                            </button>
+
+                            <!-- Time Slots Container -->
+                            <div class="time-slots-container">
+                                <h6 class="slots-header">Time Slots</h6>
+                                <div class="time-slots" data-index="0">
+                                    <div class="time-slot-card" data-index="0">
+                                        <div class="row g-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Date</label>
+                                                <input type="date" class="form-control" name="facilityBookings[0][slots][0][date]">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Start Time:</label>
+                                                <input type="time" class="form-control time-input"
+                                                    name="facilityBookings[0][slots][0][start]"
+                                                    data-display-format="12"
+                                                    onchange="updateTimeDisplay(this)">
+                                                <small class="time-display"></small>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">End Time:</label>
+                                                <input type="time" class="form-control time-input"
+                                                    name="facilityBookings[0][slots][0][end]"
+                                                    data-display-format="12"
+                                                    onchange="updateTimeDisplay(this)">
+                                                <small class="time-display"></small>
+                                            </div>
+                                            <div class="col-md-3 d-flex align-items-end">
+                                                <div class="slot-actions">
+                                                    <button type="button" class="addSlot btn btn-outline-primary btn-sm" title="Add Time Slot">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                    <button type="button" class="removeSlot btn btn-outline-danger btn-sm" title="Remove Slot">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Conflict warnings will appear here -->
+                                        <div class="conflict-container mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -319,13 +344,31 @@ $dean_name = $dean_data['dean_name'];
     <!-- ********************************************* -->
     <!-- Step 3: Pass PHP Data to JavaScript & Include External JS -->
     <!-- ********************************************* -->
+
     <script>
         // Pass the facilities array from PHP to JavaScript as a global variable.
         const facilitiesData = <?php echo json_encode($facilities); ?>;
     </script>
+
     <!-- Include the external JavaScript file -->
     <script src="js/activityProposal.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add this to your existing JavaScript
+        function updateTimeDisplay(input) {
+            if (input.value) {
+                const timeDisplay = input.nextElementSibling;
+                const [hours, minutes] = input.value.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const hour12 = hour % 12 || 12;
+                timeDisplay.textContent = `${hour12}:${minutes} ${ampm}`;
+            }
+        }
+
+        // Initialize time displays
+        document.querySelectorAll('.time-input').forEach(updateTimeDisplay);
+    </script>
 </body>
 
 </html>
