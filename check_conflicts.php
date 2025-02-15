@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+// Debugging: Log incoming request data
+error_log("Incoming Request Data: " . json_encode($data));
+
 if (!isset($data['facility_id'], $data['date'], $data['start_time'], $data['end_time'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Missing required fields']);
@@ -24,48 +27,30 @@ $date = $data['date'];
 $start_time = $data['start_time'];
 $end_time = $data['end_time'];
 
-// Check for conflicts
+// Debugging: Log parsed variables
+error_log("Checking Conflicts for Facility ID: $facility_id, Room ID: " . ($room_id ?? 'NULL') . ", Date: $date, Time: $start_time - $end_time");
+
+// Run conflict check
 $conflicts = checkBookingConflict($conn, $facility_id, $room_id, $date, $start_time, $end_time);
 
-// Get existing bookings for the day
+// Debugging: Log conflicts found
+error_log("Conflicts Found: " . json_encode($conflicts));
+
+$hasConflicts = !empty($conflicts);
 $existingBookings = getExistingBookings($conn, $facility_id, $date);
 
-// Always treat any existing booking (Pending or Confirmed) as a conflict if times overlap
-$hasConflicts = !empty($conflicts);
-
-// Debug information
-$debug = [
-    'request' => [
-        'facility_id' => $facility_id,
-        'room_id' => $room_id,
-        'date' => $date,
-        'start_time' => $start_time,
-        'end_time' => $end_time
-    ],
-    'found_conflicts' => $hasConflicts,
-    'num_conflicts' => count($conflicts),
-    'num_existing_bookings' => count($existingBookings)
-];
-
-error_log("Conflict check debug info: " . json_encode($debug));
-
-// Only look for alternative slots if there are conflicts
 $available_slots = [];
 if ($hasConflicts) {
-    $available_slots = findNextAvailableSlot(
-        $conn,
-        $facility_id,
-        $room_id,
-        $date,
-        $start_time,
-        $end_time
-    );
+    $available_slots = findNextAvailableSlot($conn, $facility_id, $room_id, $date, $start_time, $end_time);
 }
 
-echo json_encode([
+// Debugging: Log final API response
+$response = [
     'hasConflicts' => $hasConflicts,
     'conflicts' => $conflicts,
     'existingBookings' => $existingBookings,
-    'suggestedSlots' => $available_slots,
-    'debug' => $debug
-]);
+    'suggestedSlots' => $available_slots
+];
+
+error_log("Final Response: " . json_encode($response));
+echo json_encode($response);

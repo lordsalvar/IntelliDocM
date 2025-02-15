@@ -258,7 +258,7 @@ $dean_name = $dean_data['dean_name'];
                                                     name="facilityBookings[0][slots][0][start]"
                                                     data-display-format="12"
                                                     onchange="updateTimeDisplay(this)">
-                                                <small class="time-display"></small>
+
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">End Time:</label>
@@ -266,7 +266,7 @@ $dean_name = $dean_data['dean_name'];
                                                     name="facilityBookings[0][slots][0][end]"
                                                     data-display-format="12"
                                                     onchange="updateTimeDisplay(this)">
-                                                <small class="time-display"></small>
+
                                             </div>
                                             <div class="col-md-3 d-flex align-items-end">
                                                 <div class="slot-actions">

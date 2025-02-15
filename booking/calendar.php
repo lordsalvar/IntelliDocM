@@ -48,7 +48,8 @@ if ($result && $result->num_rows > 0) {
 
     // Format dates to ISO format (YYYY-MM-DD)
     $startDate = date('Y-m-d', strtotime($row['activity_date']));
-    $endDate = date('Y-m-d', strtotime($row['end_activity_date']));
+    $endDate = date('Y-m-d', strtotime($row['end_activity_date'] . ' +1 day'));
+
 
     // Append status to title if desired
     $title = $row['activity_title'] . " (" . $statusText . ")";

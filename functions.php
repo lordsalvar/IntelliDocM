@@ -99,73 +99,244 @@ function getFacilitiesWithRooms($conn)
     return $facilities;
 }
 
-function checkBookingConflict($conn, $facility_id, $room_id, $booking_date, $start_time, $end_time)
+function checkRoomBookingConflict($conn, $facility_id, $room_id, $booking_date, $start_time, $end_time)
 {
-    // Debug log
-    error_log("Checking conflicts for: Facility $facility_id, Room $room_id, Date $booking_date, Time $start_time - $end_time");
+    if (!isValidBookingTime($start_time) || !isValidBookingTime($end_time)) {
+        return [
+            [
+                'conflict_type' => 'restricted_hours',
+                'message' => 'Bookings are not allowed between 12 AM and 2:59 AM'
+            ]
+        ];
+    }
 
-    $sql = "SELECT b.*, 
+    $start_time_24 = date('H:i:s', strtotime($start_time));
+    $end_time_24 = date('H:i:s', strtotime($end_time));
+
+    // First check if there's any facility-wide booking
+    $facility_sql = "
+        SELECT b.*, 
+            TIME_FORMAT(b.start_time, '%l:%i %p') as formatted_start,
+            TIME_FORMAT(b.end_time, '%l:%i %p') as formatted_end,
+            f.name as facility_name,
+            'facility' as booking_type
+        FROM bookings b
+        INNER JOIN facilities f ON b.facility_id = f.id
+        LEFT JOIN booking_rooms br ON b.id = br.booking_id
+        WHERE b.facility_id = ?
+        AND b.booking_date = ?
+        AND b.status IN ('Pending', 'Confirmed')
+        AND br.room_id IS NULL
+        AND (
+            (? BETWEEN b.start_time AND b.end_time) OR  -- Start time falls within existing booking
+            (? BETWEEN b.start_time AND b.end_time) OR  -- End time falls within existing booking
+            (? <= b.start_time AND ? >= b.end_time)     -- Existing booking falls completely within new booking
+        )";
+
+    $stmt = $conn->prepare($facility_sql);
+    $stmt->bind_param(
+        "isssss",
+        $facility_id,
+        $booking_date,
+        $start_time_24,
+        $end_time_24,
+        $start_time_24,
+        $end_time_24
+    );
+
+    $stmt->execute();
+    $facility_conflicts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    // Then check for room-specific conflicts
+    $room_sql = "
+        SELECT b.*, 
             TIME_FORMAT(b.start_time, '%l:%i %p') as formatted_start,
             TIME_FORMAT(b.end_time, '%l:%i %p') as formatted_end,
             f.name as facility_name,
             r.room_number,
-            b.status
-            FROM bookings b
-            LEFT JOIN booking_rooms br ON b.id = br.booking_id
-            LEFT JOIN facilities f ON b.facility_id = f.id
-            LEFT JOIN rooms r ON br.room_id = r.id
-            WHERE b.facility_id = ? 
-            AND b.booking_date = ?
-            AND b.status IN ('Pending', 'Confirmed')
-            AND (
-                (? BETWEEN b.start_time AND b.end_time)
-                OR (? BETWEEN b.start_time AND b.end_time)
-                OR (b.start_time BETWEEN ? AND ?)
-                OR (b.end_time BETWEEN ? AND ?)
-            )";
+            'room' as booking_type
+        FROM bookings b
+        INNER JOIN facilities f ON b.facility_id = f.id
+        INNER JOIN booking_rooms br ON b.id = br.booking_id
+        INNER JOIN rooms r ON br.room_id = r.id
+        WHERE b.facility_id = ?
+        AND br.room_id = ?
+        AND b.booking_date = ?
+        AND b.status IN ('Pending', 'Confirmed')
+        AND (
+            (? BETWEEN b.start_time AND b.end_time) OR  -- Start time falls within existing booking
+            (? BETWEEN b.start_time AND b.end_time) OR  -- End time falls within existing booking
+            (? <= b.start_time AND ? >= b.end_time)     -- Existing booking falls completely within new booking
+        )";
 
-    if ($room_id) {
-        $sql .= " AND (br.room_id = ? OR br.room_id IS NULL)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param(
-            "issssssssi",
-            $facility_id,
-            $booking_date,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $room_id
-        );
-    } else {
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param(
-            "isssssss",
-            $facility_id,
-            $booking_date,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time
-        );
+    $stmt = $conn->prepare($room_sql);
+    $stmt->bind_param(
+        "iisssss",
+        $facility_id,
+        $room_id,
+        $booking_date,
+        $start_time_24,
+        $end_time_24,
+        $start_time_24,
+        $end_time_24
+    );
+
+    $stmt->execute();
+    $room_conflicts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    // Combine and format conflicts with detailed messages
+    $all_conflicts = [];
+
+    foreach ($facility_conflicts as $conflict) {
+        $all_conflicts[] = [
+            'conflict_type' => 'facility_wide',
+            'facility_name' => $conflict['facility_name'],
+            'start_time' => $conflict['formatted_start'],
+            'end_time' => $conflict['formatted_end'],
+            'message' => "Facility-wide booking exists for {$conflict['facility_name']} from {$conflict['formatted_start']} to {$conflict['formatted_end']}"
+        ];
     }
+
+    foreach ($room_conflicts as $conflict) {
+        $overlap_type = '';
+        $conflict_start = strtotime($conflict['start_time']);
+        $conflict_end = strtotime($conflict['end_time']);
+        $new_start = strtotime($start_time_24);
+        $new_end = strtotime($end_time_24);
+
+        if ($new_start >= $conflict_start && $new_end <= $conflict_end) {
+            $overlap_type = 'completely within';
+        } elseif ($new_start <= $conflict_start && $new_end >= $conflict_end) {
+            $overlap_type = 'completely overlaps';
+        } elseif ($new_start < $conflict_end && $new_end > $conflict_end) {
+            $overlap_type = 'overlaps end';
+        } elseif ($new_start < $conflict_start && $new_end > $conflict_start) {
+            $overlap_type = 'overlaps start';
+        }
+
+        $all_conflicts[] = [
+            'conflict_type' => 'room_specific',
+            'room_number' => $conflict['room_number'],
+            'facility_name' => $conflict['facility_name'],
+            'start_time' => $conflict['formatted_start'],
+            'end_time' => $conflict['formatted_end'],
+            'overlap_type' => $overlap_type,
+            'message' => "Room {$conflict['room_number']} has a booking that {$overlap_type} from {$conflict['formatted_start']} to {$conflict['formatted_end']}"
+        ];
+    }
+
+    return $all_conflicts;
+}
+
+function checkBookingConflict($conn, $facility_id, $room_id, $booking_date, $start_time, $end_time)
+{
+    // If room_id is provided, use the room-specific conflict checker
+    if ($room_id) {
+        return checkRoomBookingConflict($conn, $facility_id, $room_id, $booking_date, $start_time, $end_time);
+    }
+
+    // Add time validation
+    if (!isValidBookingTime($start_time) || !isValidBookingTime($end_time)) {
+        return [
+            [
+                'conflict_type' => 'restricted_hours',
+                'message' => 'Bookings are not allowed between 12 AM and 2:59 AM'
+            ]
+        ];
+    }
+
+    $start_time_24 = date('H:i:s', strtotime($start_time));
+    $end_time_24 = date('H:i:s', strtotime($end_time));
+
+    // Query to check conflicts for facility-wide bookings
+    $sql = "
+        SELECT DISTINCT 
+            b.*, 
+            TIME_FORMAT(b.start_time, '%l:%i %p') as formatted_start,
+            TIME_FORMAT(b.end_time, '%l:%i %p') as formatted_end,
+            f.name as facility_name,
+            r.room_number,
+            r.id as room_id,
+            b.status,
+            CASE 
+                WHEN br.room_id IS NULL THEN 'facility'
+                ELSE 'room'
+            END as booking_type
+        FROM bookings b
+        INNER JOIN facilities f ON b.facility_id = f.id
+        LEFT JOIN booking_rooms br ON b.id = br.booking_id
+        LEFT JOIN rooms r ON br.room_id = r.id
+        WHERE b.facility_id = ?
+        AND b.booking_date = ?
+        AND b.status IN ('Pending', 'Confirmed')
+        AND (
+            (? BETWEEN b.start_time AND b.end_time) OR  -- Start time falls within existing booking
+            (? BETWEEN b.start_time AND b.end_time) OR  -- End time falls within existing booking
+            (? <= b.start_time AND ? >= b.end_time)     -- Existing booking falls completely within new booking
+        )";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "isssss",
+        $facility_id,
+        $booking_date,
+        $start_time_24,
+        $end_time_24,
+        $start_time_24,
+        $end_time_24
+    );
 
     $stmt->execute();
     $result = $stmt->get_result();
     $conflicts = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
 
-    // Debug log
-    error_log("Found " . count($conflicts) . " conflicts");
+    // Process and format conflicts with detailed overlap information
+    $formatted_conflicts = [];
     foreach ($conflicts as $conflict) {
-        error_log("Conflict: " . json_encode($conflict));
+        $conflict_start = strtotime($conflict['start_time']);
+        $conflict_end = strtotime($conflict['end_time']);
+        $new_start = strtotime($start_time_24);
+        $new_end = strtotime($end_time_24);
+
+        // Determine overlap type
+        $overlap_type = '';
+        if ($new_start >= $conflict_start && $new_end <= $conflict_end) {
+            $overlap_type = 'completely within';
+        } elseif ($new_start <= $conflict_start && $new_end >= $conflict_end) {
+            $overlap_type = 'completely overlaps';
+        } elseif ($new_start < $conflict_end && $new_end > $conflict_end) {
+            $overlap_type = 'overlaps end';
+        } elseif ($new_start < $conflict_start && $new_end > $conflict_start) {
+            $overlap_type = 'overlaps start';
+        }
+
+        // Format the conflict message based on booking type
+        if ($conflict['booking_type'] === 'facility') {
+            $formatted_conflicts[] = [
+                'conflict_type' => 'facility_wide',
+                'facility_name' => $conflict['facility_name'],
+                'start_time' => $conflict['formatted_start'],
+                'end_time' => $conflict['formatted_end'],
+                'overlap_type' => $overlap_type,
+                'message' => "Facility-wide booking {$overlap_type} for {$conflict['facility_name']} from {$conflict['formatted_start']} to {$conflict['formatted_end']}"
+            ];
+        } else {
+            $formatted_conflicts[] = [
+                'conflict_type' => 'room_specific',
+                'room_number' => $conflict['room_number'],
+                'facility_name' => $conflict['facility_name'],
+                'start_time' => $conflict['formatted_start'],
+                'end_time' => $conflict['formatted_end'],
+                'overlap_type' => $overlap_type,
+                'message' => "Room {$conflict['room_number']} has a booking that {$overlap_type} from {$conflict['formatted_start']} to {$conflict['formatted_end']}"
+            ];
+        }
     }
 
-    $stmt->close();
-    return $conflicts;
+    return $formatted_conflicts;
 }
 
 function getExistingBookings($conn, $facility_id, $date)
@@ -200,8 +371,31 @@ function getExistingBookings($conn, $facility_id, $date)
 
 function findNextAvailableSlot($conn, $facility_id, $room_id, $desired_date, $desired_start, $desired_end)
 {
-    // Add a buffer time in minutes between bookings
-    $buffer_minutes = 30; // You can adjust this value as needed
+    $buffer_minutes = 30;
+
+    // Check if desired times are within restricted hours
+    if (!isValidBookingTime($desired_start) || !isValidBookingTime($desired_end)) {
+        // If trying to book during restricted hours, move to 8 AM of the same day
+        // or next day if the current time is past 8 AM
+        $current_hour = (int)date('H', strtotime($desired_start));
+        if ($current_hour < 8) {
+            $desired_start = "08:00:00";
+        } else {
+            $desired_date = date('Y-m-d', strtotime($desired_date . " +1 day"));
+            $desired_start = "08:00:00";
+        }
+        $desired_end = date('H:i:s', strtotime($desired_start) + (strtotime($desired_end) - strtotime($desired_start)));
+    }
+
+    // Check for end time past 11:59 PM
+    $desired_end_timestamp = strtotime($desired_end);
+    $day_end_limit = strtotime("23:59:59");
+
+    if ($desired_end_timestamp > $day_end_limit) {
+        $desired_date = date('Y-m-d', strtotime($desired_date . " +1 day"));
+        $desired_start = "08:00:00";
+        $desired_end = date('H:i:s', strtotime($desired_start) + (strtotime($desired_end) - strtotime($desired_start)));
+    }
 
     $sql = "SELECT b.start_time, b.end_time 
             FROM bookings b
@@ -222,32 +416,37 @@ function findNextAvailableSlot($conn, $facility_id, $room_id, $desired_date, $de
     $result = $stmt->get_result();
     $bookings = $result->fetch_all(MYSQLI_ASSOC);
 
-    // Convert desired times to minutes for easier comparison
     $desired_duration = (strtotime($desired_end) - strtotime($desired_start)) / 60;
-    $day_start = strtotime("08:00:00"); // Facility opens at 8 AM
-    $day_end = strtotime("17:00:00");   // Facility closes at 5 PM
+    $day_start = strtotime("08:00:00");
+    $day_end = strtotime("23:59:59"); // Updated to 11:59 PM
 
     $available_slots = [];
     $current_time = $day_start;
 
     foreach ($bookings as $booking) {
         $booking_start = strtotime($booking['start_time']);
-
-        // Add buffer time to the previous booking's end time
         $current_time_with_buffer = $current_time + ($buffer_minutes * 60);
+
+        // Additional check for restricted hours
+        if (!isValidBookingTime(date('H:i:s', $current_time_with_buffer))) {
+            $current_time_with_buffer = strtotime("08:00:00", strtotime("+1 day", $current_time_with_buffer));
+        }
 
         $gap = ($booking_start - $current_time_with_buffer) / 60;
 
-        if ($gap >= $desired_duration) {
-            $slot_start_time = $current_time_with_buffer;
-            $slot_end_time = $slot_start_time + ($desired_duration * 60);
-
+        // Check if the potential slot would end before 11:59 PM and not extend into restricted hours
+        $potential_end_time = $current_time_with_buffer + ($desired_duration * 60);
+        if (
+            $gap >= $desired_duration &&
+            $potential_end_time <= $day_end &&
+            isValidBookingTime(date('H:i:s', $potential_end_time))
+        ) {
             $available_slots[] = [
                 'date' => $desired_date,
-                'start' => date('h:i A', $slot_start_time),
-                'end' => date('h:i A', $slot_end_time),
-                'start_24' => date('H:i:s', $slot_start_time),
-                'end_24' => date('H:i:s', $slot_end_time)
+                'start' => date('h:i A', $current_time_with_buffer),
+                'end' => date('h:i A', $potential_end_time),
+                'start_24' => date('H:i:s', $current_time_with_buffer),
+                'end_24' => date('H:i:s', $potential_end_time)
             ];
         }
         $current_time = strtotime($booking['end_time']);
@@ -255,19 +454,20 @@ function findNextAvailableSlot($conn, $facility_id, $room_id, $desired_date, $de
 
     // Check final gap of the day (with buffer)
     $final_start_time = $current_time + ($buffer_minutes * 60);
+    $final_end_time = $final_start_time + ($desired_duration * 60);
     $gap = ($day_end - $final_start_time) / 60;
 
-    if ($gap >= $desired_duration) {
+    if ($gap >= $desired_duration && $final_end_time <= $day_end) {
         $available_slots[] = [
             'date' => $desired_date,
             'start' => date('h:i A', $final_start_time),
-            'end' => date('h:i A', $final_start_time + ($desired_duration * 60)),
+            'end' => date('h:i A', $final_end_time),
             'start_24' => date('H:i:s', $final_start_time),
-            'end_24' => date('H:i:s', $final_start_time + ($desired_duration * 60))
+            'end_24' => date('H:i:s', $final_end_time)
         ];
     }
 
-    // If no slots found on same day, look for next 7 days with buffer
+    // If no slots found on same day or if end time would be past 11:59 PM, look for next 7 days
     if (empty($available_slots)) {
         for ($i = 1; $i <= 7; $i++) {
             $next_date = date('Y-m-d', strtotime($desired_date . " +$i days"));
@@ -276,17 +476,28 @@ function findNextAvailableSlot($conn, $facility_id, $room_id, $desired_date, $de
             if ($result->num_rows === 0) {
                 $start_time = strtotime('08:00:00');
                 $end_time = $start_time + ($desired_duration * 60);
-                $available_slots[] = [
-                    'date' => $next_date,
-                    'start' => date('h:i A', $start_time),
-                    'end' => date('h:i A', $end_time),
-                    'start_24' => date('H:i:s', $start_time),
-                    'end_24' => date('H:i:s', $end_time)
-                ];
-                break;
+
+                // Only add slot if it ends before 11:59 PM
+                if ($end_time <= strtotime("23:59:59")) {
+                    $available_slots[] = [
+                        'date' => $next_date,
+                        'start' => date('h:i A', $start_time),
+                        'end' => date('h:i A', $end_time),
+                        'start_24' => date('H:i:s', $start_time),
+                        'end_24' => date('H:i:s', $end_time)
+                    ];
+                    break;
+                }
             }
         }
     }
 
     return $available_slots;
+}
+
+// Add this new function after the existing functions
+function isValidBookingTime($time)
+{
+    $hour = (int)date('H', strtotime($time));
+    return !($hour >= 0 && $hour < 3); // Returns false for hours between 12 AM and 2:59 AM
 }

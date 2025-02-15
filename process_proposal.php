@@ -133,6 +133,7 @@ try {
         foreach ($_POST['facilityBookings'] as $booking) {
             if (empty($booking['facility'])) continue;
 
+            // First insert the booking
             $stmt = $conn->prepare("
                 INSERT INTO bookings (
                     facility_id, user_id, booking_date, 
@@ -149,7 +150,21 @@ try {
                 $booking['slots'][0]['end']
             );
 
-            $stmt->execute();
+            if ($stmt->execute()) {
+                $booking_id = $stmt->insert_id;
+
+                // If a room was selected, insert into booking_rooms table
+                if (!empty($booking['room'])) {
+                    $roomStmt = $conn->prepare("
+                        INSERT INTO booking_rooms (booking_id, room_id) 
+                        VALUES (?, ?)
+                    ");
+                    $roomStmt->bind_param("ii", $booking_id, $booking['room']);
+                    $roomStmt->execute();
+                    $roomStmt->close();
+                }
+            }
+            $stmt->close();
         }
     }
 

@@ -260,28 +260,33 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 7) Function that checks booking conflicts on the fly
-    async function checkBookingConflicts(facilityId, roomId, date, startTime, endTime) {
-        try {
-            const response = await fetch('check_conflicts.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    facility_id: facilityId,
-                    room_id: roomId,
-                    date: date,
-                    start_time: startTime,
-                    end_time: endTime
-                })
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('Error checking conflicts:', error);
-            return { error: 'Failed to check conflicts' };
-        }
+   
+   // 7) Function that checks booking conflicts on the fly
+async function checkBookingConflicts(facilityId, roomId, date, startTime, endTime) {
+    try {
+        console.log("Checking conflicts with:", { facilityId, roomId, date, startTime, endTime });
+
+        const response = await fetch('check_conflicts.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                facility_id: facilityId,
+                room_id: roomId,
+                date: date,
+                start_time: startTime,
+                end_time: endTime
+            })
+        });
+
+        const data = await response.json();
+        console.log("Conflict Check Response:", data);
+        return data;
+    } catch (error) {
+        console.error('Error checking conflicts:', error);
+        return { error: 'Failed to check conflicts' };
     }
+}
+
 
     // For quick display of 12-hour times if needed
     function formatTime12Hour(time24) {
@@ -370,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Add click handlers for suggestions
                     warningBox.querySelectorAll('.suggested-slot').forEach(button => {
-                        button.addEventListener('click', function() {
+                        button.addEventListener('click', async function() {
                             const date = this.dataset.date;
                             const start = this.dataset.start;
                             const end = this.dataset.end;
@@ -380,8 +385,58 @@ document.addEventListener("DOMContentLoaded", function() {
                                 startInput.value = start;
                                 endInput.value = end;
                                 warningBox.remove();
-                                // Trigger a new check for the newly chosen slot
-                                startInput.dispatchEvent(new Event('change'));
+                                
+                                // Create and dispatch custom event with the new booking details
+                                const checkEvent = new CustomEvent('checkConflict', {
+                                    detail: {
+                                        date: date,
+                                        start: start,
+                                        end: end,
+                                        facilityId: facilityId,
+                                        roomId: roomId
+                                    }
+                                });
+                                
+                                // Show immediate checking indicator
+                                const loadingIndicator = document.createElement('div');
+                                loadingIndicator.className = 'checking-indicator';
+                                loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking availability...';
+                                slot.appendChild(loadingIndicator);
+
+                                // Check conflicts for the suggested slot
+                                try {
+                                    const response = await checkBookingConflicts(
+                                        facilityId,
+                                        roomId,
+                                        date,
+                                        start,
+                                        end
+                                    );
+
+                                    loadingIndicator.remove();
+
+                                    if (!response.hasConflicts) {
+                                        const successIndicator = document.createElement('div');
+                                        successIndicator.className = 'alert alert-success mt-2';
+                                        successIndicator.innerHTML = '<i class="fas fa-check-circle"></i> Time slot available!';
+                                        slot.appendChild(successIndicator);
+                                        
+                                        setTimeout(() => successIndicator.remove(), 2000);
+                                        document.querySelector('button[type="submit"]').disabled = false;
+                                    } else {
+                                        // If somehow there's still a conflict, show the warning
+                                        startInput.dispatchEvent(new Event('change'));
+                                    }
+                                } catch (error) {
+                                    console.error('Error checking conflicts:', error);
+                                    loadingIndicator.remove();
+                                    
+                                    const errorIndicator = document.createElement('div');
+                                    errorIndicator.className = 'alert alert-danger mt-2';
+                                    errorIndicator.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error checking availability.';
+                                    slot.appendChild(errorIndicator);
+                                    setTimeout(() => errorIndicator.remove(), 2000);
+                                }
                             }
                         });
                     });
