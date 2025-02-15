@@ -1,0 +1,99 @@
+/* General Body Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding-top: 60px; /* Reduced padding-top to better fit header */
+    padding-bottom: 60px; /* Adds padding at the bottom to avoid footer overlap */
+}
+
+/* Fixed header with proper height */
+header {
+    background-color: #fff;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+    width: 100%;
+    position: fixed; /* Keeps the header at the top */
+    top: 0; /* Aligns the header at the top */
+    z-index: 1030; /* Ensures header is above all other content */
+}
+
+/* Footer Styles - No longer relative, now fixed at the bottom */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f4f6f9;
+    border-top: 1px solid #dee2e6;
+    position: fixed; /* Fixed at the bottom */
+    bottom: 0; /* Aligns footer at the bottom */
+    width: 100%;
+    z-index: 1020; /* Ensures footer is above all but below modal dialogs */
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* Container and Row Styles */
+.dashboard-container {
+    padding: 15px;
+    max-width: 100%;
+    margin-top: 80px; /* Space added to accommodate fixed header */
+    margin-bottom: 80px; /* Space added to ensure footer doesn't overlap content */
+}
+
+/* Card Styling */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px 15px;
+}
+
+.list-group-item {
+    border: none;
+    background-color: transparent;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eaecef;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Chart and List Container Styles */
+.chart-container, .list-container {
+    padding: 15px;
+    overflow: hidden;
+}
+
+.chart-container canvas, .list-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Handling for smaller devices */
+@media (max-width: 768px) {
+    body {
+        padding-top: 30px; /* Adjusted for smaller screens */
+        padding-bottom: 30px; /* Ensures space for footer on mobile */
+    }
+    .dashboard-container {
+        padding: 15px 5px;
+    }
+    .card-header {
+        padding: 8px 10px;
+    }
+    .list-group-item {
+        padding: 8px 10px;
+    }
+    header, footer {
+        padding: 8px 0;
+    }
+}

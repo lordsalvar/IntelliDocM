@@ -41,6 +41,9 @@ if (substr($basePath, -1) !== '/') {
                         <a class="nav-link text-white" href="facilityManager.php">Facility Manager</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href="ActivityTracker.php">Activity Tracker</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="/main/IntelliDocM/activity_proposal_form.php">Student Forms</a>
                     </li>
                     <li class="nav-item">
