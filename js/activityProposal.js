@@ -214,21 +214,39 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
-    ``
+    
     // 5) Toggle Venue & Address Fields Based on Activity Type
     const onCampusCheckbox = document.getElementById('on-campus');
     const offCampusCheckbox = document.getElementById('off-campus');
     const venueAddressContainer = document.getElementById('venue-address-container');
+    const facilityBookingsContainer = document.getElementById('facilityBookingsContainer'); // Add this line
 
     function toggleVenueAddress() {
         if (onCampusCheckbox.checked || offCampusCheckbox.checked) {
             venueAddressContainer.style.display = 'flex';
+            
+            // Show/hide facility bookings based on activity type
+            if (offCampusCheckbox.checked) {
+                facilityBookingsContainer.style.display = 'none';
+                // Clear any existing facility bookings
+                facilityBookingsContainer.innerHTML = '';
+            } else {
+                facilityBookingsContainer.style.display = 'block';
+                // If there are no bookings, add an initial one
+                if (facilityBookingsContainer.children.length === 0) {
+                    addBooking();
+                }
+            }
         } else {
             venueAddressContainer.style.display = 'none';
+            facilityBookingsContainer.style.display = 'block';
         }
     }
-    // Initially hide it
+
+    // Initially hide venue/address
     venueAddressContainer.style.display = 'none';
+    
+    // Add event listeners
     onCampusCheckbox.addEventListener('change', toggleVenueAddress);
     offCampusCheckbox.addEventListener('change', toggleVenueAddress);
 
