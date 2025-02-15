@@ -81,43 +81,79 @@ document.addEventListener("DOMContentLoaded", function() {
             const block = e.target.closest(".facility-booking");
             const bookingIdx = block.dataset.index;
             const timeSlotsContainer = block.querySelector(".time-slots");
-            let slotIndex = timeSlotsContainer.querySelectorAll(".time-slot").length;
+            let slotIndex = timeSlotsContainer.querySelectorAll(".time-slot-card").length;
 
             const slotDiv = document.createElement("div");
-            slotDiv.classList.add("row", "g-2", "align-items-end", "time-slot");
+            slotDiv.classList.add("time-slot-card");
             slotDiv.dataset.index = slotIndex;
 
             slotDiv.innerHTML = `
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Date:</label>
-                    <input type="date" class="form-control" name="facilityBookings[${bookingIdx}][slots][${slotIndex}][date]">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Date</label>
+                        <input type="date"
+                            class="form-control"
+                            name="facilityBookings[${bookingIdx}][slots][${slotIndex}][date]"
+                            required
+                            min="${getTomorrow()}"
+                            max="${getMaxDate()}"
+                            value="${getTomorrow()}"
+                            data-date-validation="true">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Start Time:</label>
+                        <input type="time" class="form-control time-input"
+                            name="facilityBookings[${bookingIdx}][slots][${slotIndex}][start]"
+                            data-display-format="12"
+                            onchange="updateTimeDisplay(this)">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">End Time:</label>
+                        <input type="time" class="form-control time-input"
+                            name="facilityBookings[${bookingIdx}][slots][${slotIndex}][end]"
+                            data-display-format="12"
+                            onchange="updateTimeDisplay(this)">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="slot-actions">
+                            <button type="button" class="addSlot btn btn-outline-primary btn-sm" title="Add Time Slot">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="removeSlot btn btn-outline-danger btn-sm" title="Remove Slot">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Room or Building</label>
-                    <input type="text" class="form-control room-or-building" name="facilityBookings[${bookingIdx}][slots][${slotIndex}][room]">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Start Time:</label>
-                    <input type="time" class="form-control" name="facilityBookings[${bookingIdx}][slots][${slotIndex}][start]">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">End Time:</label>
-                    <input type="time" class="form-control" name="facilityBookings[${bookingIdx}][slots][${slotIndex}][end]">
-                </div>
-                <div class="col-md-3 text-end">
-                    <button type="button" class="removeSlot btn btn-danger btn-sm mt-4" title="Remove Slot">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
+                <div class="conflict-container mt-2"></div>
             `;
+
             timeSlotsContainer.appendChild(slotDiv);
+
+            // Initialize date validation for the new slot
+            const dateInput = slotDiv.querySelector('input[type="date"]');
+            if (dateInput) {
+                dateInput.addEventListener('change', function() {
+                    validateDate(this);
+                });
+            }
         }
     });
 
     // Remove time slot
     document.getElementById("facilityBookingsContainer").addEventListener("click", function(e) {
         if (e.target && e.target.closest(".removeSlot")) {
-            e.target.closest(".time-slot").remove();
+            const timeSlotCard = e.target.closest(".time-slot-card");
+            const timeSlotsContainer = timeSlotCard.closest('.time-slots');
+            const totalSlots = timeSlotsContainer.querySelectorAll('.time-slot-card').length;
+
+            // Don't allow removal if it's the only slot
+            if (totalSlots <= 1) {
+                alert("Cannot remove the last time slot. At least one time slot is required.");
+                return;
+            }
+
+            timeSlotCard.remove();
         }
     });
 
@@ -477,13 +513,6 @@ async function checkBookingConflicts(facilityId, roomId, date, startTime, endTim
             return false;
         }
 
-        // Check if it's a Sunday
-        if (selectedDate.getDay() === 0) {
-            alert('Sunday bookings are not allowed.');
-            input.value = '';
-            return false;
-        }
-
         return true;
     }
 
@@ -607,4 +636,26 @@ async function checkBookingConflicts(facilityId, roomId, date, startTime, endTim
         maxDate.setMonth(maxDate.getMonth() + 6);
         return maxDate.toISOString().split('T')[0];
     }
+
+    // Update time input event listeners
+    document.getElementById("facilityBookingsContainer").addEventListener("change", function(e) {
+        if (e.target.matches('input[type="time"]')) {
+            const timeValue = e.target.value;
+            const timeInput = e.target;
+            const slot = timeInput.closest('.time-slot, .time-slot-card');
+            const startInput = slot.querySelector('input[name$="[start]"]');
+            const endInput = slot.querySelector('input[name$="[end]"]');
+
+            if (startInput && endInput) {
+                // Basic validation: end time must be after start time
+                if (startInput.value && endInput.value) {
+                    if (endInput.value <= startInput.value) {
+                        alert("End time must be after start time");
+                        e.target.value = '';
+                        return;
+                    }
+                }
+            }
+        }
+    });
 });
