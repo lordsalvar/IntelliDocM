@@ -1,0 +1,98 @@
+/* General body and header styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header, footer {
+    background-color: #fff;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* Dashboard styles */
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+h1 {
+    color: #0056b3;
+    font-size: 24px;
+}
+
+/* Facility Selector styles */
+#facilitySelector {
+    border: 2px solid #ced4da;
+    border-radius: 0.25rem;
+    height: 38px;
+}
+
+/* Chart styles */
+/* Chart styles */
+canvas {
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    display: block; /* Ensures the canvas doesn't take more space than necessary */
+    margin: 0 auto; /* Centers the canvas */
+    width: 400px; /* Fixed width for the canvas */
+    height: 400px; /* Fixed height for the canvas */
+}
+
+
+/* Report list styles */
+#reportList {
+    max-height: 300px;  /* Set a fixed maximum height */
+    overflow-y: auto;   /* Enable vertical scrolling when content exceeds the container */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    margin-bottom: 5px;
+    padding: 10px;      /* Adds padding inside the list for better text readability */
+}
+
+.list-group-item {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    color: #495057;
+    margin-bottom: 2px;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.list-group-item:hover {
+    background-color: #e2e6ea;
+}
+
+/* Adjusting modal styles if necessary */
+.modal-content {
+    max-height: 80vh;  /* Limiting the modal height if it appears too tall */
+    overflow-y: auto;  /* Allow scrolling inside the modal if content is long */
+}
+
+
+.modal-header, .modal-body {
+    padding: 20px;
+}
+
+.modal-title {
+    color: #333;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
