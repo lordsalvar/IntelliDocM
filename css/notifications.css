@@ -1,0 +1,233 @@
+.notifications-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: linear-gradient(to bottom right, #fff, #f8f8f8);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(183, 28, 28, 0.1);
+    border-left: 5px solid #B71C1C;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(183, 28, 28, 0.1);
+}
+
+.notifications-header h2 {
+    color: #B71C1C;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.mark-read-btn {
+    background: none;
+    border: 2px solid #B71C1C;
+    color: #B71C1C;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.mark-read-btn:hover {
+    background: #B71C1C;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notification-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.notification-item.unread {
+    background: #fff5f5;
+    box-shadow: 0 4px 12px rgba(183, 28, 28, 0.1);
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #B71C1C;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(183, 28, 28, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #B71C1C;
+    font-size: 1.2rem;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.notification-header h3 {
+    color: #333;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.notification-time {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.notification-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.proposal-title, .club-name {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #666;
+}
+
+.mark-read {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #B71C1C;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.mark-read:hover {
+    text-decoration: underline;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #B71C1C;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .notifications-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .notifications-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .notification-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notification-count {
+    background: #B71C1C;
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.view-proposal {
+    background: #B71C1C;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.view-proposal:hover {
+    background: #D32F2F;
+    transform: translateY(-2px);
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.empty-state span {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #888;
+}

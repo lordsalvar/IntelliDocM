@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Fetch user details
     $stmt = $conn->prepare("
-        SELECT u.id, u.password, u.role, cm.designation 
+        SELECT u.id, u.password, u.role, u.full_name, cm.designation 
         FROM users u
         LEFT JOIN club_memberships cm ON u.id = cm.user_id
         WHERE u.username = ?
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id, $hashed_password, $role, $designation);
+    $stmt->bind_result($id, $hashed_password, $role, $full_name, $designation);
     $stmt->fetch();
 
     // Verify user credentials
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $id;
             $_SESSION['username'] = $username;
             $_SESSION['role'] = $role;
+            $_SESSION['full_name'] = $full_name; // Add this line
             $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
 
             // Debugging session variables

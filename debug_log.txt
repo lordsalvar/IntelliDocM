@@ -679,3 +679,5 @@ Fetching notifications for user_id: 2
 Fetching notifications for user_id: 2
 Fetching notifications for user_id: 2
 Fetching notifications for user_id: 2
+Fetching notifications for user_id: 8
+Fetching notifications for user_id: 8
