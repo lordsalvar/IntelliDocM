@@ -9,41 +9,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $userActivity = 'User logged in';  // Example activity description
-
-    // Log the activity
-    logActivity($username, $userActivity);
     // Get the database connection
     $conn = getDbConnection();
 
-    // Fetch user details
-    $stmt = $conn->prepare("
-        SELECT u.id, u.password, u.role, u.full_name, cm.designation 
-        FROM users u
-        LEFT JOIN club_memberships cm ON u.id = cm.user_id
-        WHERE u.username = ?
-        LIMIT 1
-    ");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id, $hashed_password, $role, $full_name, $designation);
-    $stmt->fetch();
+    // First check if username exists
+    $check_user = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $check_user->bind_param("s", $username);
+    $check_user->execute();
+    $check_user->store_result();
 
-    // Verify user credentials
-    if ($stmt->num_rows > 0) {
+    if ($check_user->num_rows === 0) {
+        $error = "Username is not registered. Please request for an account at the SSC office.";
+    } else {
+        // Fetch user details
+        $stmt = $conn->prepare("
+            SELECT u.id, u.password, u.role, u.full_name, cm.designation 
+            FROM users u
+            LEFT JOIN club_memberships cm ON u.id = cm.user_id
+            WHERE u.username = ?
+            LIMIT 1
+        ");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($id, $hashed_password, $role, $full_name, $designation);
+        $stmt->fetch();
+
         if (password_verify($password, $hashed_password)) {
-            // Store normalized designation in the session
+            $userActivity = 'User logged in';
+            logActivity($username, $userActivity);
+
             $_SESSION['user_id'] = $id;
             $_SESSION['username'] = $username;
             $_SESSION['role'] = $role;
-            $_SESSION['full_name'] = $full_name; // Add this line
-            $_SESSION['designation'] = strtolower(trim($designation)); // Normalize to lowercase
+            $_SESSION['full_name'] = $full_name;
+            $_SESSION['designation'] = strtolower(trim($designation));
 
-            // Debugging session variables
-            echo "Redirecting based on: Role = $role, Designation = " . $_SESSION['designation'] . "<br>";
-
-            // Use normalized designation for comparison
+            // Redirect based on role
             if ($role === 'admin') {
                 header('Location: admin/view_proposals.php');
                 exit();
@@ -58,14 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
         } else {
-            header('Location: /main/IntelliDocM/client.php');
-            exit();
+            $error = "Invalid password";
         }
-    } else {
-        $error = "Invalid password"; // Set error for invalid password
     }
-} else {
-    $error = "Invalid username or password"; // Set error for invalid username
 }
 
 ?>
@@ -77,57 +74,137 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="css/login.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Login - IntelliDoc</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #FFF5F5;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(183, 28, 28, 0.1);
+            border-left: 5px solid #B71C1C;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #B71C1C;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #B71C1C;
+        }
+
+        .form-control {
+            padding-left: 3rem;
+            border-radius: 8px;
+            border: 1px solid rgba(183, 28, 28, 0.2);
+        }
+
+        .form-control:focus {
+            border-color: #B71C1C;
+            box-shadow: 0 0 0 0.2rem rgba(183, 28, 28, 0.25);
+        }
+
+        .btn-login {
+            background: #B71C1C;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: #D32F2F;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
 </head>
 
 <body>
-    <section class="vh-100">
-        <div class="container-fluid h-custom">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-md-9 col-lg-6 col-xl-5">
-                    <img src="images/draw2.webp" class="img-fluid" alt="Sample image">
-                </div>
-                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-
-                    <form method="POST" action="login.php">
-                        <div>
-                            <h2 class="text-center">Login</h2>
-                        </div>
-
-                        <!-- Error Message -->
-                        <?php if (!empty($error)): ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo htmlspecialchars($error); ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Username input -->
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required placeholder="Enter your username">
-                        </div>
-
-                        <!-- Password input -->
-                        <div class="form-group mt-3">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
-                        </div>
-
-                        <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-sm">Login</button>
-                        </div>
-                    </form>
-                </div>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-circle"></i>
+                <h2>Welcome Back</h2>
+                <p>Sign in to continue</p>
             </div>
-        </div>
-    </section>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="login.php">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text"
+                        class="form-control"
+                        id="username"
+                        name="username"
+                        required
+                        placeholder="Username">
+                </div>
+
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        required
+                        placeholder="Password">
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

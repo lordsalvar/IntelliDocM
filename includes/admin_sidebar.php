@@ -24,7 +24,7 @@
             <i class="fas fa-door-open"></i>
             <span>Resource Management</span>
         </a>
-        <a href="admin_activity_calendar.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'admin_activity_calendar.php' ? 'active' : '' ?>">
+        <a href="/main/intellidocm/admin_activity_calendar.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'admin_activity_calendar.php' ? 'active' : '' ?>">
             <i class="fas fa-calendar-alt"></i>
             <span>Activity Calendar</span>
         </a>
