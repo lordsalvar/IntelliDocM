@@ -22,7 +22,7 @@
         </a>
         <a href="/main/intellidocm/admin/facility_management.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'facility_management.php' ? 'active' : '' ?>">
             <i class="fas fa-door-open"></i>
-            <span>Facility Management</span>
+            <span>Resource Management</span>
         </a>
         <a href="admin_activity_calendar.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'admin_activity_calendar.php' ? 'active' : '' ?>">
             <i class="fas fa-calendar-alt"></i>

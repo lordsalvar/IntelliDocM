@@ -1,0 +1,198 @@
+<!-- Add Facility Modal -->
+<div class="modal fade" id="addFacilityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus"></i> Add New Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addFacilityForm" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="facilityName" class="form-label">Facility Name</label>
+                        <input type="text" class="form-control" id="facilityName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityCode" class="form-label">Facility Code</label>
+                        <input type="text" class="form-control" id="facilityCode" name="code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="facilityDescription" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Facility</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Facility Modal -->
+<div class="modal fade" id="editFacilityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editFacilityForm">
+                <input type="hidden" id="editFacilityId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editFacilityName" class="form-label">Facility Name</label>
+                        <input type="text" class="form-control" id="editFacilityName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityCode" class="form-label">Facility Code</label>
+                        <input type="text" class="form-control" id="editFacilityCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editFacilityDescription" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Rooms Modal -->
+<div class="modal fade" id="viewRoomsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-door-open"></i> Facility Rooms</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="facility-name"></h6>
+                    <button class="btn btn-primary btn-sm" onclick="showAddRoomForm()">
+                        <i class="fas fa-plus"></i> Add Room
+                    </button>
+                </div>
+                <div class="rooms-container">
+                    <!-- Rooms will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Room Modal -->
+<div class="modal fade" id="addRoomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus"></i> Add New Room</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addRoomForm">
+                <input type="hidden" id="facilityIdForRoom">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="roomNumber" class="form-label">Room Number</label>
+                        <input type="text" class="form-control" id="roomNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roomCapacity" class="form-label">Capacity</label>
+                        <input type="number" class="form-control" id="roomCapacity" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="roomDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="roomDescription" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Details Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-calendar-check"></i> Facility Bookings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="booking-filters mb-3">
+                    <select class="form-select" id="bookingStatusFilter">
+                        <option value="all">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <input type="date" class="form-control" id="bookingDateFilter">
+                </div>
+                <div class="bookings-container">
+                    <!-- Bookings will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmationMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking History Modal -->
+<div class="modal fade" id="bookingHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-history"></i> Booking History
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Facility</th>
+                                <th class="text-center">Room(s)</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Time</th>
+                                <th class="text-center">Organization User</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingHistoryBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

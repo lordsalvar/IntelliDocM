@@ -186,30 +186,21 @@ CREATE TABLE activity_log (
 );
 
 CREATE TABLE bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    club_name VARCHAR(255) NOT NULL,
-    contact_number VARCHAR(50) NOT NULL,
-    purpose TEXT NOT NULL,
-    proposal_id INT NOT NULL,  -- Links to the activity proposal
-    requested_by_signature VARCHAR(255),  -- QR code for requested by signature
-    ssc_signature VARCHAR(255),  -- QR code for SSC signature
-    moderator_signature VARCHAR(255),  -- QR code for Moderator/Dean signature
-    security_signature VARCHAR(255),  -- QR code for Security In-charge signature
-    property_custodian_signature VARCHAR(255),  -- QR code for Property Custodian signature
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (proposal_id) REFERENCES activity_proposals(proposal_id)
-);
+	    id INT AUTO_INCREMENT PRIMARY KEY,
+	    facility_id INT NOT NULL,
+	    user_id INT NOT NULL,
+	    booking_date DATE NOT NULL,
+	    start_time TIME NOT NULL,
+	    end_time TIME NOT NULL,
+	    status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Pending',
+	    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	    FOREIGN KEY (facility_id) REFERENCES facilities(id) ON DELETE CASCADE
+	);
 
-CREATE TABLE booked_facilities (
-    booking_id INT NOT NULL,
-    facility_id INT NOT NULL,
-    building_or_room VARCHAR(255),  -- Stores room/building details
-    date_of_use DATE NOT NULL,
-    time_of_use TIME,  -- The starting time of use
-    end_time_of_use TIME,  -- The ending time of use
-    PRIMARY KEY (booking_id, facility_id),
-    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
-    FOREIGN KEY (facility_id) REFERENCES facilities(id) ON DELETE CASCADE
-);
+		CREATE TABLE booking_rooms (
+		    id INT AUTO_INCREMENT PRIMARY KEY,
+		    booking_id INT NOT NULL,
+		    room_id INT NOT NULL,
+		    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
+		    FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
+		);
