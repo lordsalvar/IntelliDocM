@@ -340,9 +340,9 @@ async function checkBookingConflicts(facilityId, roomId, date, startTime, endTim
                     
                     let warningHTML = `
                         <strong><i class="fas fa-exclamation-triangle"></i> Booking Conflict</strong><br>
-                        This time slot conflicts with existing bookings:<br>
+                        This time slot conflicts with submitted bookings:<br>
                         ${response.existingBookings.map(booking => `
-                            <div class="existing-booking">
+                            <div class="submitted-booking">
                                 <i class="fas fa-clock"></i> ${booking.formatted_start} - ${booking.formatted_end}
                                 ${booking.room_number ? `<br><i class="fas fa-door-open"></i> Room ${booking.room_number}` : ''}
                                 <span class="booking-status ${booking.status.toLowerCase()}">${booking.status}</span>

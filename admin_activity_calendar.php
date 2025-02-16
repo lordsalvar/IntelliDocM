@@ -10,25 +10,97 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 // Fetch activity data
 $events = [];
-$sql = "SELECT activity_title, activity_date, end_activity_date, status, club_name FROM activity_proposals";
-$result = $conn->query($sql);
 
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        // Set event color based on status
-        $color = match ($row['status']) {
-            'cancelled' => '#dc3545',
-            'confirmed' => '#28a745',
-            'pending' => '#ffc107',
-            default => '#007bff'
-        };
+// Add these queries right after the initial $events array declaration
+$stats = [
+    'approved' => $conn->query("SELECT COUNT(*) as count FROM activity_proposals WHERE status = 'confirmed'")->fetch_assoc()['count'],
+    'pending' => $conn->query("SELECT COUNT(*) as count FROM activity_proposals WHERE status = 'pending'")->fetch_assoc()['count'],
+    'received' => $conn->query("SELECT COUNT(*) as count FROM activity_proposals WHERE status = 'received'")->fetch_assoc()['count'],
+    'rejected' => $conn->query("SELECT COUNT(*) as count FROM activity_proposals WHERE status = 'cancelled'")->fetch_assoc()['count']
+];
+
+// Fetch both activity proposals and bookings
+$events = [];
+
+// First, get activities from activity_proposals table with proper date formatting
+$activities_sql = "SELECT 
+    activity_title,
+    acronym,
+    DATE_FORMAT(activity_date, '%Y-%m-%d') as start_date,
+    DATE_FORMAT(end_activity_date, '%Y-%m-%d') as end_date,
+    status,
+    start_time,
+    end_time
+    FROM activity_proposals 
+    WHERE activity_date IS NOT NULL 
+    AND end_activity_date IS NOT NULL";
+
+$activities_result = $conn->query($activities_sql);
+
+if ($activities_result && $activities_result->num_rows > 0) {
+    while ($row = $activities_result->fetch_assoc()) {
+        // Create an event that spans multiple days
+        $start_datetime = $row['start_date'] . ($row['start_time'] ? ' ' . $row['start_time'] : '');
+        $end_datetime = $row['end_date'] . ($row['end_time'] ? ' ' . $row['end_time'] : ' 23:59:59');
 
         $events[] = [
-            "title" => $row['activity_title'] . " (" . $row['club_name'] . ")",
-            "start" => date('Y-m-d', strtotime($row['activity_date'])),
-            "end" => date('Y-m-d', strtotime($row['end_activity_date'] . ' +1 day')),
-            "color" => $color,
-            "status" => $row['status']
+            "title" => "Activity: " . $row['activity_title'] . " (" . ($row['acronym'] ?? 'N/A') . ")",
+            "start" => $start_datetime,
+            "end" => $end_datetime,
+            "color" => match ($row['status']) {
+                'cancelled' => '#dc3545',
+                'confirmed' => '#28a745',
+                'pending' => '#ffc107',
+                'received' => '#0dcaf0',
+                default => '#007bff'
+            },
+            "status" => $row['status'],
+            "type" => "activity",
+            "allDay" => empty($row['start_time']) && empty($row['end_time'])
+        ];
+    }
+}
+
+// Then, get facility bookings
+$bookings_sql = "SELECT 
+    b.id, b.booking_date, b.start_time, b.end_time, b.status,
+    f.name as facility_name,
+    GROUP_CONCAT(r.room_number) as room_numbers,
+    c.acronym
+    FROM bookings b
+    LEFT JOIN facilities f ON b.facility_id = f.id
+    LEFT JOIN booking_rooms br ON b.id = br.booking_id
+    LEFT JOIN rooms r ON br.room_id = r.id
+    LEFT JOIN users u ON b.user_id = u.id
+    LEFT JOIN club_memberships cm ON u.id = cm.user_id
+    LEFT JOIN clubs c ON cm.club_id = c.club_id
+    GROUP BY b.id";
+
+$bookings_result = $conn->query($bookings_sql);
+
+if ($bookings_result && $bookings_result->num_rows > 0) {
+    while ($row = $bookings_result->fetch_assoc()) {
+        $roomInfo = $row['room_numbers'] ? " (Rooms: " . $row['room_numbers'] . ")" : "";
+        $title = "Booking: " . $row['facility_name'] . $roomInfo;
+        if ($row['acronym']) {
+            $title .= " - " . $row['acronym'];
+        }
+
+        $startDateTime = $row['booking_date'] . ' ' . $row['start_time'];
+        $endDateTime = $row['booking_date'] . ' ' . $row['end_time'];
+
+        $events[] = [
+            "title" => $title,
+            "start" => date('Y-m-d\TH:i:s', strtotime($startDateTime)),
+            "end" => date('Y-m-d\TH:i:s', strtotime($endDateTime)),
+            "color" => match ($row['status']) {
+                'Cancelled' => '#ff6b6b',
+                'Confirmed' => '#51cf66',
+                'Pending' => '#ffd43b',
+                default => '#339af0'
+            },
+            "status" => $row['status'],
+            "type" => "booking"
         ];
     }
 }
@@ -73,37 +145,84 @@ if ($result && $result->num_rows > 0) {
             margin: 0;
         }
 
-        .legend {
-            display: flex;
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
+            margin-top: 1rem;
         }
 
-        .legend-item {
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: white;
+            gap: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        .legend-pending {
-            background: #ffc107;
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
 
-        .legend-confirmed {
-            background: #28a745;
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
         }
 
-        .legend-cancelled {
-            background: #dc3545;
+        .stat-details h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #666;
         }
 
-        .legend-default {
-            background: #007bff;
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Stat Card Variants */
+        .stat-card.approved {
+            border-left: 4px solid #28a745;
+        }
+
+        .stat-card.approved .stat-icon {
+            color: #28a745;
+            background: #e8f5e9;
+        }
+
+        .stat-card.pending {
+            border-left: 4px solid #ffc107;
+        }
+
+        .stat-card.pending .stat-icon {
+            color: #ffc107;
+            background: #fff3e0;
+        }
+
+        .stat-card.received {
+            border-left: 4px solid #007bff;
+        }
+
+        .stat-card.received .stat-icon {
+            color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .stat-card.rejected {
+            border-left: 4px solid #dc3545;
+        }
+
+        .stat-card.rejected .stat-icon {
+            color: #dc3545;
+            background: #ffebee;
         }
 
         .fc .fc-button-primary {
@@ -131,20 +250,47 @@ if ($result && $result->num_rows > 0) {
                 <div class="calendar-header">
                     <h2><i class="fas fa-calendar-alt"></i> Activity Calendar</h2>
                 </div>
-                <div class="legend">
-                    <div class="legend-item legend-pending">
-                        <i class="fas fa-circle"></i> Pending
+
+                <!-- Replace the legend with stats cards -->
+                <div class="stats-row mb-4">
+                    <div class="stat-card approved">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Approved</h3>
+                            <span class="stat-number"><?php echo $stats['approved']; ?></span>
+                        </div>
                     </div>
-                    <div class="legend-item legend-confirmed">
-                        <i class="fas fa-circle"></i> Confirmed
+                    <div class="stat-card pending">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Pending</h3>
+                            <span class="stat-number"><?php echo $stats['pending']; ?></span>
+                        </div>
                     </div>
-                    <div class="legend-item legend-cancelled">
-                        <i class="fas fa-circle"></i> Cancelled
+                    <div class="stat-card received">
+                        <div class="stat-icon">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Received</h3>
+                            <span class="stat-number"><?php echo $stats['received']; ?></span>
+                        </div>
                     </div>
-                    <div class="legend-item legend-default">
-                        <i class="fas fa-circle"></i> Others
+                    <div class="stat-card rejected">
+                        <div class="stat-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Rejected</h3>
+                            <span class="stat-number"><?php echo $stats['rejected']; ?></span>
+                        </div>
                     </div>
                 </div>
+
                 <div id="calendar"></div>
             </div>
         </div>
@@ -155,16 +301,45 @@ if ($result && $result->num_rows > 0) {
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: 'timeGridWeek', // Changed to show time grid by default
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 events: <?php echo json_encode($events); ?>,
+                slotMinTime: '07:00:00', // Start time of day
+                slotMaxTime: '21:00:00', // End time of day
                 height: 'auto',
+                views: {
+                    timeGridWeek: {
+                        slotMinTime: '07:00:00',
+                        slotMaxTime: '21:00:00',
+                        displayEventEnd: true
+                    },
+                    dayGridMonth: {
+                        displayEventEnd: true
+                    }
+                },
+                eventDisplay: 'block',
+                displayEventTime: true,
                 eventDidMount: function(info) {
-                    info.el.title = info.event.title;
+                    const event = info.event;
+                    const type = event.extendedProps.type === 'booking' ? 'Booking' : 'Activity';
+                    let dateInfo = '';
+
+                    if (event.allDay) {
+                        dateInfo = `\nFrom: ${new Date(event.start).toLocaleDateString()} To: ${new Date(event.end).toLocaleDateString()}`;
+                    } else {
+                        dateInfo = `\nFrom: ${event.start.toLocaleString()} To: ${event.end.toLocaleString()}`;
+                    }
+
+                    info.el.title = `${type}: ${event.title}\nStatus: ${event.extendedProps.status}${dateInfo}`;
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: true
                 }
             });
             calendar.render();

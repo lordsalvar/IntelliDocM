@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Redirect based on role
             if ($role === 'admin') {
-                header('Location: admin/view_proposals.php');
+                header('Location: /main/intellidocm/admin_dashboard.php');
                 exit();
             } elseif ($_SESSION['designation'] === 'moderator') {
                 header('Location: moderator/moderator_view.php');
@@ -250,16 +250,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent immediate form submission
-            const loader = document.querySelector('.loader-container');
-            loader.style.display = 'flex';
-            setTimeout(() => loader.classList.add('show'), 10);
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            // Add delay before form submission
-            setTimeout(() => {
-                this.submit();
-            }, 800); // 800ms delay - adjust this value to make loader more/less visible
+            // First verify credentials without showing loader
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch('ajax/verify_login.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Only show loader and redirect on success
+                    const loader = document.querySelector('.loader-container');
+                    loader.style.display = 'flex';
+                    setTimeout(() => loader.classList.add('show'), 10);
+
+                    // Submit the form after showing loader
+                    setTimeout(() => {
+                        this.submit();
+                    }, 800);
+                } else {
+                    // Show error message without loader
+                    const errorDiv = document.querySelector('.alert') || document.createElement('div');
+                    errorDiv.className = 'alert alert-danger';
+                    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${result.message}`;
+
+                    if (!document.querySelector('.alert')) {
+                        this.insertBefore(errorDiv, this.firstChild);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
     </script>
 
