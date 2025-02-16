@@ -195,6 +195,13 @@ try {
     error_log("Proposal submission error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => $e->getMessage(),
+        'redirect' => '/main/IntelliDocM/client.php'  // Add redirect even on error
     ]);
+}
+
+// If we somehow get here without redirecting, redirect anyway
+if (!headers_sent()) {
+    header('Location: /main/IntelliDocM/client.php');
+    exit();
 }
