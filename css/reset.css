@@ -1,0 +1,46 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Reset headings */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: normal;
+}
+
+/* Reset lists */
+ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Reset links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Reset buttons */
+button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+/* Reset form elements */
+input, textarea, select {
+    font: inherit;
+    margin: 0;
+}

@@ -46,6 +46,12 @@ if ($result && $result->num_rows > 0) {
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/admin.css">
     <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
         .calendar-container {
             background: white;
             padding: 2rem;
