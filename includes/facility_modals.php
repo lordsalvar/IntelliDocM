@@ -87,26 +87,25 @@
 </div>
 
 <!-- Add Room Modal -->
-<div class="modal fade" id="addRoomModal" tabindex="-1">
+<div class="modal fade" id="addRoomModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus"></i> Add New Room</h5>
+                <h5 class="modal-title"><i class="fas fa-door-open"></i> Add New Room</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form id="addRoomForm">
-                <input type="hidden" id="facilityIdForRoom">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="roomNumber" class="form-label">Room Number</label>
                         <input type="text" class="form-control" id="roomNumber" required>
                     </div>
                     <div class="mb-3">
-                        <label for="roomCapacity" class="form-label">Capacity</label>
-                        <input type="number" class="form-control" id="roomCapacity" required min="1">
+                        <label for="roomCapacity" class="form-label">Max. Capacity</label>
+                        <input type="number" class="form-control" id="roomCapacity" value="30" min="1" required>
                     </div>
                     <div class="mb-3">
-                        <label for="roomDescription" class="form-label">Description</label>
+                        <label for="roomDescription" class="form-label">Description (Optional)</label>
                         <textarea class="form-control" id="roomDescription" rows="3"></textarea>
                     </div>
                 </div>
@@ -191,6 +190,70 @@
                             <!-- Data will be loaded here -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Manage Facility Modal -->
+<div class="modal fade" id="manageFacilityModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-cog"></i> Manage Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Facility Details Form -->
+                <form id="manageFacilityForm" class="mb-4">
+                    <input type="hidden" id="manageFacilityId">
+                    <div class="mb-3">
+                        <label for="manageFacilityName" class="form-label">Facility Name</label>
+                        <input type="text" class="form-control" id="manageFacilityName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="manageFacilityCode" class="form-label">Facility Code</label>
+                        <input type="text" class="form-control" id="manageFacilityCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="manageFacilityDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="manageFacilityDescription" rows="3"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-danger" id="deleteFacilityBtn">
+                            <i class="fas fa-trash"></i> Delete Facility
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Rooms Section -->
+                <hr class="my-4">
+                <div class="rooms-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-door-open"></i> Facility Rooms</h5>
+                        <button class="btn btn-primary btn-sm" id="addRoomBtn">
+                            <i class="fas fa-plus"></i> Add Room
+                        </button>
+                    </div>
+                    <div id="roomsList" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Room Number</th>
+                                    <th>Capacity</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomsTableBody">
+                                <!-- Rooms will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

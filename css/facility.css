@@ -46,7 +46,7 @@
     color: white;
 }
 
-/* Modal Styling */
+/* Basic Modal Styling */
 .modal-content {
     border-radius: 15px;
     border: none;
@@ -60,6 +60,36 @@
 
 .modal-footer {
     border-top: none;
+}
+
+/* Simple z-index stacking */
+.modal {
+    z-index: 1050;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+}
+
+/* Modal stacking */
+#manageFacilityModal {
+    z-index: 1050;
+}
+
+#addRoomModal {
+    z-index: 1060;
+}
+
+.modal-backdrop:nth-child(2) {
+    z-index: 1055;
+}
+
+.manage-facility-dimmed {
+    opacity: 0.5;
+}
+
+.manage-facility-dimmed .modal-content {
+    filter: blur(1px);
 }
 
 /* Main Layout */

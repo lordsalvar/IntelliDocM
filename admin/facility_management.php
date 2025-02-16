@@ -106,7 +106,7 @@ $facilities = $conn->query($sql);
                     <!-- Facilities Grid -->
                     <div class="facilities-grid">
                         <?php while ($facility = $facilities->fetch_assoc()): ?>
-                            <div class="facility-card">
+                            <div class="facility-card" data-facility-id="<?= $facility['id'] ?>">
                                 <div class="facility-header">
                                     <h3><?= htmlspecialchars($facility['name']) ?></h3>
                                     <span class="facility-code"><?= htmlspecialchars($facility['code']) ?></span>
@@ -123,7 +123,10 @@ $facilities = $conn->query($sql);
                                     </div>
                                 </div>
                                 <div class="facility-actions">
-                                    <button class="btn-icon" onclick="FacilityManager.manageFacility(<?= $facility['id'] ?>)" title="Manage Facility">
+                                    <button
+                                        class="btn-icon manage-facility"
+                                        data-facility-id="<?= $facility['id'] ?>"
+                                        title="Manage Facility">
                                         <i class="fas fa-cog"></i>
                                     </button>
                                     <button class="btn-icon" onclick="FacilityManager.viewRooms(<?= $facility['id'] ?>)" title="View Rooms">

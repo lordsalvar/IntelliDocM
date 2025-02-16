@@ -151,7 +151,7 @@ $clubs = fetchAllClubs();
                             <tr>
                                 <th>Club Name</th>
                                 <th>Type</th>
-                                <th>Members</th>
+                                <th>President</th>
                                 <th>Moderator</th>
                                 <th>Actions</th>
                             </tr>

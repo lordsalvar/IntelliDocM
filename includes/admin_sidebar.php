@@ -1,6 +1,6 @@
 <div class="sidebar">
     <div class="profile">
-        <img src="css/images/cjc_logo.png" alt="Admin Profile" class="profile-img">
+        <img src="../css/img/cjc_logo.png" alt="Admin Profile" class="profile-img">
         <span><?php echo htmlspecialchars($_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Administrator'); ?></span>
     </div>
     <nav>
@@ -36,7 +36,7 @@
             <i class="fas fa-cog"></i>
             <span>Settings</span>
         </a>
-        <a href="logout.php" class="nav-link">
+        <a href="/main/IntelliDocM/logout.php" class="nav-link">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
         </a>

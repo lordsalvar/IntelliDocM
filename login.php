@@ -156,10 +156,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 8px;
             border-left: 4px solid #dc3545;
         }
+
+        /* Loader Styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #B71C1C;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .loader-container.show {
+            opacity: 1;
+        }
+
+        .loader-logo {
+            width: 150px;
+            height: auto;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Add Loader Container -->
+    <div class="loader-container">
+        <img src="css/img/cjc_logo.png" alt="CJC Logo" class="loader-logo">
+    </div>
+
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -203,6 +248,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent immediate form submission
+            const loader = document.querySelector('.loader-container');
+            loader.style.display = 'flex';
+            setTimeout(() => loader.classList.add('show'), 10);
+
+            // Add delay before form submission
+            setTimeout(() => {
+                this.submit();
+            }, 800); // 800ms delay - adjust this value to make loader more/less visible
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

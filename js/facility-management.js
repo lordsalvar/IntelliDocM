@@ -2,6 +2,7 @@ const FacilityManager = {
     init() {
         this.bindEvents();
         this.bindHistoryFilters();
+        this.bindManageFacility();
     },
 
     bindEvents() {
@@ -77,7 +78,7 @@ const FacilityManager = {
                     </div>
                 </div>
                 <div class="facility-actions">
-                    <button class="btn-icon" onclick="FacilityManager.manageFacility(${facility.id})" title="Manage Facility">
+                    <button class="btn-icon manage-facility" data-facility-id="${facility.id}" title="Manage Facility">
                         <i class="fas fa-cog"></i>
                     </button>
                     <button class="btn-icon" onclick="FacilityManager.viewRooms(${facility.id})" title="View Rooms">
@@ -192,19 +193,187 @@ const FacilityManager = {
     },
 
     bindHistoryFilters() {
-        document.getElementById('statusFilter').addEventListener('change', e => 
-            this.loadBookingHistory(e.target.value, document.getElementById('dateFilter').value)
-        );
-        
-        document.getElementById('dateFilter').addEventListener('change', e => 
-            this.loadBookingHistory(document.getElementById('statusFilter').value, e.target.value)
-        );
+        const statusFilter = document.getElementById('statusFilter');
+        const dateFilter = document.getElementById('dateFilter');
+
+        // Only bind events if elements exist
+        if (statusFilter && dateFilter) {
+            statusFilter.addEventListener('change', e => 
+                this.loadBookingHistory(e.target.value, dateFilter.value)
+            );
+            
+            dateFilter.addEventListener('change', e => 
+                this.loadBookingHistory(statusFilter.value, e.target.value)
+            );
+        }
     },
 
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+
+    bindManageFacility() {
+        document.addEventListener('click', (e) => {
+            const manageBtn = e.target.closest('.manage-facility');
+            if (manageBtn) {
+                const facilityId = manageBtn.dataset.facilityId;
+                this.manageFacility(facilityId);
+            }
+        });
+    },
+
+    manageFacility(facilityId) {
+        const manageFacilityModal = new bootstrap.Modal(document.getElementById('manageFacilityModal'));
+        const manageFacilityEl = document.getElementById('manageFacilityModal');
+        
+        fetch('ajax/manage_facility.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=get&facilityId=${facilityId}`
+        })
+        .then(response => response.json())
+        .then(facility => {
+            if (facility) {
+                // Populate facility details
+                document.getElementById('manageFacilityId').value = facility.id;
+                document.getElementById('manageFacilityName').value = facility.name;
+                document.getElementById('manageFacilityCode').value = facility.code;
+                document.getElementById('manageFacilityDescription').value = facility.description || '';
+                
+                this.loadFacilityRooms(facilityId);
+                manageFacilityModal.show();
+
+                // Simple add room button handler
+                document.getElementById('addRoomBtn').onclick = () => {
+                    // Dim the manage facility modal
+                    manageFacilityEl.classList.add('manage-facility-dimmed');
+                    
+                    const addRoomModal = new bootstrap.Modal(document.getElementById('addRoomModal'), {
+                        backdrop: 'static'
+                    });
+                    
+                    // Set up facility ID for the form
+                    document.getElementById('addRoomForm').dataset.facilityId = facilityId;
+                    
+                    // Handle closing of add room modal
+                    document.getElementById('addRoomModal').addEventListener('hidden.bs.modal', () => {
+                        manageFacilityEl.classList.remove('manage-facility-dimmed');
+                    }, { once: true });
+                    
+                    addRoomModal.show();
+                };
+
+                // Add delete button handler
+                document.getElementById('deleteFacilityBtn').onclick = () => {
+                    if (confirm('Are you sure you want to delete this facility? This action cannot be undone.')) {
+                        fetch('ajax/manage_facility.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `action=delete&facilityId=${facilityId}`
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('Facility deleted successfully!');
+                                window.location.reload();
+                            } else {
+                                throw new Error(result.message || 'Failed to delete facility');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert(error.message);
+                        });
+                    }
+                };
+
+                // Add room form submit handler
+                document.getElementById('addRoomForm').onsubmit = (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const facilityId = form.dataset.facilityId;
+                    
+                    const formData = new FormData();
+                    formData.append('action', 'add_room');
+                    formData.append('facilityId', facilityId);
+                    formData.append('roomNumber', document.getElementById('roomNumber').value);
+                    formData.append('capacity', document.getElementById('roomCapacity').value);
+                    formData.append('description', document.getElementById('roomDescription').value);
+
+                    fetch('ajax/room_handler.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            // Close the add room modal
+                            bootstrap.Modal.getInstance(document.getElementById('addRoomModal')).hide();
+                            
+                            // Reset form
+                            form.reset();
+                            
+                            // Show success message
+                            alert('Room added successfully!');
+                            
+                            // Reload rooms list
+                            this.loadFacilityRooms(facilityId);
+                        } else {
+                            throw new Error(result.message || 'Failed to add room');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(error.message || 'Failed to add room');
+                    });
+                };
+            } else {
+                throw new Error('Facility not found');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to load facility details');
+        });
+    },
+
+    loadFacilityRooms(facilityId) {
+        fetch('ajax/room_handler.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=get_rooms&facilityId=${facilityId}`
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                const tbody = document.getElementById('roomsTableBody');
+                if (result.data.length > 0) {
+                    tbody.innerHTML = result.data.map(room => `
+                        <tr>
+                            <td>${this.escapeHtml(room.room_number)}</td>
+                            <td>${room.capacity} persons</td>
+                            <td>${this.escapeHtml(room.description || '-')}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="FacilityManager.deleteRoom(${room.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No rooms available</td></tr>';
+                }
+            }
+        })
+        .catch(error => console.error('Error loading rooms:', error));
     }
 };
 
