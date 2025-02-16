@@ -533,3 +533,23 @@
 .bg-warning { background-color: #ffc107 !important; }
 .bg-success { background-color: #28a745 !important; }
 .bg-danger { background-color: #dc3545 !important; }
+
+.no-results-message {
+    grid-column: 1 / -1;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+    border: 1px dashed #B71C1C;
+    margin: 1rem 0;
+}
+
+.no-results-message h4 {
+    color: #B71C1C;
+    margin: 1rem 0;
+}
+
+.no-results-message p {
+    color: #666;
+}

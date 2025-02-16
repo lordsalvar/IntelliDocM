@@ -244,7 +244,7 @@
                             <thead>
                                 <tr>
                                     <th>Room Number</th>
-                                    <th>Capacity</th>
+                                    <th>Max. Capacity</th>
                                     <th>Description</th>
                                     <th>Actions</th>
                                 </tr>

@@ -96,6 +96,7 @@ const FacilityManager = {
     handleSearch(value) {
         const cards = document.querySelectorAll('.facility-card');
         const searchTerm = value.toLowerCase();
+        let hasMatches = false;
 
         cards.forEach(card => {
             const name = card.querySelector('h3').textContent.toLowerCase();
@@ -107,7 +108,28 @@ const FacilityManager = {
                            description.includes(searchTerm);
 
             card.style.display = matches ? 'block' : 'none';
+            if (matches) hasMatches = true;
         });
+
+        // Handle no results feedback
+        const existingNoResults = document.querySelector('.no-results-message');
+        if (existingNoResults) {
+            existingNoResults.remove();
+        }
+
+        if (!hasMatches && value.trim() !== '') {
+            const facilitiesGrid = document.querySelector('.facilities-grid');
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results-message';
+            noResults.innerHTML = `
+                <div class="text-center p-4">
+                    <i class="fas fa-search mb-3" style="font-size: 2rem; color: #B71C1C;"></i>
+                    <h4>No facilities found</h4>
+                    <p>No facilities match the search term "${this.escapeHtml(value)}"</p>
+                </div>
+            `;
+            facilitiesGrid.appendChild(noResults);
+        }
     },
 
     handleFilter(type) {
