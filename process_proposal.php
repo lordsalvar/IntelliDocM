@@ -1,9 +1,14 @@
 <?php
+// Turn off error output
+error_reporting(0);
+ini_set('display_errors', 0);
+
 require_once 'config.php';
 require_once 'functions.php';
 require_once 'system_log/activity_log.php';
 include_once 'phpqrcode/qrlib.php';
 
+// Ensure JSON content type is set before any output
 header('Content-Type: application/json');
 
 try {
@@ -126,7 +131,7 @@ try {
     );
 
     if (!$stmt->execute()) {
-        throw new Exception("Database error: " . $stmt->error);
+        throw new Exception($stmt->error);
     }
 
     $proposal_id = $stmt->insert_id;
@@ -141,7 +146,11 @@ try {
     // Update the record with the QR code
     $updateStmt = $conn->prepare("UPDATE activity_proposals SET applicant_signature = ? WHERE proposal_id = ?");
     $updateStmt->bind_param("si", $qrImageData, $proposal_id);
-    $updateStmt->execute();
+
+    if (!$updateStmt->execute()) {
+        throw new Exception($updateStmt->error);
+    }
+
     $updateStmt->close();
 
     // Process facility bookings if any
