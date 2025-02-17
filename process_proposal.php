@@ -81,7 +81,7 @@ try {
     $dean_data = isset($club_data['club_id']) ? getDeanData($conn, $club_data['club_id']) : ['dean_name' => ''];
     $dean_name = $dean_data['dean_name'];
 
-    // First execute the insert to get proposal_id
+    // Update the insert statement to include all fields
     $stmt = $conn->prepare("
         INSERT INTO activity_proposals (
             user_id, club_name, acronym, club_type, designation, activity_title, 
@@ -94,9 +94,6 @@ try {
             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Received'
         )
     ");
-
-    // Temporarily use empty string for applicant_signature
-    $empty_signature = '';
 
     $stmt->bind_param(
         "issssssssssssssisssssss",
@@ -118,7 +115,7 @@ try {
         $target_participants,
         $expected_participants,
         $applicant_name,
-        $empty_signature, // Temporary empty signature
+        $applicant_signature,
         $applicant_designation,
         $applicant_date_filed,
         $applicant_details['applicant_contact'],
@@ -130,19 +127,6 @@ try {
     }
 
     $proposal_id = $stmt->insert_id;
-
-    // Now generate QR code with the actual proposal_id
-    $qrData = "proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
-    ob_start();
-    QRcode::png($qrData, null, QR_ECLEVEL_L, 5);
-    $qrImageData = ob_get_contents();
-    ob_end_clean();
-
-    // Update the record with the QR code
-    $updateStmt = $conn->prepare("UPDATE activity_proposals SET applicant_signature = ? WHERE proposal_id = ?");
-    $updateStmt->bind_param("si", $qrImageData, $proposal_id);
-    $updateStmt->execute();
-    $updateStmt->close();
 
     // Process facility bookings if any
     if (isset($_POST['facilityBookings']) && is_array($_POST['facilityBookings'])) {
@@ -184,17 +168,40 @@ try {
         }
     }
 
-    // Return success response
-    echo json_encode([
-        'success' => true,
-        'message' => 'Proposal submitted successfully!',
-        'redirect' => '/main/IntelliDocM/client.php'  // Make sure this path is correct
-    ]);
+    // Generate QR code after successful insertion
+    if ($proposal_id) {
+        $qrData = "proposal_id=" . urlencode($proposal_id) . "&signed_by=" . urlencode($applicant_name);
+        $qrDirectory = "client_qr_codes";
+        if (!is_dir($qrDirectory)) {
+            mkdir($qrDirectory, 0777, true);
+        }
+        $qrFilePath = $qrDirectory . "/applicant_qr_" . $proposal_id . ".png";
+        QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+        // Update proposal with QR code path
+        $updateStmt = $conn->prepare("UPDATE activity_proposals SET qr_code_path = ? WHERE proposal_id = ?");
+        $updateStmt->bind_param("si", $qrFilePath, $proposal_id);
+        $updateStmt->execute();
+        $updateStmt->close();
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Proposal submitted successfully!',
+            'proposal_id' => $proposal_id,
+            'redirect' => '/main/IntelliDocM/client.php'
+        ]);
+    }
 } catch (Exception $e) {
     error_log("Proposal submission error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'Error submitting proposal',
-        'redirect' => '/main/IntelliDocM/client.php'
+        'message' => $e->getMessage(),
+        'redirect' => '/main/IntelliDocM/client.php'  // Add redirect even on error
     ]);
+}
+
+// If we somehow get here without redirecting, redirect anyway
+if (!headers_sent()) {
+    header('Location: /main/IntelliDocM/client.php');
+    exit();
 }
