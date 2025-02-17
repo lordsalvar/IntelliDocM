@@ -11,16 +11,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const formData = new FormData(this);
-            await fetch('process_proposal.php', {
+            const response = await fetch('process_proposal.php', {
                 method: 'POST',
                 body: formData
             });
             
-            alert('Proposal submitted successfully!');
-            window.location.href = '/main/IntelliDocM/client.php';
+            const result = await response.json();
             
+            if (result.success) {
+                alert('Proposal submitted successfully!');
+                window.location.href = result.redirect;
+            } else {
+                alert('Error: ' + (result.message || 'Failed to submit proposal'));
+            }
         } catch (error) {
-            alert('Error submitting proposal');
+            console.error('Error:', error);
+            alert('An error occurred while submitting the proposal');
         }
     });
 
