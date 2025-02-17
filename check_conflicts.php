@@ -27,6 +27,11 @@ $date = $data['date'];
 $start_time = $data['start_time'];
 $end_time = $data['end_time'];
 
+// Standardize formats before checking conflicts
+$date = date('Y-m-d', strtotime($data['date']));       // Always YYYY-MM-DD
+$start_time = date('H:i:s', strtotime($start_time));   // Always 24-hour format
+$end_time = date('H:i:s', strtotime($end_time));       // Always 24-hour format
+
 // Debugging: Log parsed variables
 error_log("Checking Conflicts for Facility ID: $facility_id, Room ID: " . ($room_id ?? 'NULL') . ", Date: $date, Time: $start_time - $end_time");
 

@@ -628,13 +628,22 @@ async function checkBookingConflicts(facilityId, roomId, date, startTime, endTim
     function getTomorrow() {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        return tomorrow.toISOString().split('T')[0];
+        // Ensure YYYY-MM-DD format regardless of system settings
+        return tomorrow.toISOString().split('T')[0];  // Always returns YYYY-MM-DD
     }
 
     function getMaxDate() {
         const maxDate = new Date();
         maxDate.setMonth(maxDate.getMonth() + 6);
-        return maxDate.toISOString().split('T')[0];
+        // Ensure YYYY-MM-DD format regardless of system settings
+        return maxDate.toISOString().split('T')[0];  // Always returns YYYY-MM-DD
+    }
+
+    function formatDateForInput(date) {
+        // Ensure date is in YYYY-MM-DD format for input fields
+        return date instanceof Date ? 
+            date.toISOString().split('T')[0] : 
+            new Date(date).toISOString().split('T')[0];
     }
 
     // Update time input event listeners
