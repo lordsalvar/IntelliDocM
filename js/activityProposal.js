@@ -2,45 +2,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('submitProposalForm');
     if (!form) return;
 
-    // Single form submission handler
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
         
-        // Show loading overlay
-        const loadingOverlay = document.createElement('div');
-        loadingOverlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        `;
-        
-        const loadingContent = document.createElement('div');
-        loadingContent.innerHTML = `
-            <div class="text-center p-4 bg-white rounded shadow">
-                <div class="spinner-border text-primary mb-3"></div>
-                <div>Submitting proposal...</div>
-            </div>
-        `;
-        
-        loadingOverlay.appendChild(loadingContent);
-        document.body.appendChild(loadingOverlay);
+        if (!confirm('Are you sure you want to submit this proposal?')) {
+            return;
+        }
 
-        // Log the activity then submit
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "system_log/log_activity.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onload = function() {
-            // After logging, submit the form
-            form.submit();
-        };
-        xhr.send("activity=" + encodeURIComponent("User submitted the Activity Proposal Form"));
+        try {
+            const formData = new FormData(this);
+            await fetch('process_proposal.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            alert('Proposal submitted successfully!');  // Simple success message
+            window.location.href = '/main/IntelliDocM/client.php';  // Redirect
+            
+        } catch (error) {
+            // Keep existing error handling
+            console.error('Error:', error);
+        }
     });
 
     // ****************************************************************
