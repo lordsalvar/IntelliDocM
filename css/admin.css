@@ -126,4 +126,33 @@
     box-shadow: 0 4px 15px rgba(183, 28, 28, 0.1);
 }
 
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    border: none;
+    overflow: hidden;
+}
+
+.card-header {
+    background: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+}
+
+.card-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+    min-height: 300px;
+}
+
 /* ...existing responsive styles... */
