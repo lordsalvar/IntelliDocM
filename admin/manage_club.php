@@ -371,6 +371,173 @@ $clubs = fetchAllClubs();
         </div>
     </div>
 
+    <!-- Add View Club Details Modal -->
+    <div class="modal fade" id="viewClubModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Organization Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="club-detail-header">
+                        <img src="" alt="Club Logo" id="viewClubLogo" class="club-detail-logo">
+                        <div class="club-detail-title">
+                            <h3 id="viewClubName"></h3>
+                            <span class="badge" id="viewClubType"></span>
+                        </div>
+                    </div>
+                    <div class="club-detail-info">
+                        <div class="info-group">
+                            <label><i class="fas fa-font"></i> Acronym</label>
+                            <p id="viewClubAcronym"></p>
+                        </div>
+                        <div class="info-group">
+                            <label><i class="fas fa-user-tie"></i> Moderator</label>
+                            <p id="viewClubModerator"></p>
+                        </div>
+                        <div class="info-group">
+                            <label><i class="fas fa-users"></i> Total Members</label>
+                            <p id="viewClubMembers"></p>
+                        </div>
+                    </div>
+                    <div class="member-list-section">
+                        <h4>Members List</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Designation</th>
+                                        <th>Contact</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="membersList">
+                                    <!-- Members will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Club Modal -->
+    <div class="modal fade" id="editClubModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Organization</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="editClubForm" enctype="multipart/form-data">
+                    <input type="hidden" name="clubId" id="editClubId">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Organization Name</label>
+                            <input type="text" class="form-control" name="clubName" id="editClubName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Acronym</label>
+                            <input type="text" class="form-control" name="acronym" id="editClubAcronym" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-control" name="type" id="editClubType" required>
+                                <option value="Academic">Academic</option>
+                                <option value="Non-Academic">Non-Academic</option>
+                                <option value="ACCO">ACCO</option>
+                                <option value="CSG">CSG</option>
+                                <option value="College-LGU">College-LGU</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Moderator</label>
+                            <input type="text" class="form-control" name="moderator" id="editClubModerator" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Organization Logo</label>
+                            <input type="file" class="form-control" name="logo" accept="image/*">
+                            <small class="text-muted">Leave empty to keep current logo</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Management Modal -->
+    <div class="modal fade" id="manageMembersModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Manage Club Members</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add Member Form -->
+                    <form id="addMemberForm" class="mb-4">
+                        <input type="hidden" id="memberClubId" name="clubId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" name="fullName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact</label>
+                                <input type="text" class="form-control" name="contact" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Designation</label>
+                                <input type="text" class="form-control" name="designation" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Member</button>
+                    </form>
+
+                    <!-- Members List -->
+                    <h6 class="mb-3">Current Members</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Designation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody">
+                                <!-- Members will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -540,21 +707,20 @@ $clubs = fetchAllClubs();
 
             function filterClubs(searchText, type) {
                 $('.club-card').each(function() {
-                    const card = $(this);
-                    const name = card.find('.club-name').text().toLowerCase();
-                    const acronym = card.find('.club-acronym').text().toLowerCase();
-                    const clubType = card.find('.type-badge').text().toLowerCase();
-                    const moderator = card.find('.club-moderator').text().toLowerCase();
+                    const clubName = $(this).find('.club-name').text().toLowerCase();
+                    const clubAcronym = $(this).find('.club-acronym').text().toLowerCase();
+                    const clubType = $(this).find('.type-badge').text().toLowerCase();
+                    const clubModerator = $(this).find('.club-moderator').text().toLowerCase();
 
                     const matchesSearch = !searchText ||
-                        name.includes(searchText) ||
-                        acronym.includes(searchText) ||
+                        clubName.includes(searchText) ||
+                        clubAcronym.includes(searchText) ||
                         clubType.includes(searchText) ||
-                        moderator.includes(searchText);
+                        clubModerator.includes(searchText);
 
                     const matchesType = type === 'all' || clubType === type.toLowerCase();
 
-                    card.toggle(matchesSearch && matchesType);
+                    $(this).toggle(matchesSearch && matchesType);
                 });
 
                 // Show/hide empty state
@@ -694,6 +860,279 @@ $clubs = fetchAllClubs();
             filterAndSearchClubs();
         });
 
+        // Add the view club details function
+        function viewClubDetails(clubId) {
+            // Show loading state
+            $('#viewClubModal').modal('show');
+            $('#membersList').html('<tr><td colspan="3" class="text-center">Loading...</td></tr>');
+
+            // Fetch club details
+            $.ajax({
+                url: 'ajax/get_club_details.php',
+                type: 'POST',
+                data: {
+                    clubId: clubId
+                },
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+                        if (data.success) {
+                            // Update modal with club details
+                            $('#viewClubName').text(data.club.club_name);
+                            $('#viewClubAcronym').text(data.club.acronym);
+                            $('#viewClubType').text(data.club.club_type)
+                                .removeClass()
+                                .addClass('badge type-badge ' + data.club.club_type.toLowerCase());
+                            $('#viewClubModerator').text(data.club.moderator);
+                            $('#viewClubMembers').text(data.members.length);
+                            $('#viewClubLogo').attr('src', data.club.club_logo || '../images/clubs/default_club.png');
+
+                            // Populate members table
+                            let membersHtml = '';
+                            data.members.forEach(member => {
+                                membersHtml += `
+                                    <tr>
+                                        <td>${member.full_name}</td>
+                                        <td>${member.designation}</td>
+                                        <td>${member.contact || 'N/A'}</td>
+                                    </tr>
+                                `;
+                            });
+                            $('#membersList').html(membersHtml || '<tr><td colspan="3" class="text-center">No members found</td></tr>');
+                        } else {
+                            throw new Error(data.message || 'Failed to load club details');
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error loading club details');
+                    }
+                },
+                error: function() {
+                    alert('Error loading club details');
+                    $('#viewClubModal').modal('hide');
+                }
+            });
+        }
+
+        // Prevent action buttons from triggering card click
+        $(document).ready(function() {
+            $('.club-actions button').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            // Make card content clickable
+            $('.card-content').on('click', function(e) {
+                if (!$(e.target).closest('.club-actions').length) {
+                    const clubId = $(this).closest('.club-card').data('club-id');
+                    viewClubDetails(clubId);
+                }
+            });
+        });
+
+        function editClub(clubId) {
+            // Show loading state
+            $('#editClubModal').modal('show');
+
+            // Fetch club details
+            $.ajax({
+                url: 'ajax/get_club_details.php',
+                type: 'POST',
+                data: {
+                    clubId: clubId
+                },
+                success: function(response) {
+                    try {
+                        const data = JSON.parse(response);
+                        if (data.success) {
+                            // Populate form with club details
+                            $('#editClubId').val(clubId);
+                            $('#editClubName').val(data.club.club_name);
+                            $('#editClubAcronym').val(data.club.acronym);
+                            $('#editClubType').val(data.club.club_type);
+                            $('#editClubModerator').val(data.club.moderator);
+                        } else {
+                            throw new Error(data.message || 'Failed to load club details');
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error loading club details');
+                        $('#editClubModal').modal('hide');
+                    }
+                },
+                error: function() {
+                    alert('Error loading club details');
+                    $('#editClubModal').modal('hide');
+                }
+            });
+        }
+
+        // Handle edit form submission
+        $('#editClubForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            formData.append('action', 'updateClub');
+
+            $.ajax({
+                url: 'ajax/handle_club.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    try {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            alert('Organization updated successfully!');
+                            $('#editClubModal').modal('hide');
+                            window.location.reload();
+                        } else {
+                            alert('Error: ' + (result.message || 'Failed to update organization'));
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error: Failed to process server response');
+                    }
+                },
+                error: function() {
+                    alert('Error: Failed to send request');
+                }
+            });
+        });
+
+        function manageMembers(clubId) {
+            $('#memberClubId').val(clubId);
+            $('#manageMembersModal').modal('show');
+            loadClubMembers(clubId);
+        }
+
+        function loadClubMembers(clubId) {
+            $.ajax({
+                url: 'ajax/manage_members.php',
+                type: 'POST',
+                data: {
+                    action: 'getMembers',
+                    clubId: clubId
+                },
+                success: function(response) {
+                    try {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            let html = '';
+                            result.members.forEach(member => {
+                                html += `
+                                    <tr>
+                                        <td>${member.full_name}</td>
+                                        <td>${member.email}</td>
+                                        <td>${member.contact}</td>
+                                        <td>${member.designation}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeMember(${member.id}, ${clubId})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            $('#membersTableBody').html(html || '<tr><td colspan="5" class="text-center">No members found</td></tr>');
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error loading members');
+                    }
+                }
+            });
+        }
+
+        // Handle member form submission
+        $('#addMemberForm').on('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'addMember');
+
+            $.ajax({
+                url: 'ajax/manage_members.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    try {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            alert('Member added successfully!');
+                            $('#addMemberForm')[0].reset();
+                            loadClubMembers($('#memberClubId').val());
+                        } else {
+                            alert('Error: ' + (result.message || 'Failed to add member'));
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error processing response');
+                    }
+                }
+            });
+        });
+
+        function removeMember(userId, clubId) {
+            if (confirm('Are you sure you want to remove this member?')) {
+                $.ajax({
+                    url: 'ajax/manage_members.php',
+                    type: 'POST',
+                    data: {
+                        action: 'removeMember',
+                        userId: userId,
+                        clubId: clubId
+                    },
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                loadClubMembers(clubId);
+                            } else {
+                                alert('Error: ' + (result.message || 'Failed to remove member'));
+                            }
+                        } catch (e) {
+                            console.error('Error:', e);
+                            alert('Error processing response');
+                        }
+                    }
+                });
+            }
+        }
+
+        // Add this in your JavaScript section
+        function deleteClub(clubId) {
+            if (confirm('Are you sure you want to delete this organization? This action cannot be undone.')) {
+                $.ajax({
+                    url: 'ajax/handle_club.php',
+                    type: 'POST',
+                    data: {
+                        action: 'deleteClub',
+                        clubId: clubId
+                    },
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Organization deleted successfully!');
+                                window.location.reload();
+                            } else {
+                                alert('Error: ' + (result.message || 'Failed to delete organization'));
+                            }
+                        } catch (e) {
+                            console.error('Error:', e);
+                            alert('Error processing response');
+                        }
+                    },
+                    error: function() {
+                        alert('Error: Failed to send request');
+                    }
+                });
+            }
+        }
+
         // ... rest of existing code ...
     </script>
 </body>
@@ -714,11 +1153,19 @@ $clubs = fetchAllClubs();
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: default;
+        /* Remove pointer cursor */
+        position: relative;
     }
 
     .club-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-content {
+        cursor: default;
+        /* Remove pointer cursor */
     }
 
     .club-header {
@@ -826,6 +1273,9 @@ $clubs = fetchAllClubs();
         display: flex;
         justify-content: center;
         gap: 1rem;
+        position: relative;
+        z-index: 10;
+        background: white;
     }
 
     .btn-icon {
@@ -836,6 +1286,9 @@ $clubs = fetchAllClubs();
         background: #f8f9fa;
         color: #666;
         transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+        pointer-events: auto;
     }
 
     .btn-icon:hover {
@@ -1062,4 +1515,71 @@ $clubs = fetchAllClubs();
     }
 
     /* ... rest of existing styles ... */
+
+    .club-detail-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 1.5rem;
+    }
+
+    .club-detail-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .club-detail-title h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.5rem;
+    }
+
+    .club-detail-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-group {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .info-group label {
+        color: #666;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-group p {
+        margin: 0;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .member-list-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .member-list-section h4 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .club-card::after {
+        display: none;
+    }
 </style>
