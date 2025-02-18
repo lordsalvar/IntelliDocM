@@ -12,7 +12,7 @@
             <i class="fas fa-calendar-alt"></i>
             <span>Activity Calendar</span>
         </a>
-        <a href="admin/proposals.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'view_proposals.php' ? 'active' : '' ?>">
+        <a href="/main/intellidocm/admin/proposals.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'view_proposals.php' ? 'active' : '' ?>">
             <i class="fas fa-file-alt"></i>
             <span>Proposals</span>
         </a>
