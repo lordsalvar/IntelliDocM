@@ -187,17 +187,6 @@ if ($club_name) {
                 </div>
             </div>
 
-            <div class="card">
-                <h3>Quick Actions</h3>
-                <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                    <button style="padding: 1rem; border: none;">
-                        <i class="fas fa-upload"></i> Upload Document
-                    </button>
-                    <button style="padding: 1rem; border: none;">
-                        <i class="fas fa-folder"></i> View All Documents
-                    </button>
-                </div>
-            </div>
             <div class="proposals-card">
                 <div class="proposals-header">
                     <h3 class="proposals-title">
