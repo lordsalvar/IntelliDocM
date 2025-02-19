@@ -21,7 +21,8 @@ $sql = "SELECT
             ap.*,
             u.full_name as submitted_by,
             u.email as submitter_email,
-            u.contact as submitter_contact
+            u.contact as submitter_contact,
+            ap.designation as submitter_designation  -- Add this line to get designation
         FROM activity_proposals ap
         LEFT JOIN users u ON ap.user_id = u.id
         ORDER BY ap.submitted_date DESC";
@@ -101,67 +102,125 @@ $proposals = $conn->query($sql);
 
         .proposal-card {
             background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .proposal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .proposal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .proposal-info h3 {
-            margin: 0;
-            color: #333;
+        .proposal-title {
             font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .proposal-content {
+            padding: 1.25rem;
         }
 
         .proposal-meta {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             color: #666;
             font-size: 0.9rem;
         }
 
-        .proposal-status {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
+        .meta-item i {
+            width: 16px;
+            text-align: center;
+            color: #1976d2;
         }
 
-        .status-pending {
+        .proposal-footer {
+            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge.pending {
             background: #fff3e0;
             color: #f57c00;
         }
 
-        .status-confirmed {
+        .status-badge.confirmed {
             background: #e8f5e9;
             color: #2e7d32;
         }
 
-        .status-cancelled {
+        .status-badge.cancelled {
             background: #ffebee;
             color: #c62828;
         }
 
+        .status-badge i {
+            font-size: 0.8rem;
+        }
+
         .action-buttons {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .btn-action {
-            padding: 0.5rem;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
-        .btn-action:hover {
-            opacity: 0.9;
+        .rejection-reason {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: #ffebee;
+            border-radius: 8px;
+            color: #c62828;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .search-controls {
@@ -248,6 +307,22 @@ $proposals = $conn->query($sql);
         .no-results.show {
             display: block;
         }
+
+        .designation {
+            color: #1976d2;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .status-received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .proposal-card[data-status="received"] .status-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
     </style>
 </head>
 
@@ -303,9 +378,18 @@ $proposals = $conn->query($sql);
                 </div>
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-status="all">All</button>
-                    <button class="filter-btn" data-status="pending">Pending</button>
-                    <button class="filter-btn" data-status="confirmed">Confirmed</button>
-                    <button class="filter-btn" data-status="cancelled">Cancelled</button>
+                    <button class="filter-btn" data-status="received">
+                        <i class="fas fa-inbox"></i> Received
+                    </button>
+                    <button class="filter-btn" data-status="pending">
+                        <i class="fas fa-clock"></i> Pending
+                    </button>
+                    <button class="filter-btn" data-status="confirmed">
+                        <i class="fas fa-check"></i> Confirmed
+                    </button>
+                    <button class="filter-btn" data-status="cancelled">
+                        <i class="fas fa-times"></i> Cancelled
+                    </button>
                 </div>
             </div>
 
@@ -320,35 +404,67 @@ $proposals = $conn->query($sql);
                 <?php else: ?>
                     <?php while ($proposal = $proposals->fetch_assoc()): ?>
                         <div class="proposal-card" data-status="<?= strtolower($proposal['status']) ?>">
-                            <div class="proposal-info">
-                                <h3><?= htmlspecialchars($proposal['activity_title']) ?></h3>
+                            <div class="proposal-header">
+                                <h3 class="proposal-title"><?= htmlspecialchars($proposal['activity_title']) ?></h3>
+                                <span class="status-badge <?= strtolower($proposal['status']) ?>">
+                                    <i class="fas fa-circle"></i>
+                                    <?= ucfirst($proposal['status']) ?>
+                                </span>
+                            </div>
+
+                            <div class="proposal-content">
                                 <div class="proposal-meta">
-                                    <span><i class="fas fa-users"></i> <?= htmlspecialchars($proposal['club_name'] . ' (' . $proposal['acronym'] . ')') ?></span>
-                                    <span><i class="fas fa-tag"></i> <?= htmlspecialchars($proposal['activity_type']) ?></span>
-                                    <span><i class="fas fa-calendar"></i> <?= date('M d, Y', strtotime($proposal['activity_date'])) ?> - <?= date('M d, Y', strtotime($proposal['end_activity_date'])) ?></span>
-                                    <span><i class="fas fa-clock"></i> <?= date('h:i A', strtotime($proposal['start_time'])) ?> - <?= date('h:i A', strtotime($proposal['end_time'])) ?></span>
-                                    <span><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($proposal['venue']) ?></span>
-                                    <span><i class="fas fa-user"></i> <?= htmlspecialchars($proposal['submitted_by']) ?></span>
+                                    <div class="meta-item">
+                                        <i class="fas fa-users"></i>
+                                        <span><?= htmlspecialchars($proposal['club_name'] . ' (' . $proposal['acronym'] . ')') ?></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-tag"></i>
+                                        <span><?= htmlspecialchars($proposal['activity_type']) ?></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span><?= date('M d, Y', strtotime($proposal['activity_date'])) ?> - <?= date('M d, Y', strtotime($proposal['end_activity_date'])) ?></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span><?= date('h:i A', strtotime($proposal['start_time'])) ?> - <?= date('h:i A', strtotime($proposal['end_time'])) ?></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span><?= htmlspecialchars($proposal['venue']) ?></span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-user"></i>
+                                        <span><?= htmlspecialchars($proposal['submitted_by']) ?>
+                                            <?php if ($proposal['designation']): ?>
+                                                - <span class="designation"><?= htmlspecialchars($proposal['designation']) ?></span>
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
                                 </div>
+
                                 <?php if ($proposal['status'] === 'cancelled' && $proposal['rejection_reason']): ?>
                                     <div class="rejection-reason">
-                                        <i class="fas fa-info-circle"></i> Reason: <?= htmlspecialchars($proposal['rejection_reason']) ?>
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Reason: <?= htmlspecialchars($proposal['rejection_reason']) ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <div class="proposal-actions">
-                                <span class="proposal-status status-<?= strtolower($proposal['status']) ?>">
-                                    <?= ucfirst($proposal['status']) ?>
-                                </span>
+
+                            <div class="proposal-footer">
                                 <div class="action-buttons">
-                                    <button class="btn-action" style="background: #1976d2;" onclick="viewProposal(<?= $proposal['proposal_id'] ?>)">
+                                    <button class="btn-action" style="background: #e3f2fd; color: #1976d2;"
+                                        onclick="viewProposal(<?= $proposal['proposal_id'] ?>)" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                     <?php if ($proposal['status'] === 'pending'): ?>
-                                        <button class="btn-action" style="background: #2e7d32;" onclick="approveProposal(<?= $proposal['proposal_id'] ?>)">
+                                        <button class="btn-action" style="background: #e8f5e9; color: #2e7d32;"
+                                            onclick="approveProposal(<?= $proposal['proposal_id'] ?>)" title="Approve">
                                             <i class="fas fa-check"></i>
                                         </button>
-                                        <button class="btn-action" style="background: #c62828;" onclick="rejectProposal(<?= $proposal['proposal_id'] ?>)">
+                                        <button class="btn-action" style="background: #ffebee; color: #c62828;"
+                                            onclick="rejectProposal(<?= $proposal['proposal_id'] ?>)" title="Reject">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     <?php endif; ?>

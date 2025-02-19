@@ -538,6 +538,44 @@ $clubs = fetchAllClubs();
         </div>
     </div>
 
+    <!-- Add this new modal after your existing modals -->
+    <div class="modal fade" id="editMemberModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="editMemberForm">
+                    <div class="modal-body">
+                        <input type="hidden" name="userId" id="editMemberId">
+                        <input type="hidden" name="clubId" id="editMemberClubId">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" name="fullName" id="editMemberName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="editMemberEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact</label>
+                            <input type="text" class="form-control" name="contact" id="editMemberContact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-control" name="designation" id="editMemberDesignation" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -1028,6 +1066,9 @@ $clubs = fetchAllClubs();
                                         <td>${member.contact}</td>
                                         <td>${member.designation}</td>
                                         <td>
+                                            <button class="btn btn-sm btn-primary" onclick="editMember(${member.id}, ${clubId}, ${JSON.stringify(member).replace(/"/g, '&quot;')})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
                                             <button class="btn btn-sm btn-danger" onclick="removeMember(${member.id}, ${clubId})">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -1045,11 +1086,24 @@ $clubs = fetchAllClubs();
             });
         }
 
-        // Handle member form submission
-        $('#addMemberForm').on('submit', function(e) {
+        function editMember(userId, clubId, memberData) {
+            // Populate the edit form
+            $('#editMemberId').val(userId);
+            $('#editMemberClubId').val(clubId);
+            $('#editMemberName').val(memberData.full_name);
+            $('#editMemberEmail').val(memberData.email);
+            $('#editMemberContact').val(memberData.contact);
+            $('#editMemberDesignation').val(memberData.designation);
+
+            // Show the modal
+            $('#editMemberModal').modal('show');
+        }
+
+        // Handle edit member form submission
+        $('#editMemberForm').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            formData.append('action', 'addMember');
+            formData.append('action', 'updateMember');
 
             $.ajax({
                 url: 'ajax/manage_members.php',
@@ -1061,11 +1115,11 @@ $clubs = fetchAllClubs();
                     try {
                         const result = JSON.parse(response);
                         if (result.success) {
-                            alert('Member added successfully!');
-                            $('#addMemberForm')[0].reset();
-                            loadClubMembers($('#memberClubId').val());
+                            alert('Member updated successfully!');
+                            $('#editMemberModal').modal('hide');
+                            loadClubMembers($('#editMemberClubId').val());
                         } else {
-                            alert('Error: ' + (result.message || 'Failed to add member'));
+                            alert('Error: ' + (result.message || 'Failed to update member'));
                         }
                     } catch (e) {
                         console.error('Error:', e);

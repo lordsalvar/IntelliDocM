@@ -88,6 +88,62 @@ switch ($action) {
         }
         break;
 
+    case 'updateMember':
+        try {
+            $conn->begin_transaction();
+
+            // Determine role based on designation
+            $role = 'client';
+            if (strtolower($_POST['designation']) === 'moderator') {
+                $role = 'moderator';
+            } elseif (strtolower($_POST['designation']) === 'dean') {
+                $role = 'dean';
+            }
+
+            // Update user details
+            $sql = "UPDATE users SET 
+                    full_name = ?, 
+                    email = ?, 
+                    contact = ?,
+                    role = ?
+                    WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "ssssi",
+                $_POST['fullName'],
+                $_POST['email'],
+                $_POST['contact'],
+                $role,
+                $_POST['userId']
+            );
+
+            if (!$stmt->execute()) {
+                throw new Exception("Failed to update user");
+            }
+
+            // Update club membership designation
+            $sql = "UPDATE club_memberships SET designation = ? 
+                    WHERE user_id = ? AND club_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "sii",
+                $_POST['designation'],
+                $_POST['userId'],
+                $_POST['clubId']
+            );
+
+            if (!$stmt->execute()) {
+                throw new Exception("Failed to update membership");
+            }
+
+            $conn->commit();
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+        break;
+
     case 'removeMember':
         try {
             $userId = $_POST['userId'];

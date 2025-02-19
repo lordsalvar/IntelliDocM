@@ -22,7 +22,15 @@ if (!isset($_SESSION['full_name']) && $admin_data) {
 }
 
 // Fetch recent proposals
-$proposals_query = "SELECT * FROM activity_proposals ORDER BY submitted_date DESC LIMIT 5";
+$proposals_query = "SELECT 
+    ap.*, 
+    DATE_FORMAT(ap.activity_date, '%b %d') as formatted_date,
+    DATE_FORMAT(ap.submitted_date, '%M %d, %Y') as submission_date,
+    u.full_name as submitted_by
+    FROM activity_proposals ap
+    LEFT JOIN users u ON ap.user_id = u.id 
+    ORDER BY ap.submitted_date DESC 
+    LIMIT 5";
 $proposals_result = $conn->query($proposals_query);
 
 // Fetch system statistics
@@ -264,6 +272,335 @@ $recent_utilization = $conn->query("
             font-size: 0.9rem;
             margin-top: 0.25rem;
         }
+
+        /* Recent Proposals Styling */
+        .recent-proposals {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-all {
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .proposals-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .proposal-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+        }
+
+        /* ... Add all the styles from proposals.php for .proposal-header, .proposal-content, etc ... */
+
+        /* Additional specific styles for dashboard */
+        .recent-proposals .proposal-card {
+            margin-bottom: 1rem;
+        }
+
+        .recent-proposals .proposal-meta {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge.received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-badge.confirmed {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge.cancelled {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Recent Proposals Styling to match proposals.php */
+        .proposal-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+
+        .proposal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .proposal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proposal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .proposal-content {
+            padding: 1.25rem;
+        }
+
+        .proposal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .meta-item i {
+            width: 16px;
+            text-align: center;
+            color: #1976d2;
+        }
+
+        .proposal-footer {
+            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge i {
+            font-size: 0.8rem;
+        }
+
+        .status-badge.received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-badge.confirmed {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge.cancelled {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .designation {
+            color: #1976d2;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .recent-proposals {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-left .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0 0;
+        }
+
+        .proposals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .proposal-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .proposal-item:hover {
+            transform: translateX(5px);
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .proposal-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            padding: 0.5rem;
+            background: #e3f2fd;
+            border-radius: 6px;
+            color: #1976d2;
+        }
+
+        .proposal-date .date {
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .proposal-main {
+            flex: 1;
+        }
+
+        .proposal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .proposal-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .proposal-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .detail-item i {
+            color: #1976d2;
+            width: 16px;
+            text-align: center;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: #e3f2fd;
+            color: #1976d2;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-badge i {
+            font-size: 0.7rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -356,38 +693,68 @@ $recent_utilization = $conn->query("
                     </div>
                 </div>
 
-                <!-- Recent Proposals Section -->
+                <!-- Replace the recent proposals section with this -->
                 <div class="recent-proposals">
                     <div class="section-header">
-                        <h3><i class="fas fa-clipboard-list"></i> Recent Proposals</h3>
-                        <a href="admin/view_proposals.php" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                        <div class="header-left">
+                            <h3><i class="fas fa-clipboard-list"></i> Recent Activity Proposals</h3>
+                            <p class="subtitle">Latest activity proposals submitted to the system</p>
+                        </div>
+                        <a href="admin/proposals.php" class="view-all">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
-                    <div class="proposals-list">
-                        <?php if ($proposals_result->num_rows > 0): ?>
+
+                    <?php if ($proposals_result->num_rows === 0): ?>
+                        <div class="empty-state">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>No Recent Proposals</h3>
+                            <p>There are no activity proposals submitted yet.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="proposals-list">
                             <?php while ($proposal = $proposals_result->fetch_assoc()): ?>
-                                <div class="proposal-card">
-                                    <div class="proposal-info">
-                                        <h4><?= htmlspecialchars($proposal['activity_title']) ?></h4>
-                                        <p class="club-name"><i class="fas fa-users"></i> <?= htmlspecialchars($proposal['club_name']) ?></p>
-                                        <span class="date"><i class="fas fa-calendar"></i> <?= date('M d, Y', strtotime($proposal['activity_date'])) ?></span>
+                                <div class="proposal-item" data-status="<?= strtolower($proposal['status']) ?>">
+                                    <div class="proposal-date">
+                                        <span class="date"><?= $proposal['formatted_date'] ?></span>
                                     </div>
-                                    <div class="proposal-status">
-                                        <span class="status-badge <?= strtolower($proposal['status']) ?>">
-                                            <?= ucfirst(htmlspecialchars($proposal['status'])) ?>
-                                        </span>
-                                        <a href="admin/view_proposal.php?id=<?= $proposal['proposal_id'] ?>" class="view-btn">
-                                            <i class="fas fa-eye"></i> View
+                                    <div class="proposal-main">
+                                        <div class="proposal-header">
+                                            <h4><?= htmlspecialchars($proposal['activity_title']) ?></h4>
+                                            <span class="status-badge <?= strtolower($proposal['status']) ?>">
+                                                <i class="fas fa-circle"></i>
+                                                <?= ucfirst($proposal['status']) ?>
+                                            </span>
+                                        </div>
+                                        <div class="proposal-details">
+                                            <div class="detail-item">
+                                                <i class="fas fa-users"></i>
+                                                <span><?= htmlspecialchars($proposal['club_name']) ?></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <span><?= htmlspecialchars($proposal['venue']) ?></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <i class="fas fa-user"></i>
+                                                <span><?= htmlspecialchars($proposal['submitted_by']) ?></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <i class="fas fa-clock"></i>
+                                                <span>Submitted <?= $proposal['submission_date'] ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="proposal-actions">
+                                        <a href="admin/view_proposal.php?id=<?= $proposal['proposal_id'] ?>"
+                                            class="btn-action" title="View Details">
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
                                 </div>
                             <?php endwhile; ?>
-                        <?php else: ?>
-                            <div class="empty-state">
-                                <i class="fas fa-folder-open"></i>
-                                <p>No proposals found</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -27,7 +27,7 @@
                 <span class="notification-badge"><?php echo $unread_count; ?></span>
             <?php endif; ?>
         </a>
-        <a href="profile_settings.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'profile_settings.php' ? 'active' : '' ?>">
+        <a href="/main/intellidocm/profile.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'profile_settings.php' ? 'active' : '' ?>">
             <i class="fas fa-user-cog"></i>
             <span>Profile Settings</span>
         </a>
