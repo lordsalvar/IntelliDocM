@@ -11,40 +11,20 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_POST['action'] === 'update_picture') {
     try {
-        $userId = $_SESSION['user_id'];
+        // Create upload directory if it doesn't exist
         $uploadDir = '../uploads/profile_pictures/';
-
-        // Create directory if it doesn't exist
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
         $file = $_FILES['profile_picture'];
-        $fileName = $file['name'];
-        $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-        // Validate file type
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-        if (!in_array($fileType, $allowedTypes)) {
-            throw new Exception('Invalid file type. Only JPG, PNG and GIF allowed.');
-        }
 
         // Generate unique filename
-        $newFileName = uniqid('profile_') . '.' . $fileType;
-        $uploadPath = $uploadDir . $newFileName;
+        $fileName = 'profile_' . $_SESSION['user_id'] . '_' . time() . '.jpg';
+        $uploadPath = $uploadDir . $fileName;
 
-        // Move uploaded file
         if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-            // Update database with new profile picture
-            $sql = "UPDATE users SET profile_picture = ? WHERE id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("si", $newFileName, $userId);
-
-            if (!$stmt->execute()) {
-                throw new Exception("Failed to update database");
-            }
-
-            // Delete old profile picture if it exists and isn't the default
+            // Delete old profile picture if it exists
             if (isset($_POST['old_picture']) && $_POST['old_picture'] !== 'default.png') {
                 $oldFile = $uploadDir . $_POST['old_picture'];
                 if (file_exists($oldFile)) {
@@ -52,10 +32,19 @@ if ($_POST['action'] === 'update_picture') {
                 }
             }
 
-            echo json_encode([
-                'success' => true,
-                'image_url' => 'uploads/profile_pictures/' . $newFileName
-            ]);
+            // Update database
+            $sql = "UPDATE users SET profile_picture = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si", $fileName, $_SESSION['user_id']);
+
+            if ($stmt->execute()) {
+                echo json_encode([
+                    'success' => true,
+                    'image_url' => 'uploads/profile_pictures/' . $fileName
+                ]);
+            } else {
+                throw new Exception("Failed to update database");
+            }
         } else {
             throw new Exception("Failed to upload file");
         }
