@@ -36,11 +36,12 @@ if (!isset($_SESSION['full_name']) && $admin_data) {
     $_SESSION['full_name'] = $admin_data['full_name'];
 }
 
-// Fetch recent proposals
+// Update the proposals query to include duration calculation
 $proposals_query = "SELECT 
     ap.*, 
     DATE_FORMAT(ap.activity_date, '%b %d') as formatted_date,
     DATE_FORMAT(ap.submitted_date, '%M %d, %Y') as submission_date,
+    DATEDIFF(ap.end_activity_date, ap.activity_date) as duration,
     u.full_name as submitted_by
     FROM activity_proposals ap
     LEFT JOIN users u ON ap.user_id = u.id 
@@ -101,6 +102,38 @@ $recent_utilization = $conn->query("
     ORDER BY b.booking_date DESC
     LIMIT 5
 ")->fetch_all(MYSQLI_ASSOC);
+
+// Update the calendar events query to only show confirmed activities
+$mini_calendar_events = $conn->query("
+    SELECT 
+        activity_title as title,
+        activity_date as start,
+        end_activity_date as end,
+        status,
+        'activity' as type,
+        DATEDIFF(end_activity_date, activity_date) as duration
+    FROM activity_proposals 
+    WHERE activity_date >= CURRENT_DATE 
+    AND activity_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    AND status = 'confirmed'  /* Add this condition */
+    UNION ALL
+    SELECT 
+        CONCAT(f.name, ' - ', GROUP_CONCAT(r.room_number)) as title,
+        booking_date as start,
+        booking_date as end,
+        status,
+        'booking' as type,
+        0 as duration
+    FROM bookings b
+    JOIN facilities f ON b.facility_id = f.id
+    LEFT JOIN booking_rooms br ON b.id = br.booking_id
+    LEFT JOIN rooms r ON br.room_id = r.id
+    WHERE booking_date >= CURRENT_DATE 
+    AND booking_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    AND b.status = 'Confirmed'  /* Add this condition - note the capital C */
+    GROUP BY b.id
+    ORDER BY start ASC
+    LIMIT 10")->fetch_all(MYSQLI_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -689,6 +722,178 @@ $recent_utilization = $conn->query("
         .status-badge i {
             font-size: 0.7rem;
         }
+
+        /* Add this CSS to your existing styles */
+        .calendar-widget {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .calendar-events {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        .event-item:hover {
+            transform: translateX(5px);
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .event-date i {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-details h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #2c3e50;
+        }
+
+        .event-status {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .event-status i {
+            font-size: 0.6rem;
+        }
+
+        /* Status colors */
+        .event-item.activity.confirmed .event-status,
+        .event-item.booking.confirmed .event-status {
+            color: #2e7d32;
+        }
+
+        .event-item.pending .event-status {
+            color: #f57c00;
+        }
+
+        .event-item.cancelled .event-status {
+            color: #c62828;
+        }
+
+        .event-item.activity .event-date {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .event-item.booking .event-date {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .calendar-events::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .calendar-events::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .calendar-events::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .calendar-events::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        .event-date {
+            min-width: 80px;
+            /* Increased width for date range */
+        }
+
+        .date-range {
+            font-size: 0.8rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .duration {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .event-duration {
+            font-size: 0.8rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .event-duration i {
+            font-size: 0.75rem;
+            color: #1976d2;
+        }
+
+        .event-item {
+            padding: 1rem;
+        }
+
+        .event-details {
+            align-items: flex-start;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -769,6 +974,58 @@ $recent_utilization = $conn->query("
                     </div>
                 </div>
 
+                <!-- Add this HTML after your charts section and before the utilization section -->
+                <div class="calendar-widget">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <h3><i class="fas fa-calendar-alt"></i> Upcoming Activities</h3>
+                            <p class="subtitle">Next 7 days schedule</p>
+                        </div>
+                        <a href="admin_activity_calendar.php" class="view-all">
+                            Full Calendar <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="calendar-events">
+                        <?php if (empty($mini_calendar_events)): ?>
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-day"></i>
+                                <p>No upcoming activities for the next 7 days</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($mini_calendar_events as $event): ?>
+                                <div class="event-item <?= $event['type'] ?> <?= strtolower($event['status']) ?>">
+                                    <div class="event-date">
+                                        <i class="fas fa-<?= $event['type'] === 'activity' ? 'calendar-check' : 'door-open' ?>"></i>
+                                        <?php if ($event['type'] === 'activity' && $event['duration'] > 0): ?>
+                                            <span class="date-range">
+                                                <?= date('M d', strtotime($event['start'])) ?> - <?= date('M d', strtotime($event['end'])) ?>
+                                            </span>
+                                            <span class="duration"><?= $event['duration'] + 1 ?> days</span>
+                                        <?php else: ?>
+                                            <span class="date"><?= date('M d', strtotime($event['start'])) ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-info">
+                                            <h4><?= htmlspecialchars($event['title']) ?></h4>
+                                            <?php if ($event['type'] === 'activity' && $event['duration'] > 0): ?>
+                                                <span class="event-duration">
+                                                    <i class="fas fa-clock"></i>
+                                                    <?= $event['duration'] + 1 ?> day<?= $event['duration'] > 0 ? 's' : '' ?> activity
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span class="event-status">
+                                            <i class="fas fa-circle"></i>
+                                            <?= ucfirst($event['status']) ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <!-- Add this HTML after the charts section and before recent proposals -->
                 <div class="utilization-section">
                     <div class="section-header">
@@ -817,11 +1074,27 @@ $recent_utilization = $conn->query("
                             <?php while ($proposal = $proposals_result->fetch_assoc()): ?>
                                 <div class="proposal-item" data-status="<?= strtolower($proposal['status']) ?>">
                                     <div class="proposal-date">
-                                        <span class="date"><?= $proposal['formatted_date'] ?></span>
+                                        <?php if ($proposal['duration'] > 0): ?>
+                                            <span class="date-range">
+                                                <?= date('M d', strtotime($proposal['activity_date'])) ?> -
+                                                <?= date('M d', strtotime($proposal['end_activity_date'])) ?>
+                                            </span>
+                                            <span class="duration"><?= $proposal['duration'] + 1 ?> days</span>
+                                        <?php else: ?>
+                                            <span class="date"><?= $proposal['formatted_date'] ?></span>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="proposal-main">
                                         <div class="proposal-header">
-                                            <h4><?= htmlspecialchars($proposal['activity_title']) ?></h4>
+                                            <div class="header-info">
+                                                <h4><?= htmlspecialchars($proposal['activity_title']) ?></h4>
+                                                <?php if ($proposal['duration'] > 0): ?>
+                                                    <span class="duration-badge">
+                                                        <i class="fas fa-clock"></i>
+                                                        <?= $proposal['duration'] + 1 ?> day<?= $proposal['duration'] > 0 ? 's' : '' ?> activity
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
                                             <span class="status-badge <?= strtolower($proposal['status']) ?>">
                                                 <i class="fas fa-circle"></i>
                                                 <?= ucfirst($proposal['status']) ?>
