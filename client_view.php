@@ -24,14 +24,14 @@ $stmt->close();
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/print.css" media="print">
     <link rel="stylesheet" href="css/client_view.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
-    <header>
-        <?php include 'includes/clientnavbar.php'; ?>
-    </header>
-
-    <div class="container my-5">
+    <div class="dashboard">
+        <?php include 'includes/sidebar.php'; ?>
+        <div class="container my-5">
         <!-- Overlay Box -->
         <div class="overlay-box">
             <p><strong>Index No.:</strong> <u> 7.3 </u></p>
@@ -229,17 +229,13 @@ $stmt->close();
                 <?php else: ?>
                     <p class="text-warning mt-2">Awaiting approval.</p>
                 <?php endif; ?>
-                <div class="form-row mt-4">
-                    <div class="d-flex justify-content-center">
-                        <button onclick="window.print();" class="btn btn-primary mb-3">Print Document</button>
-                    </div>
+                <div class="form-row mt-4 d-flex justify-content-center align-items-center" style="height: 100px;">
+                    <button onclick="window.print();" class="btn btn-primary mb-3">Print Document</button>
                 </div>
+
         <?php else: ?>
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
-        <footer>
-            <?php include 'includes/footer.php'; ?>
-        </footer>
     </div>
 
     <?php

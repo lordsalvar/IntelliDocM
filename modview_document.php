@@ -1,5 +1,7 @@
 <?php
+
 include 'database.php';
+include 'phpqrcode/qrlib.php';
 
 $id = $_GET['id']; // Get the proposal ID from the URL
 
@@ -12,48 +14,41 @@ $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
+    // Generate QR Code content
+    $qrData = "http://10.6.8.72/main/IntelliDocM/verify_qr/mod_verify_qr.php?proposal_id=" . urlencode($proposal['proposal_id']) . "&moderator_name=" . urlencode($proposal['moderator_name']);
 
-if ($proposal['status'] === 'Received') {
-    $updateStatusSql = "UPDATE activity_proposals SET status = 'Pending' WHERE proposal_id = ?";
-    $updateStatusStmt = $conn->prepare($updateStatusSql);
-    $updateStatusStmt->bind_param("i", $id);
-    $updateStatusStmt->execute();
-    $updateStatusStmt->close();
-}
-
-// Handle Approve or Reject actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'];
-    $status = ($action === 'approve') ? 'Approved' : 'Rejected';
-    $rejectionReason = ($status === 'Rejected') ? $_POST['rejection_reason'] : null;
-
-    // Update proposal status
-    $updateSql = "UPDATE activity_proposals SET status = ?, rejection_reason = ? WHERE proposal_id = ?";
-    $updateStmt = $conn->prepare($updateSql);
-    $updateStmt->bind_param("ssi", $status, $rejectionReason, $id);
-    $updateStmt->execute();
-
-    // ✅ Insert notification for the user when approved/rejected
-    if (isset($proposal['id'], $proposal['activity_title'])) {
-        insertNotification($proposal['user_id'], $message);
-        $message = ($status === 'Approved')
-            ? "Your activity proposal '{$proposal['activity_title']}' has been approved."
-            : "Your activity proposal '{$proposal['activity_title']}' has been rejected. Reason: $rejectionReason";
-
-        $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
-        $insertNotificationStmt = $conn->prepare($insertNotificationSql);
-        $insertNotificationStmt->bind_param("is", $user_id, $message);
-        $insertNotificationStmt->execute();
-        $insertNotificationStmt->close();
+    // Define the directory to save QR codes
+    $qrDirectory = "../qr_codes";
+    if (!is_dir($qrDirectory)) {
+        mkdir($qrDirectory, 0777, true); // Create the directory if it doesn't exist
     }
 
+    // Define the file path for the QR code
+    $qrFilePath = $qrDirectory . "/qr_" . $proposal['proposal_id'] . ".png";
 
-    header("Location: /main/IntelliDocM/admin/view_proposals.php");
-    exit;
+    // Generate and save the QR code as a file
+    QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
+
+    // Update the moderator_signature column with the file path
+    $updateSql = "UPDATE activity_proposals SET moderator_signature = ? WHERE proposal_id = ?";
+    $updateStmt = $conn->prepare($updateSql);
+    $updateStmt->bind_param("si", $qrFilePath, $id);
+
+    if ($updateStmt->execute()) {
+        echo "<script>alert('Moderator signature added and QR code generated successfully.'); window.location.href='modview_doc.php?id=$id';</script>";
+    } else {
+        echo "<script>alert('Failed to update moderator signature. Please try again.');</script>";
+        error_log('Database update error: ' . $updateStmt->error);
+    }
+    $updateStmt->close();
 }
 
+$conn->close();
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Proposal Document</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/view_document.css">
+    <link rel="stylesheet" href="css/modviewDoc.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
@@ -252,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <!-- Signatures Section -->
-            <div class="row mb-4 text-center">
+            <div class="row mb-4">
                 <div class="col-md-4">
                     <label class="form-label">Applicant</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
@@ -267,18 +262,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="col-md-4">
                     <label class="form-label">Moderator</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
+
                     <?php if (!empty($proposal['moderator_signature'])): ?>
                         <div class="qr-code-container text-center">
                             <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                         </div>
                         <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
-                        <p class="text-warning mt-2">Awaiting approval.</p>
+                        <p class="text-warning mt-2">No QR Code generated yet.</p>
+                        <form method="POST" class="text-center mt-4">
+                            <button type="submit" name="generate_qr" class="btn btn-primary">
+                                Sign Document
+                            </button>
+                        </form>
                     <?php endif; ?>
                 </div>
+
                 <div class="col-md-4">
                     <label class="form-label">Other Faculty/Staff</label>
                     <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['faculty_signature']) ?>" readonly />
+
                 </div>
             </div>
 
@@ -287,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
                 <?php if (!empty($proposal['dean_signature'])): ?>
                     <div class="qr-code-container text-center">
-                        <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
+                        <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                     </div>
                     <p class="text-success mt-2">Date Signed</p>
                 <?php else: ?>
@@ -297,76 +300,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-            <!-- Action Buttons -->
-            <div class="text-center mt-4">
-                <form method="POST" onsubmit="return confirmAction(event)">
-                    <button type="submit" name="action" value="approve" class="btn btn-success mx-2">Approve</button>
-                    <button type="button" class="btn btn-danger mx-2" data-toggle="modal" data-target="#rejectModal">Reject</button>
-                </form>
-            </div>
-            <!-- Reject Modal -->
-            <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="rejectModalLabel">Reject Proposal</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form method="POST">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="rejectionReason">Reason for Rejection:</label>
-                                    <textarea class="form-control" id="rejectionReason" name="rejection_reason" required></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
         <?php else: ?>
             <p>No proposal found with the specified ID.</p>
         <?php endif; ?>
     </div>
-    <?php
-    // -- Only run this if $proposal was found (and thus $proposalId is set).
-    //    But you can wrap it in a check if needed.
-
-    // 2) Run a simple query to check if there's at least one record in the bookings table
-    //    for this proposal.
-    $proposalId = $proposal['proposal_id'] ?? 0;
-    $sql = "SELECT COUNT(*) AS total FROM bookings WHERE proposal_id = '$proposalId'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    $bookingCount = (int) $row['total'];
-
-    // 3) If a booking is found for this proposal, show 'View Document', otherwise 'Book Facilities'
-    if ($bookingCount > 0) {
-        // Already has a booking record
-    ?>
-        <div class="text-center mt-5">
-            <a
-                href="view_boking_admin.php?proposal_id=<?= urlencode($proposalId) ?>"
-                class="btn btn-success btn-lg">
-                View Document
-            </a>
-        </div>
-    <?php
-    } else {
-        // No booking record yet
-    
-    }
-
-    // 4) Close the connection at the very end
-    mysqli_close($conn);
-    ?>
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
