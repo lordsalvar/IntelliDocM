@@ -12,6 +12,27 @@ $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
 
+// Fetch facility bookings for this proposal
+$bookings_sql = "SELECT 
+    b.booking_date,
+    b.start_time,
+    b.end_time,
+    b.status,
+    f.name as facility_name,
+    GROUP_CONCAT(r.room_number SEPARATOR ', ') as room_numbers
+FROM bookings b
+JOIN facilities f ON b.facility_id = f.id
+LEFT JOIN booking_rooms br ON b.id = br.booking_id
+LEFT JOIN rooms r ON br.room_id = r.id
+WHERE b.activity_proposal_id = ?
+GROUP BY b.id
+ORDER BY b.booking_date, b.start_time";
+
+$bookings_stmt = $conn->prepare($bookings_sql);
+$bookings_stmt->bind_param("i", $id);
+$bookings_stmt->execute();
+$bookings_result = $bookings_stmt->get_result();
+$facility_bookings = $bookings_result->fetch_all(MYSQLI_ASSOC);
 
 if ($proposal['status'] === 'Received') {
     $updateStatusSql = "UPDATE activity_proposals SET status = 'Pending' WHERE proposal_id = ?";
@@ -205,35 +226,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                         </div>
-                        <!-- Continue with other program categories as necessary -->
                     </div>
                 </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label for="venue" class="form-label">Venue of the Activity:</label>
-                        <input type="text" class="form-control" id="venue" value="<?= htmlspecialchars($proposal['venue']) ?>" readonly />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="address" class="form-label">Address of the Venue:</label>
-                        <input type="text" class="form-control" id="address" value="<?= htmlspecialchars($proposal['address']) ?>" readonly />
-                    </div>
-                </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label for="date" class="form-label">Date of the Activity:</label>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="date" class="form-label">Start Date:</label>
                         <input type="date" class="form-control" id="date" value="<?= htmlspecialchars($proposal['activity_date']) ?>" readonly />
                     </div>
-                    <div class="col-md-4">
-                        <label for="startTime" class="form-label">Starting Time:</label>
-                        <input type="time" class="form-control" id="startTime" value="<?= htmlspecialchars($proposal['start_time']) ?>" readonly />
-                    </div>
-                    <div class="col-md-4">
-                        <label for="endTime" class="form-label">Finishing Time:</label>
-                        <input type="time" class="form-control" id="endTime" value="<?= htmlspecialchars($proposal['end_time']) ?>" readonly />
+                    <div class="col-md-6">
+                        <label for="endDate" class="form-label">End Date:</label>
+                        <input type="date" class="form-control" id="endDate" value="<?= htmlspecialchars($proposal['end_activity_date']) ?>" readonly />
                     </div>
                 </div>
+
+
+                <div class="mb-4">
+                    <h4 class="mb-3">Facility Bookings</h4>
+                    <?php if (empty($facility_bookings)): ?>
+                        <p class="text-muted">No facilities booked for this activity.</p>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Facility</th>
+                                        <th>Room(s)</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($facility_bookings as $booking): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($booking['facility_name']) ?></td>
+                                            <td><?= htmlspecialchars($booking['room_numbers'] ?: 'Whole Facility') ?></td>
+                                            <td><?= date('F d, Y', strtotime($booking['booking_date'])) ?></td>
+                                            <td>
+                                                <?= date('h:i A', strtotime($booking['start_time'])) ?> -
+                                                <?= date('h:i A', strtotime($booking['end_time'])) ?>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-<?= strtolower($booking['status']) === 'confirmed' ? 'success' : (strtolower($booking['status']) === 'pending' ? 'warning' : 'danger') ?>">
+                                                    <?= htmlspecialchars($booking['status']) ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
 
                 <div class="row mb-4">
                     <div class="col-md-6">
@@ -246,11 +293,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <!-- Facility Bookings Section -->
+
+
                 <!-- Signatures Section -->
                 <div class="row mb-4 text-center">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Applicant</label>
-                        <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
+                        <input type="text" class="form-control mb-2 text-center" value="<?= htmlspecialchars($proposal['applicant_name']) ?>" readonly />
                         <?php if (!empty($proposal['applicant_signature'])): ?>
                             <div class="qr-code-container text-center">
                                 <img src="/main/IntelliDocM/client_qr_codes/<?= basename($proposal['applicant_signature']) ?>" alt="Applicant QR Code" class="qr-code" />
@@ -259,9 +309,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="text-warning mt-2">Awaiting approval.</p>
                         <?php endif; ?>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Moderator</label>
-                        <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
+                        <input type="text" class="form-control mb-2 text-center" value="<?= htmlspecialchars($proposal['moderator_name']) ?>" readonly />
                         <?php if (!empty($proposal['moderator_signature'])): ?>
                             <div class="qr-code-container text-center">
                                 <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
@@ -271,15 +321,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="text-warning mt-2">Awaiting approval.</p>
                         <?php endif; ?>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Other Faculty/Staff</label>
-                        <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['faculty_signature']) ?>" readonly />
-                    </div>
                 </div>
 
                 <div class="text-center">
                     <label class="form-label">Noted by:</label>
-                    <input type="text" class="form-control mb-2" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
+                    <input type="text" class="form-control mb-2 text center" value="<?= htmlspecialchars($proposal['dean_name']) ?>" readonly />
                     <?php if (!empty($proposal['dean_signature'])): ?>
                         <div class="qr-code-container text-center">
                             <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
@@ -338,3 +384,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 
 </html>
+
+<style>
+    /* Add these styles to your existing CSS */
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        font-size: 0.85em;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .table {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>

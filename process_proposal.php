@@ -128,41 +128,56 @@ try {
 
     $proposal_id = $stmt->insert_id;
 
-    // Update the facility bookings processing to include proposal_id
+    // Update the facility bookings processing section
     if (isset($_POST['facilityBookings']) && is_array($_POST['facilityBookings'])) {
         foreach ($_POST['facilityBookings'] as $booking) {
             if (empty($booking['facility'])) continue;
 
-            // Updated booking insert to include activity_proposal_id
-            $stmt = $conn->prepare("
-                INSERT INTO bookings (
-                    facility_id, user_id, activity_proposal_id, booking_date, 
-                    start_time, end_time, status
-                ) VALUES (?, ?, ?, ?, ?, ?, 'Pending')
-            ");
+            // Process each time slot for this facility
+            if (isset($booking['slots']) && is_array($booking['slots'])) {
+                foreach ($booking['slots'] as $slot) {
+                    // Skip empty slots
+                    if (empty($slot['date']) || empty($slot['start']) || empty($slot['end'])) {
+                        continue;
+                    }
 
-            $stmt->bind_param(
-                "iiisss",
-                $booking['facility'],
-                $user_id,
-                $proposal_id,  // Add the proposal_id here
-                $booking['slots'][0]['date'],
-                $booking['slots'][0]['start'],
-                $booking['slots'][0]['end']
-            );
+                    // Insert booking for each time slot
+                    $stmt = $conn->prepare("
+                        INSERT INTO bookings (
+                            facility_id, 
+                            user_id, 
+                            activity_proposal_id, 
+                            booking_date, 
+                            start_time, 
+                            end_time, 
+                            status
+                        ) VALUES (?, ?, ?, ?, ?, ?, 'Pending')
+                    ");
 
-            if ($stmt->execute()) {
-                $booking_id = $stmt->insert_id;
+                    $stmt->bind_param(
+                        "iiisss",
+                        $booking['facility'],
+                        $user_id,
+                        $proposal_id,
+                        $slot['date'],
+                        $slot['start'],
+                        $slot['end']
+                    );
 
-                // Room booking processing remains the same
-                if (!empty($booking['room'])) {
-                    $roomStmt = $conn->prepare("INSERT INTO booking_rooms (booking_id, room_id) VALUES (?, ?)");
-                    $roomStmt->bind_param("ii", $booking_id, $booking['room']);
-                    $roomStmt->execute();
-                    $roomStmt->close();
+                    if ($stmt->execute()) {
+                        $booking_id = $stmt->insert_id;
+
+                        // Process room booking if selected
+                        if (!empty($booking['room'])) {
+                            $roomStmt = $conn->prepare("INSERT INTO booking_rooms (booking_id, room_id) VALUES (?, ?)");
+                            $roomStmt->bind_param("ii", $booking_id, $booking['room']);
+                            $roomStmt->execute();
+                            $roomStmt->close();
+                        }
+                    }
+                    $stmt->close();
                 }
             }
-            $stmt->close();
         }
     }
 
@@ -177,7 +192,7 @@ try {
         QRcode::png($qrData, $qrFilePath, QR_ECLEVEL_L, 5);
 
         // Update proposal with QR code path
-        $updateStmt = $conn->prepare("UPDATE activity_proposals SET qr_code_path = ? WHERE proposal_id = ?");
+        $updateStmt = $conn->prepare("UPDATE activity_proposals SET applicant_signature = ? WHERE proposal_id = ?");
         $updateStmt->bind_param("si", $qrFilePath, $proposal_id);
         $updateStmt->execute();
         $updateStmt->close();
