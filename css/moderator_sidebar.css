@@ -1,0 +1,126 @@
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #B71C1C 0%, #7F0000 100%);
+    color: #fff;
+    padding: 1.5rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.profile {
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    padding: 3px;
+    transition: all 0.3s ease;
+}
+
+.profile img:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.profile span {
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0.2rem 0;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #FFE0E0;
+    transform: translateX(5px);
+}
+
+.nav-link.active {
+    background: #C62828;
+    color: #FFE0E0;
+    font-weight: 500;
+}
+
+.nav-link i {
+    margin-right: 1rem;
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.nav-link span {
+    font-size: 0.95rem;
+}
+
+/* Logout link special styling */
+.nav-link:last-child {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+        padding: 1rem 0.5rem;
+    }
+
+    .profile {
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+    }
+
+    .profile img {
+        width: 40px;
+        height: 40px;
+        border-width: 2px;
+    }
+
+    .profile span,
+    .nav-link span {
+        display: none;
+    }
+
+    .nav-link {
+        padding: 0.8rem;
+        justify-content: center;
+    }
+
+    .nav-link i {
+        margin-right: 0;
+        font-size: 1.2rem;
+    }
+
+    .nav-link:hover {
+        transform: translateX(0);
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
