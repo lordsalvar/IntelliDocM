@@ -2,6 +2,21 @@
 session_start();
 require_once 'database.php';
 
+// Add this function at the top of your PHP code
+function getTimeBasedGreeting()
+{
+    $hour = date('H');
+    if ($hour >= 5 && $hour < 12) {
+        return ['greeting' => 'Good Morning', 'icon' => 'sun'];
+    } elseif ($hour >= 12 && $hour < 17) {
+        return ['greeting' => 'Good Afternoon', 'icon' => 'sun'];
+    } elseif ($hour >= 17 && $hour < 21) {
+        return ['greeting' => 'Good Evening', 'icon' => 'moon'];
+    } else {
+        return ['greeting' => 'Good Night', 'icon' => 'moon'];
+    }
+}
+
 // Validate admin login
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.php');
@@ -120,8 +135,81 @@ $recent_utilization = $conn->query("
         }
 
         .welcome-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
             margin: 2rem;
-            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #8B0000;
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text h2 {
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.8rem;
+        }
+
+        .current-time {
+            color: #666;
+            font-size: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .motto {
+            color: #8B0000;
+            font-size: 1.1rem;
+            font-style: italic;
+            margin: 0.5rem 0 0 0;
+            text-align: right;
+        }
+
+        .sun-icon {
+            color: #f39c12;
+            animation: pulse 2s infinite;
+        }
+
+        .moon-icon {
+            color: #34495e;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glow {
+            0% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.3);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
         }
 
         .dashboard-charts {
@@ -609,9 +697,22 @@ $recent_utilization = $conn->query("
     <div class="dashboard">
         <?php include 'includes/admin_sidebar.php'; ?>
         <div class="content">
+
+            <!-- Replace the welcome card section with this -->
             <div class="welcome-card">
-                <h2>Welcome, <?php echo htmlspecialchars($admin_data['full_name']); ?></h2>
-                <p>Here's what's happening in your system</p>
+                <?php
+                $timeInfo = getTimeBasedGreeting();
+                $currentTime = date('F j, Y, g:i a');
+                ?>
+                <div class="welcome-header">
+                    <div class="welcome-text">
+                        <h2><?= $timeInfo['greeting'] ?>, <?= htmlspecialchars($admin_data['full_name']); ?>
+                            <i class="fas fa-<?= $timeInfo['icon'] ?> <?= $timeInfo['icon'] ?>-icon"></i>
+                        </h2>
+                        <span class="current-time"><?= $currentTime ?></span>
+                    </div>
+                </div>
+                <p class="motto">Ametur Cor Jesu, Ametur Cor Mariae!</p>
             </div>
 
             <div class="stats-grid">
@@ -871,6 +972,28 @@ $recent_utilization = $conn->query("
                 }
             }
         });
+
+        // Add this JavaScript to update time
+        function updateTime() {
+            const timeElement = document.querySelector('.current-time');
+            if (timeElement) {
+                const now = new Date();
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
+                };
+                timeElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call
     </script>
 </body>
 
