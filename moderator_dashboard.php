@@ -49,8 +49,8 @@ if ($club_name) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moderator Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/moderator_sidebar.css">
+    <link rel="stylesheet" href="css/moderator_dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/activity_logger.js" defer></script>
     <style>
@@ -65,7 +65,7 @@ if ($club_name) {
 
 <body>
     <div class="dashboard">
-        <?php include 'includes/sidebar.php'; ?>
+        <?php include 'moderator_sidebar.php'; ?>
         <div class="content">
             <div class="card">
                 <h2>Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?></h2>
