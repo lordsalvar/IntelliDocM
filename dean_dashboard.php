@@ -49,8 +49,8 @@ if ($club_name) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dean_sidebar.css">
+    <link rel="stylesheet" href="css/dean_dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/activity_logger.js" defer></script>
     <style>
@@ -65,7 +65,7 @@ if ($club_name) {
 
 <body>
     <div class="dashboard">
-        <?php include 'includes/sidebar.php'; ?>
+        <?php include 'dean_sidebar.php'; ?>
         <div class="content">
             <div class="card">
                 <h2>Welcome, Dean</h2>
@@ -95,50 +95,58 @@ if ($club_name) {
                     </button>
                 </div>
             </div>
-            <?php if (isset($proposals_result) && $proposals_result->num_rows > 0): ?>
-                <div class="table-responsive">
-                    <table class="proposals-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-file-alt"></i> Title</th>
-                                <th><i class="fas fa-calendar"></i> Date</th>
-                                <th><i class="fas fa-clock"></i> Time</th>
-                                <th><i class="fas fa-info-circle"></i> Status</th>
-                                <th><i class="fas fa-cog"></i> Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = $proposals_result->fetch_assoc()): ?>
+            <div class="proposals-card">
+                <div class="proposals-header">
+                    <h3 class="proposals-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Recent Club Activity Proposals for <?= htmlspecialchars($club_name ?? 'No Club') ?>
+                    </h3>
+                </div>
+
+                <?php if (isset($proposals_result) && $proposals_result->num_rows > 0): ?>
+                    <div class="table-responsive">
+                        <table class="proposals-table">
+                            <thead>
                                 <tr>
-                                    <td data-label="Title"><?= htmlspecialchars($row['activity_title']) ?></td>
-                                    <td data-label="Date"><?= date('M d, Y', strtotime($row['activity_date'])) ?></td>
-                                    <td data-label="Time"><?= date('h:i A', strtotime($row['start_time'])) ?></td>
-                                    <td data-label="Status">
-                                        <span class="status-badge <?= strtolower($row['status']) ?>">
-                                            <i class="fas fa-circle"></i>
-                                            <?= htmlspecialchars($row['status'] ?? 'Pending') ?>
-                                        </span>
-                                    </td>
-                                    <td data-label="Actions">
-                                        <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
-                                            class="view-btn"
-                                            onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
-                                    </td>
+                                    <th><i class="fas fa-file-alt"></i> Title</th>
+                                    <th><i class="fas fa-calendar"></i> Date</th>
+                                    <th><i class="fas fa-clock"></i> Time</th>
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
+                                    <th><i class="fas fa-cog"></i> Actions</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="empty-state">
-                    <i class="fas fa-folder-open"></i>
-                    <p>No activity proposals found for your club.</p>
-                </div>
-            <?php endif; ?>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $proposals_result->fetch_assoc()): ?>
+                                    <tr>
+                                        <td data-label="Title"><?= htmlspecialchars($row['activity_title']) ?></td>
+                                        <td data-label="Date"><?= date('M d, Y', strtotime($row['activity_date'])) ?></td>
+                                        <td data-label="Time"><?= date('h:i A', strtotime($row['start_time'])) ?></td>
+                                        <td data-label="Status">
+                                            <span class="status-badge <?= strtolower($row['status']) ?>">
+                                                <i class="fas fa-circle"></i>
+                                                <?= htmlspecialchars($row['status'] ?? 'Pending') ?>
+                                            </span>
+                                        </td>
+                                        <td data-label="Actions">
+                                            <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
+                                                class="view-btn"
+                                                onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
+                                                <i class="fas fa-eye">View</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No activity proposals found for your club.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
     </div>
 
     <script>
