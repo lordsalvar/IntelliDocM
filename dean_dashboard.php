@@ -4,7 +4,7 @@ require_once 'database.php';
 include 'system_log/activity_log.php';
 
 // Validate user login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'dean') {
     header('Location: login.php');
     exit();
 }
@@ -96,49 +96,49 @@ if ($club_name) {
                 </div>
             </div>
             <?php if (isset($proposals_result) && $proposals_result->num_rows > 0): ?>
-                    <div class="table-responsive">
-                        <table class="proposals-table">
-                            <thead>
+                <div class="table-responsive">
+                    <table class="proposals-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-file-alt"></i> Title</th>
+                                <th><i class="fas fa-calendar"></i> Date</th>
+                                <th><i class="fas fa-clock"></i> Time</th>
+                                <th><i class="fas fa-info-circle"></i> Status</th>
+                                <th><i class="fas fa-cog"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $proposals_result->fetch_assoc()): ?>
                                 <tr>
-                                    <th><i class="fas fa-file-alt"></i> Title</th>
-                                    <th><i class="fas fa-calendar"></i> Date</th>
-                                    <th><i class="fas fa-clock"></i> Time</th>
-                                    <th><i class="fas fa-info-circle"></i> Status</th>
-                                    <th><i class="fas fa-cog"></i> Actions</th>
+                                    <td data-label="Title"><?= htmlspecialchars($row['activity_title']) ?></td>
+                                    <td data-label="Date"><?= date('M d, Y', strtotime($row['activity_date'])) ?></td>
+                                    <td data-label="Time"><?= date('h:i A', strtotime($row['start_time'])) ?></td>
+                                    <td data-label="Status">
+                                        <span class="status-badge <?= strtolower($row['status']) ?>">
+                                            <i class="fas fa-circle"></i>
+                                            <?= htmlspecialchars($row['status'] ?? 'Pending') ?>
+                                        </span>
+                                    </td>
+                                    <td data-label="Actions">
+                                        <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
+                                            class="view-btn"
+                                            onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = $proposals_result->fetch_assoc()): ?>
-                                    <tr>
-                                        <td data-label="Title"><?= htmlspecialchars($row['activity_title']) ?></td>
-                                        <td data-label="Date"><?= date('M d, Y', strtotime($row['activity_date'])) ?></td>
-                                        <td data-label="Time"><?= date('h:i A', strtotime($row['start_time'])) ?></td>
-                                        <td data-label="Status">
-                                            <span class="status-badge <?= strtolower($row['status']) ?>">
-                                                <i class="fas fa-circle"></i>
-                                                <?= htmlspecialchars($row['status'] ?? 'Pending') ?>
-                                            </span>
-                                        </td>
-                                        <td data-label="Actions">
-                                            <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
-                                                class="view-btn"
-                                                onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
-                                                <i class="fas fa-eye"></i> View
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open"></i>
-                        <p>No activity proposals found for your club.</p>
-                    </div>
-                <?php endif; ?>
-            </div>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No activity proposals found for your club.</p>
+                </div>
+            <?php endif; ?>
         </div>
+    </div>
     </div>
 
     <script>
@@ -151,21 +151,21 @@ if ($club_name) {
                     label: 'Number of Participants',
                     data: [120, 190, 100, 10, 15],
                     backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,

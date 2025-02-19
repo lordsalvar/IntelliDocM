@@ -50,10 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: /main/intellidocm/admin_dashboard.php');
                 exit();
             } elseif ($_SESSION['designation'] === 'moderator') {
-                header('Location: moderator/moderator_view.php');
+                header('Location: moderator_dashboard.php');
                 exit();
             } elseif ($_SESSION['designation'] === 'dean') {
-                header('Location: dean/dean_view.php');
+                header('Location: dean_dashboard.php');
                 exit();
             } else {
                 header('Location: client.php');

@@ -1040,7 +1040,7 @@ $clubs = fetchAllClubs();
         });
 
         function manageMembers(clubId) {
-            $('#memberClubId').val(clubId);
+            $('#memberClubId').val(clubId); // Set the club ID for the add member form
             $('#manageMembersModal').modal('show');
             loadClubMembers(clubId);
         }
@@ -1185,6 +1185,47 @@ $clubs = fetchAllClubs();
                     }
                 });
             }
+        }
+
+        // Add this handler for the add member form
+        $('#addMemberForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            formData.append('action', 'addMember');
+
+            $.ajax({
+                url: 'ajax/manage_members.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    try {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            alert('Member added successfully!');
+                            $('#addMemberForm')[0].reset();
+                            loadClubMembers($('#memberClubId').val());
+                        } else {
+                            alert('Error: ' + (result.message || 'Failed to add member'));
+                        }
+                    } catch (e) {
+                        console.error('Error:', e);
+                        alert('Error processing response');
+                    }
+                },
+                error: function() {
+                    alert('Error: Failed to send request');
+                }
+            });
+        });
+
+        // Update the manageMembers function
+        function manageMembers(clubId) {
+            $('#memberClubId').val(clubId); // Set the club ID for the add member form
+            $('#manageMembersModal').modal('show');
+            loadClubMembers(clubId);
         }
 
         // ... rest of existing code ...

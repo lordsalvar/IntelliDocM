@@ -4,7 +4,7 @@ require_once 'database.php';
 include 'system_log/activity_log.php';
 
 // Validate user login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'moderator') {
     header('Location: login.php');
     exit();
 }
@@ -162,21 +162,21 @@ if ($club_name) {
                     label: 'Number of Participants',
                     data: [120, 190, 100],
                     backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
@@ -188,16 +188,16 @@ if ($club_name) {
             }
         });
     </script>
-     
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             fetchActivities();
 
             function fetchActivities() {
-                fetch('?api=1')  // API request to the same page
-                .then(response => response.json())
-                .then(data => displayActivities(data))
-                .catch(error => console.error('Error fetching activities:', error));
+                fetch('?api=1') // API request to the same page
+                    .then(response => response.json())
+                    .then(data => displayActivities(data))
+                    .catch(error => console.error('Error fetching activities:', error));
             }
 
             function displayActivities(activities) {
@@ -216,7 +216,7 @@ if ($club_name) {
                     const row = tbody.insertRow();
                     row.insertCell().textContent = activity.activity_title;
                     row.insertCell().textContent = activity.activity_date;
-                    
+
                     const statusCell = row.insertCell();
                     const statusSelect = document.createElement('select');
                     ['Completed', 'Re-scheduled', 'Cancelled'].forEach(status => {
@@ -243,22 +243,22 @@ if ($club_name) {
 
             function updateStatus(activityId, status) {
                 fetch('', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `update=true&activityId=${activityId}&status=${status}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        fetchActivities(); // Refresh the activities list
-                    } else {
-                        alert('Error updating status');
-                    }
-                })
-                .catch(error => console.error('Error updating status:', error));
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `update=true&activityId=${activityId}&status=${status}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            fetchActivities(); // Refresh the activities list
+                        } else {
+                            alert('Error updating status');
+                        }
+                    })
+                    .catch(error => console.error('Error updating status:', error));
             }
         });
     </script>
