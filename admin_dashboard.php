@@ -1120,7 +1120,7 @@ $mini_calendar_events = $conn->query("
                                         </div>
                                     </div>
                                     <div class="proposal-actions">
-                                        <a href="admin/view_proposal.php?id=<?= $proposal['proposal_id'] ?>"
+                                        <a href="/main/intellidocm/view_document.php?id=<?= $proposal['proposal_id'] ?>"
                                             class="btn-action" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>

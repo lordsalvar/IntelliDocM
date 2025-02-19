@@ -535,7 +535,7 @@ $proposals = $conn->query($sql);
 
         // Add your view, approve, and reject functions here
         function viewProposal(id) {
-            window.location.href = `view_proposal.php?id=${id}`;
+            window.location.href = `/main/intellidocm/view_document.php?id=${id}`;
         }
 
         function approveProposal(id) {

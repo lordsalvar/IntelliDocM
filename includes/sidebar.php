@@ -8,7 +8,7 @@
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
         </a>
-        <a href="activity_proposal.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'activity_proposal.php' ? 'active' : '' ?>">
+        <a href="activity_proposal_form.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'activity_proposal.php' ? 'active' : '' ?>">
             <i class="fas fa-file-alt"></i>
             <span>Activity Proposal</span>
         </a>

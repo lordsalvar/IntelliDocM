@@ -36,6 +36,34 @@ $moderator_data = isset($club_data['club_id']) ? getModeratorData($conn, $club_d
 $moderator_name = $moderator_data['moderator_name'];
 $dean_data = isset($club_data['club_id']) ? getDeanData($conn, $club_data['club_id']) : ['dean_name' => ''];
 $dean_name = $dean_data['dean_name'];
+
+// Add this PHP function after your existing includes
+function getExistingActivities($conn, $startDate, $endDate)
+{
+    $sql = "SELECT 
+        ap.activity_title,
+        ap.activity_date,
+        ap.end_activity_date,
+        ap.club_name,
+        GROUP_CONCAT(DISTINCT CONCAT(f.name, ' - ', GROUP_CONCAT(r.room_number)) SEPARATOR '; ') as booked_facilities
+    FROM activity_proposals ap
+    LEFT JOIN bookings b ON DATE(b.booking_date) BETWEEN ap.activity_date AND ap.end_activity_date
+    LEFT JOIN facilities f ON b.facility_id = f.id
+    LEFT JOIN booking_rooms br ON b.id = br.booking_id
+    LEFT JOIN rooms r ON br.room_id = r.id
+    WHERE (
+        (ap.activity_date BETWEEN ? AND ?) OR
+        (ap.end_activity_date BETWEEN ? AND ?) OR
+        (? BETWEEN ap.activity_date AND ap.end_activity_date)
+    )
+    AND ap.status = 'confirmed'
+    GROUP BY ap.proposal_id";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssss", $startDate, $endDate, $startDate, $endDate, $startDate);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,13 +84,39 @@ $dean_name = $dean_data['dean_name'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <style>
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .back-button.fixed {
+            position: fixed;
+            background: rgba(33, 37, 41, 0.9);
+            color: white !important;
+            backdrop-filter: blur(5px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-50%);
+            top: 2rem;
+        }
+
+        .back-button.fixed:hover {
+            background: rgba(33, 37, 41, 1);
+            transform: translateY(-50%) translateX(5px);
+        }
+    </style>
 </head>
 
 <body>
 
 
     <div class="container my-5">
-        <a class="btn btn-secondary mb-3" href="client.php">← Back</a>
+        <a class="btn btn-secondary mb-3 back-button" href="/main/intellidocm/client_dashboard.php">← Back</a>
         <!-- Overlay Box -->
         <div class="overlay-box">
             <p><strong>Index No.:</strong> <u>7.3</u></p>
@@ -200,11 +254,18 @@ $dean_name = $dean_data['dean_name'];
                 <div class="row">
                     <div class="col-md-6">
                         <label for="start-date" class="form-label">Start Date of the Activity:</label>
-                        <input type="date" class="form-control" id="start-date" name="start_date" />
+                        <input type="date" class="form-control" id="start-date" name="start_date" onchange="checkDateConflicts()" />
                     </div>
                     <div class="col-md-6">
                         <label for="end-date" class="form-label">End Date of the Activity:</label>
-                        <input type="date" class="form-control" id="end-date" name="end_date" />
+                        <input type="date" class="form-control" id="end-date" name="end_date" onchange="checkDateConflicts()" />
+                    </div>
+                </div>
+                <!-- Add this div for conflicts -->
+                <div id="date-conflicts" class="conflicts-container mb-4" style="display: none;">
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Notice: Overlapping Activities</h5>
+                        <div id="conflicts-list"></div>
                     </div>
                 </div>
 
@@ -251,12 +312,9 @@ $dean_name = $dean_data['dean_name'];
                                             <div class="col-md-3">
                                                 <label class="form-label">Date</label>
                                                 <input type="date"
-                                                    class="form-control"
+                                                    class="form-control timeslot-date"
                                                     name="facilityBookings[0][slots][0][date]"
                                                     required
-                                                    min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
-                                                    max="<?php echo date('Y-m-d', strtotime('+6 months')); ?>"
-                                                    value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
                                                     data-date-validation="true">
                                             </div>
                                             <div class="col-md-3">
@@ -361,6 +419,22 @@ $dean_name = $dean_data['dean_name'];
     <script src="js/activityProposal.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Add this JavaScript before your existing scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            const backButton = document.querySelector('.back-button');
+            const backButtonInitialOffset = backButton.offsetTop;
+
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > backButtonInitialOffset) {
+                    backButton.classList.add('fixed');
+                } else {
+                    backButton.classList.remove('fixed');
+                }
+            });
+        });
+
+        // ... rest of your existing scripts ...
+
         // Add this to your existing JavaScript
         function updateTimeDisplay(input) {
             if (input.value) {
@@ -375,7 +449,278 @@ $dean_name = $dean_data['dean_name'];
 
         // Initialize time displays
         document.querySelectorAll('.time-input').forEach(updateTimeDisplay);
+
+        function updateTimeSlotDates() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            // Get all time slot date inputs
+            const dateInputs = document.querySelectorAll('.timeslot-date');
+
+            dateInputs.forEach(input => {
+                // Set min and max dates
+                input.min = startDate;
+                input.max = endDate;
+
+                // If current value is outside new range, clear it
+                if (input.value) {
+                    const currentDate = input.value;
+                    if (currentDate < startDate || currentDate > endDate) {
+                        input.value = '';
+                    }
+                }
+            });
+
+            // Add conflict check
+            checkDateConflicts();
+        }
+
+        // Update your existing updateTimeSlotDates function
+        function updateTimeSlotDates() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            // Existing time slot update code
+            // ... existing code ...
+
+            // Add conflict check
+            checkDateConflicts();
+        }
+
+        async function checkDateConflicts() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            if (!startDate || !endDate) return;
+
+            try {
+                const response = await fetch('ajax/check_date_conflicts.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        startDate,
+                        endDate
+                    })
+                });
+
+                const data = await response.json();
+                const conflictsContainer = document.getElementById('date-conflicts');
+                const conflictsList = document.getElementById('conflicts-list');
+
+                if (data.conflicts && data.conflicts.length > 0) {
+                    let conflictsHtml = '<ul class="conflicts-list">';
+
+                    // Group conflicts by type
+                    const proposals = data.conflicts.filter(c => c.type === 'proposal');
+                    const bookings = data.conflicts.filter(c => c.type === 'booking');
+
+                    // Show existing proposals first
+                    if (proposals.length > 0) {
+                        conflictsHtml += '<li class="conflict-section"><h6>Existing Activities:</h6></li>';
+                        proposals.forEach(conflict => {
+                            conflictsHtml += `
+                                <li class="conflict-item ${conflict.status.toLowerCase()}">
+                                    <div class="conflict-header">
+                                        <strong>${conflict.title}</strong>
+                                        <span class="status-badge ${conflict.status.toLowerCase()}">
+                                            ${conflict.status}
+                                        </span>
+                                    </div>
+                                    <div class="conflict-details">
+                                        <span class="club-name">by ${conflict.club_name}</span>
+                                        <span class="date-range">
+                                            <i class="fas fa-calendar"></i> 
+                                            ${new Date(conflict.start_date).toLocaleDateString()} - 
+                                            ${new Date(conflict.end_date).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </li>`;
+                        });
+                    }
+
+                    // Then show user's bookings
+                    if (bookings.length > 0) {
+                        conflictsHtml += '<li class="conflict-section"><h6>Your Facility Bookings:</h6></li>';
+                        bookings.forEach(booking => {
+                            conflictsHtml += `
+                                <li class="conflict-item booking">
+                                    <div class="conflict-header">
+                                        <strong>${booking.facility_name}</strong>
+                                        <span class="status-badge ${booking.status.toLowerCase()}">
+                                            ${booking.status}
+                                        </span>
+                                    </div>
+                                    <div class="conflict-details">
+                                        <span class="booking-info">
+                                            <i class="fas fa-clock"></i> 
+                                            ${new Date(booking.start_date).toLocaleDateString()} 
+                                            ${booking.booking_time}
+                                        </span>
+                                        ${booking.room_numbers ? `
+                                            <span class="room-info">
+                                                <i class="fas fa-door-open"></i> 
+                                                Room(s): ${booking.room_numbers}
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                </li>`;
+                        });
+                    }
+
+                    conflictsHtml += '</ul>';
+                    conflictsList.innerHTML = conflictsHtml;
+                    conflictsContainer.style.display = 'block';
+                } else {
+                    conflictsContainer.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking conflicts:', error);
+            }
+        }
+
+        // Update the addSlot function to apply date restrictions to new slots
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('addSlot')) {
+                // Wait for new slot to be added
+                setTimeout(() => {
+                    updateTimeSlotDates();
+                }, 100);
+            }
+        });
+
+        // Initial update
+        updateTimeSlotDates();
     </script>
+
+    <style>
+        .conflicts-container {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .conflicts-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .conflict-item {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-range,
+        .facilities {
+            font-size: 0.9rem;
+            color: #666;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .date-range i,
+        .facilities i {
+            margin-right: 0.35rem;
+        }
+
+        .conflict-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid transparent;
+        }
+
+        .conflict-item.confirmed {
+            border-left-color: #28a745;
+        }
+
+        .conflict-item.pending {
+            border-left-color: #ffc107;
+        }
+
+        .conflict-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .status-badge.confirmed {
+            background: #e8f5e9;
+            color: #28a745;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .conflict-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .club-name {
+            font-weight: 500;
+            color: #444;
+        }
+
+        .conflict-bookings {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #fff;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-line;
+        }
+
+        .conflict-user {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .conflict-section {
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .conflict-section h6 {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking .conflict-header strong {
+            color: #1976d2;
+        }
+
+        .booking-info,
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
 </body>
 
 </html>

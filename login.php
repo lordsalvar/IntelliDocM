@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: dean_dashboard.php');
                 exit();
             } else {
-                header('Location: client.php');
+                header('Location: client_dashboard.php');
                 exit();
             }
         } else {

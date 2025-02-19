@@ -128,23 +128,24 @@ try {
 
     $proposal_id = $stmt->insert_id;
 
-    // Process facility bookings if any
+    // Update the facility bookings processing to include proposal_id
     if (isset($_POST['facilityBookings']) && is_array($_POST['facilityBookings'])) {
         foreach ($_POST['facilityBookings'] as $booking) {
             if (empty($booking['facility'])) continue;
 
-            // First insert the booking
+            // Updated booking insert to include activity_proposal_id
             $stmt = $conn->prepare("
                 INSERT INTO bookings (
-                    facility_id, user_id, booking_date, 
+                    facility_id, user_id, activity_proposal_id, booking_date, 
                     start_time, end_time, status
-                ) VALUES (?, ?, ?, ?, ?, 'Pending')
+                ) VALUES (?, ?, ?, ?, ?, ?, 'Pending')
             ");
 
             $stmt->bind_param(
-                "iisss",
+                "iiisss",
                 $booking['facility'],
                 $user_id,
+                $proposal_id,  // Add the proposal_id here
                 $booking['slots'][0]['date'],
                 $booking['slots'][0]['start'],
                 $booking['slots'][0]['end']
@@ -153,12 +154,9 @@ try {
             if ($stmt->execute()) {
                 $booking_id = $stmt->insert_id;
 
-                // If a room was selected, insert into booking_rooms table
+                // Room booking processing remains the same
                 if (!empty($booking['room'])) {
-                    $roomStmt = $conn->prepare("
-                        INSERT INTO booking_rooms (booking_id, room_id) 
-                        VALUES (?, ?)
-                    ");
+                    $roomStmt = $conn->prepare("INSERT INTO booking_rooms (booking_id, room_id) VALUES (?, ?)");
                     $roomStmt->bind_param("ii", $booking_id, $booking['room']);
                     $roomStmt->execute();
                     $roomStmt->close();
