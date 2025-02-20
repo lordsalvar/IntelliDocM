@@ -3,6 +3,100 @@ const FacilityManager = {
         this.bindEvents();
         this.bindHistoryFilters();
         this.bindManageFacility();
+        this.bindAllViewButtons();
+    },
+
+    // Add this new method to bind all view buttons
+    bindAllViewButtons() {
+        // Use event delegation instead of direct binding
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.view-bookings');
+            if (btn) {
+                e.preventDefault();
+                const facilityId = btn.dataset.facilityId;
+                this.showBookingsModal(facilityId);
+            }
+        });
+    },
+
+    showBookingsModal(facilityId) {
+        // Create and show empty modal first
+        const modal = new bootstrap.Modal(document.getElementById('facilityBookingsModal'));
+        document.querySelector('#facilityBookingsModal .modal-body').innerHTML = 
+            '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading bookings...</div>';
+        modal.show();
+
+        // Then fetch the data
+        fetch('ajax/get_facility_bookings.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `facilityId=${facilityId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            let bookingsHtml = `
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Activity/Purpose</th>
+                                <th>Club/Organization</th>
+                                <th>Room(s)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            if (!data.bookings || data.bookings.length === 0) {
+                bookingsHtml += `
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <i class="fas fa-calendar-times text-muted"></i>
+                            <p class="mb-0">No bookings found for this facility</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                data.bookings.forEach(booking => {
+                    const statusClass = booking.status.toLowerCase() === 'confirmed' ? 'success' : 
+                                      booking.status.toLowerCase() === 'pending' ? 'warning' : 'danger';
+                    
+                    bookingsHtml += `
+                        <tr>
+                            <td>${booking.booking_date}</td>
+                            <td>${booking.start_time} - ${booking.end_time}</td>
+                            <td>${booking.activity_title || 'Individual Booking'}</td>
+                            <td>${booking.club_name ? `${booking.club_name} (${booking.acronym})` : 'N/A'}</td>
+                            <td>${booking.room_numbers || 'All Rooms'}</td>
+                            <td><span class="badge bg-${statusClass}">${booking.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            bookingsHtml += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.querySelector('#facilityBookingsModal .modal-title').textContent = 
+                `Booking History - ${data.bookings?.[0]?.facility_name || 'Facility'}`;
+            document.querySelector('#facilityBookingsModal .modal-body').innerHTML = bookingsHtml;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.querySelector('#facilityBookingsModal .modal-body').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> Failed to load bookings. Please try again.
+                </div>
+            `;
+        });
     },
 
     bindEvents() {
@@ -396,7 +490,81 @@ const FacilityManager = {
             }
         })
         .catch(error => console.error('Error loading rooms:', error));
-    }
+    },
+
+    viewBookings(facilityId) {
+        const modal = new bootstrap.Modal(document.getElementById('facilityBookingsModal'));
+        
+        fetch('ajax/get_facility_bookings.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `facilityId=${facilityId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.bookings) {
+                let bookingsHtml = `
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Activity/Purpose</th>
+                                    <th>Club/Organization</th>
+                                    <th>Room(s)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                if (data.bookings.length === 0) {
+                    bookingsHtml += `
+                        <tr>
+                            <td colspan="6" class="text-center">No bookings found for this facility</td>
+                        </tr>
+                    `;
+                } else {
+                    data.bookings.forEach(booking => {
+                        const statusClass = booking.status.toLowerCase() === 'confirmed' ? 'success' : 
+                                          booking.status.toLowerCase() === 'pending' ? 'warning' : 'danger';
+                        
+                        bookingsHtml += `
+                            <tr>
+                                <td>${booking.booking_date}</td>
+                                <td>${booking.start_time} - ${booking.end_time}</td>
+                                <td>${booking.activity_title || 'Individual Booking'}</td>
+                                <td>${booking.club_name ? `${booking.club_name} (${booking.acronym})` : 'N/A'}</td>
+                                <td>${booking.room_numbers || 'All Rooms'}</td>
+                                <td><span class="badge bg-${statusClass}">${booking.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                bookingsHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                document.querySelector('#facilityBookingsModal .modal-title').textContent = 
+                    `Booking History - ${data.bookings[0]?.facility_name || 'Facility'}`;
+                document.querySelector('#facilityBookingsModal .modal-body').innerHTML = bookingsHtml;
+                modal.show();
+            } else {
+                throw new Error('Failed to load bookings data');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching bookings:', error);
+            alert('Failed to load booking history');
+        });
+    },
+
 };
 
 // Initialize when document is ready

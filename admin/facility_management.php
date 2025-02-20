@@ -123,16 +123,13 @@ $facilities = $conn->query($sql);
                                     </div>
                                 </div>
                                 <div class="facility-actions">
-                                    <button
-                                        class="btn-icon manage-facility"
-                                        data-facility-id="<?= $facility['id'] ?>"
-                                        title="Manage Facility">
+                                    <button class="btn-icon manage-facility" data-facility-id="<?= $facility['id'] ?>" title="Manage Facility">
                                         <i class="fas fa-cog"></i>
                                     </button>
-                                    <button class="btn-icon" onclick="FacilityManager.viewRooms(<?= $facility['id'] ?>)" title="View Rooms">
+                                    <button class="btn-icon view-rooms" data-facility-id="<?= $facility['id'] ?>" title="View Rooms">
                                         <i class="fas fa-door-open"></i>
                                     </button>
-                                    <button class="btn-icon" onclick="FacilityManager.viewBookings(<?= $facility['id'] ?>)" title="View Bookings">
+                                    <button class="btn-icon view-bookings" data-facility-id="<?= $facility['id'] ?>" title="View Bookings">
                                         <i class="fas fa-calendar"></i>
                                     </button>
                                 </div>
