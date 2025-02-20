@@ -48,31 +48,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = ($action === 'approve') ? 'Approved' : 'Rejected';
     $rejectionReason = ($status === 'Rejected') ? $_POST['rejection_reason'] : null;
 
-    // Update proposal status
-    $updateSql = "UPDATE activity_proposals SET status = ?, rejection_reason = ? WHERE proposal_id = ?";
-    $updateStmt = $conn->prepare($updateSql);
-    $updateStmt->bind_param("ssi", $status, $rejectionReason, $id);
-    $updateStmt->execute();
+    // Start transaction
+    $conn->begin_transaction();
 
-    // ✅ Insert notification for the user when approved/rejected
-    if (isset($proposal['id'], $proposal['activity_title'])) {
-        insertNotification($proposal['user_id'], $message);
-        $message = ($status === 'Approved')
-            ? "Your activity proposal '{$proposal['activity_title']}' has been approved."
-            : "Your activity proposal '{$proposal['activity_title']}' has been rejected. Reason: $rejectionReason";
+    try {
+        // 1. Update proposal status
+        $updateSql = "UPDATE activity_proposals SET status = ?, rejection_reason = ? WHERE proposal_id = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("ssi", $status, $rejectionReason, $id);
+        $updateStmt->execute();
 
-        $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
-        $insertNotificationStmt = $conn->prepare($insertNotificationSql);
-        $insertNotificationStmt->bind_param("is", $user_id, $message);
-        $insertNotificationStmt->execute();
-        $insertNotificationStmt->close();
+        // 2. If approved, update all related bookings to Confirmed
+        if ($status === 'Approved') {
+            $updateBookingsSql = "UPDATE bookings SET status = 'Confirmed' WHERE activity_proposal_id = ?";
+            $updateBookingsStmt = $conn->prepare($updateBookingsSql);
+            $updateBookingsStmt->bind_param("i", $id);
+            $updateBookingsStmt->execute();
+            $updateBookingsStmt->close();
+        }
+
+        // 3. Insert notification
+        if (isset($proposal['id'], $proposal['activity_title'])) {
+            $message = ($status === 'Approved')
+                ? "Your activity proposal '{$proposal['activity_title']}' has been approved."
+                : "Your activity proposal '{$proposal['activity_title']}' has been rejected. Reason: $rejectionReason";
+
+            $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
+            $insertNotificationStmt = $conn->prepare($insertNotificationSql);
+            $insertNotificationStmt->bind_param("is", $proposal['user_id'], $message);
+            $insertNotificationStmt->execute();
+            $insertNotificationStmt->close();
+        }
+
+        // Commit transaction
+        $conn->commit();
+
+        // Redirect after successful update
+        header("Location: /main/IntelliDocM/admin/proposals.php");
+        exit;
+    } catch (Exception $e) {
+        // Rollback on error
+        $conn->rollback();
+        error_log("Error in proposal approval: " . $e->getMessage());
+        echo "<div class='alert alert-danger'>Error processing the request. Please try again.</div>";
     }
 
-
-    header("Location: /main/IntelliDocM/admin/proposals.php");
-    exit;
+    $updateStmt->close();
 }
-
 
 ?>
 
