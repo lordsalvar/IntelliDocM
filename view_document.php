@@ -12,6 +12,16 @@ $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
 
+// Add this after proposal data fetch
+$showActions = true;
+if ($proposal['status'] === 'Approved' || $proposal['status'] === 'Confirmed') {
+    $showActions = false;
+    $statusMessage = "<div class='alert alert-success'><i class='fas fa-check-circle'></i> This proposal has been approved.</div>";
+} elseif ($proposal['status'] === 'Rejected' || $proposal['status'] === 'Cancelled') {
+    $showActions = false;
+    $statusMessage = "<div class='alert alert-danger'><i class='fas fa-times-circle'></i> This proposal has been rejected. Reason: " . htmlspecialchars($proposal['rejection_reason']) . "</div>";
+}
+
 // Fetch facility bookings for this proposal
 $bookings_sql = "SELECT 
     b.booking_date,
@@ -338,7 +348,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="qr-code-container text-center">
                                 <img src="/main/IntelliDocM/qr_codes/<?= basename($proposal['moderator_signature']) ?>" alt="Moderator QR Code" class="qr-code" />
                             </div>
-                            <p class="text-success mt-2">Date Signed</p>
                         <?php else: ?>
                             <p class="text-warning mt-2">Awaiting approval.</p>
                         <?php endif; ?>
@@ -352,7 +361,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="qr-code-container text-center">
                             <img src="/main/IntelliDocM/dean_qr_codes/<?= basename($proposal['dean_signature']) ?>" alt="Dean QR Code" class="qr-code" />
                         </div>
-                        <p class="text-success mt-2">Date Signed</p>
                     <?php else: ?>
                         <p class="text-warning mt-2">Awaiting approval.</p>
                     <?php endif; ?>
@@ -360,13 +368,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-                <!-- Action Buttons -->
+                <!-- Action Buttons and Status Message -->
                 <div class="text-center mt-4">
-                    <form method="POST" onsubmit="return confirmAction(event)">
-                        <button type="submit" name="action" value="approve" class="btn btn-success mx-2">Approve</button>
-                        <button type="button" class="btn btn-danger mx-2" data-toggle="modal" data-target="#rejectModal">Reject</button>
-                    </form>
+                    <?php if (isset($statusMessage)): ?>
+                        <?php echo $statusMessage; ?>
+                    <?php endif; ?>
+
+                    <?php if ($showActions): ?>
+                        <form method="POST" onsubmit="return confirmAction(event)" id="actionForm">
+                            <button type="submit" name="action" value="approve" class="btn btn-success mx-2" onclick="this.disabled=true; document.getElementById('actionForm').submit();">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button type="button" class="btn btn-danger mx-2" data-toggle="modal" data-target="#rejectModal">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </div>
+
                 <!-- Reject Modal -->
                 <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -403,6 +422,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            function confirmAction(event) {
+                if (!confirm('Are you sure you want to proceed with this action?')) {
+                    event.preventDefault();
+                    return false;
+                }
+                const form = event.target;
+                const buttons = form.querySelectorAll('button');
+                buttons.forEach(button => button.disabled = true);
+                return true;
+            }
+        </script>
 </body>
 
 </html>
