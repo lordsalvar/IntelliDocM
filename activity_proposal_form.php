@@ -353,17 +353,7 @@ function getExistingActivities($conn, $startDate, $endDate)
                     </div>
                 </div>
 
-                <!-- Venue and Address -->
-                <div class="row mb-4" id="venue-address-container">
-                    <div class="col-md-6">
-                        <label for="venue" class="form-label">Venue of the Activity:</label>
-                        <input type="text" class="form-control" id="venue" name="venue" placeholder="Enter venue" />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="address" class="form-label">Address of the Venue:</label>
-                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" />
-                    </div>
-                </div>
+
 
                 <!-- Participants -->
                 <div class="row mb-4">
