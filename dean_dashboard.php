@@ -128,7 +128,7 @@ if ($club_name) {
                                             </span>
                                         </td>
                                         <td data-label="Actions">
-                                            <a href="deanview_document.php?id=<?= $row['proposal_id'] ?>"
+                                            <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
                                                 class="view-btn"
                                                 onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
                                                 <i class="fas fa-eye">View</i>

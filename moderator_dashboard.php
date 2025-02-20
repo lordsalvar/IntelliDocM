@@ -72,18 +72,6 @@ if ($club_name) {
                 <p>This is your dashboard where you can manage your documents and profile.</p>
             </div>
             <div class="card">
-                <h3>Recent Documents</h3>
-                <div class="recent-documents">
-                    <ul>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Proposal for Intramurals</a></li>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Budget Report for Intramurals</a></li>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Proposal for IT WEEK</a></li>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Minutes of the Last CCIS Meeting</a></li>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Club Fundraising Proposal</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card">
                 <h3>Quick Actions</h3>
                 <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
                     <button style="padding: 1rem; border: none;">
@@ -143,7 +131,7 @@ if ($club_name) {
                                             </span>
                                         </td>
                                         <td data-label="Actions">
-                                            <a href="modview_document.php?id=<?= $row['proposal_id'] ?>"
+                                            <a href="client_view.php?id=<?= $row['proposal_id'] ?>"
                                                 class="view-btn"
                                                 onclick="logDocumentViewActivity('<?= htmlspecialchars($row['activity_title']) ?>', <?= $row['proposal_id'] ?>)">
                                                 <i class="fas fa-eye">View</i>
