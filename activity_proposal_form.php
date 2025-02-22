@@ -318,20 +318,22 @@ function getExistingActivities($conn, $startDate, $endDate)
                                                     data-date-validation="true">
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="form-label">Start Time:</label>
-                                                <input type="time" class="form-control time-input"
-                                                    name="facilityBookings[0][slots][0][start]"
-                                                    data-display-format="12"
-                                                    onchange="updateTimeDisplay(this)">
-
+                                                <label class="form-label">Start Time</label>
+                                                <div class="time-input-wrapper">
+                                                    <input type="time"
+                                                        class="form-control time-input"
+                                                        name="facilityBookings[0][slots][0][start]"
+                                                        data-display-format="12">
+                                                </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="form-label">End Time:</label>
-                                                <input type="time" class="form-control time-input"
-                                                    name="facilityBookings[0][slots][0][end]"
-                                                    data-display-format="12"
-                                                    onchange="updateTimeDisplay(this)">
-
+                                                <label class="form-label">End Time</label>
+                                                <div class="time-input-wrapper">
+                                                    <input type="time"
+                                                        class="form-control time-input"
+                                                        name="facilityBookings[0][slots][0][end]"
+                                                        data-display-format="12">
+                                                </div>
                                             </div>
                                             <div class="col-md-3 d-flex align-items-end">
                                                 <div class="slot-actions">
@@ -427,18 +429,51 @@ function getExistingActivities($conn, $startDate, $endDate)
 
         // Add this to your existing JavaScript
         function updateTimeDisplay(input) {
-            if (input.value) {
-                const timeDisplay = input.nextElementSibling;
-                const [hours, minutes] = input.value.split(':');
-                const hour = parseInt(hours);
-                const ampm = hour >= 12 ? 'PM' : 'AM';
-                const hour12 = hour % 12 || 12;
-                timeDisplay.textContent = `${hour12}:${minutes} ${ampm}`;
-            }
+            if (!input || !input.value) return;
+
+            const wrapper = input.closest('.time-input-wrapper');
+            if (!wrapper) return;
+
+            const display = wrapper.querySelector('.time-display');
+            if (!display) return;
+
+            const [hours, minutes] = input.value.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+
+            display.textContent = `${hour12}:${minutes} ${ampm}`;
         }
 
         // Initialize time displays
-        document.querySelectorAll('.time-input').forEach(updateTimeDisplay);
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeInputs = document.querySelectorAll('.time-input');
+            timeInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    updateTimeDisplay(this);
+                    validateTimeSlot(this);
+                });
+                if (input.value) {
+                    updateTimeDisplay(input);
+                }
+            });
+        });
+
+        function validateTimeSlot(input) {
+            const slot = input.closest('.time-slot-card');
+            const startInput = slot.querySelector('input[name$="[start]"]');
+            const endInput = slot.querySelector('input[name$="[end]"]');
+
+            if (startInput.value && endInput.value) {
+                if (endInput.value <= startInput.value) {
+                    alert("End time must be after start time");
+                    input.value = '';
+                    updateTimeDisplay(input);
+                    return false;
+                }
+            }
+            return true;
+        }
 
         function updateTimeSlotDates() {
             const startDate = document.getElementById('start-date').value;
@@ -709,6 +744,29 @@ function getExistingActivities($conn, $startDate, $endDate)
             gap: 0.5rem;
             color: #666;
             font-size: 0.9rem;
+        }
+
+        .time-input-wrapper {
+            position: relative;
+        }
+
+        .time-display {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85em;
+            color: #666;
+            pointer-events: none;
+        }
+
+        .conflict-warning {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
         }
     </style>
 </body>
