@@ -408,7 +408,7 @@ function getExistingActivities($conn, $startDate, $endDate)
     </script>
 
     <!-- Include the external JavaScript file -->
-    <script src="js/activityProposal.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Add this JavaScript before your existing scripts
@@ -769,6 +769,7 @@ function getExistingActivities($conn, $startDate, $endDate)
             color: #856404;
         }
     </style>
+    <script src="js/activityProposal.js"></script>
 </body>
 
 </html>
