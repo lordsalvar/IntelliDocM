@@ -1,3 +1,67 @@
+document.addEventListener('DOMContentLoaded', function () {
+    // Attach event listeners to date input fields
+    document.getElementById('start-date').addEventListener('change', checkConflict);
+    document.getElementById('end-date').addEventListener('change', checkConflict);
+});
+
+function checkConflict() {
+    let start_date = document.getElementById('start-date').value;
+    let end_date = document.getElementById('end-date').value;
+
+    if (!start_date || !end_date) return;
+
+    fetch('check_date_conflicts.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ start_date, end_date })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let conflictContainer = document.getElementById('date-conflicts');
+        let conflictList = document.getElementById('conflicts-list');
+
+        if (data.conflict) {
+            let conflictMsg = `<h5><i class="fas fa-exclamation-triangle"></i> Schedule Conflict Detected</h5>`;
+            data.conflicts.forEach(conflict => {
+                let statusBadge = '';
+                
+                // Color-code statuses
+                switch (conflict.status) {
+                    case 'Approved':
+                        statusBadge = `<span class="badge bg-success">Approved</span>`;
+                        break;
+                    case 'Pending':
+                        statusBadge = `<span class="badge bg-warning">Pending</span>`;
+                        break;
+                    case 'Rejected':
+                        statusBadge = `<span class="badge bg-danger">Rejected</span>`;
+                        break;
+                    default:
+                        statusBadge = `<span class="badge bg-secondary">${conflict.status}</span>`;
+                }
+
+                conflictMsg += `
+                    <div class="alert alert-warning">
+                        <strong>Activity:</strong> ${conflict.activity_title} <br>
+                        <strong>Club:</strong> ${conflict.club_name} <br>
+                        <strong>Scheduled:</strong> ${conflict.start_date} - ${conflict.end_date} <br>
+                        <strong>Status:</strong> ${statusBadge} <br>
+                        <strong>Facility:</strong> ${conflict.facility_name}
+                    </div>
+                `;
+            });
+
+            conflictList.innerHTML = conflictMsg;
+            conflictContainer.style.display = 'block';
+        } else {
+            conflictContainer.style.display = 'none';
+            conflictList.innerHTML = '';
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('submitProposalForm');
     if (!form) return;
@@ -548,3 +612,5 @@ function updateBookingIndexes(container) {
         }
     });
 }
+
+// ...rest of existing code...

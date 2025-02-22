@@ -264,7 +264,6 @@ function getExistingActivities($conn, $startDate, $endDate)
                 <!-- Add this div for conflicts -->
                 <div id="date-conflicts" class="conflicts-container mb-4" style="display: none;">
                     <div class="alert alert-warning">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Notice: Overlapping Activities</h5>
                         <div id="conflicts-list"></div>
                     </div>
                 </div>
