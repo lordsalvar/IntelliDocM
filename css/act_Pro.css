@@ -324,6 +324,24 @@ footer {
 
 .room-selection {
     transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    margin-top: 10px;
+}
+
+.room-selection select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    margin-top: 5px;
+}
+
+.room-selection .text-muted {
+    font-size: 0.9em;
+    padding: 8px;
+    color: #6c757d;
 }
 
 .conflict-container {

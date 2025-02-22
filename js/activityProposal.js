@@ -28,6 +28,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Add facility selection handler
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('facility-select')) {
+            handleFacilitySelection(e.target);
+        }
+    });
+
+    // Initialize any existing facility selects
+    document.querySelectorAll('.facility-select').forEach(select => {
+        if (select.value) {
+            handleFacilitySelection(select);
+        }
+    });
+
     // Function to check conflicts and suggest alternative slots
     async function checkAndHandleBookingConflicts(element) {
         const slot = element.closest('.time-slot-card');
@@ -183,3 +197,354 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => errorIndicator.remove(), 2000);
     }
 });
+
+// Add this function to handle facility selection
+function handleFacilitySelection(select) {
+    const facilityId = select.value;
+    const bookingCard = select.closest('.facility-booking');
+    const roomSelectionDiv = bookingCard.querySelector('.room-selection');
+    
+    if (!facilityId) {
+        roomSelectionDiv.innerHTML = '';
+        return;
+    }
+
+    const facility = facilitiesData[facilityId];
+    
+    if (facility && facility.rooms && facility.rooms.length > 0) {
+        const roomsHtml = `
+            <label class="form-label">Select Room</label>
+            <select class="form-select" name="facilityBookings[${bookingCard.dataset.index}][room]" required>
+                <option value="">-- Select Room --</option>
+                ${facility.rooms.map(room => `
+                    <option value="${room.id}">
+                        ${room.room_number} - Capacity: ${room.capacity}
+                        ${room.description ? ` (${room.description})` : ''}
+                    </option>
+                `).join('')}
+            </select>
+        `;
+        roomSelectionDiv.innerHTML = roomsHtml;
+    } else {
+        roomSelectionDiv.innerHTML = '<div class="text-muted">No rooms available for this facility</div>';
+    }
+}
+
+// Update the addBooking function to include room handling
+function addNewBooking() {
+    // ...existing code...
+    
+    // After adding the new booking, initialize facility select
+    const newSelect = container.querySelector(`.facility-booking[data-index="${bookingCount}"] .facility-select`);
+    newSelect.addEventListener('change', () => handleFacilitySelection(newSelect));
+}
+
+function getTimeSlotTemplate(bookingIndex, slotIndex) {
+    return `
+        <div class="time-slot-card" data-index="${slotIndex}">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Date</label>
+                    <input type="date"
+                        class="form-control timeslot-date"
+                        name="facilityBookings[${bookingIndex}][slots][${slotIndex}][date]"
+                        required
+                        data-date-validation="true">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Start Time</label>
+                    <div class="time-input-wrapper">
+                        <input type="time"
+                            class="form-control time-input"
+                            name="facilityBookings[${bookingIndex}][slots][${slotIndex}][start]"
+                            data-display-format="12">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">End Time</label>
+                    <div class="time-input-wrapper">
+                        <input type="time"
+                            class="form-control time-input"
+                            name="facilityBookings[${bookingIndex}][slots][${slotIndex}][end]"
+                            data-display-format="12">
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <div class="slot-actions">
+                        <button type="button" class="addSlot btn btn-outline-primary btn-sm" title="Add Time Slot">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="removeSlot btn btn-outline-danger btn-sm" title="Remove Slot">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="conflict-container mt-2"></div>
+        </div>
+    `;
+}
+
+function getNewBookingTemplate(bookingCount) {
+    return `
+        <div class="card mb-3 facility-booking mt-3" data-index="${bookingCount}">
+            <div class="card-body">
+                <div class="booking-header">
+                    <h5 class="card-title">Booking #<span class="booking-number">${bookingCount + 1}</span></h5>
+                    <div class="booking-actions">
+                        <button type="button" class="btn btn-danger btn-sm remove-booking">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Select Facility</label>
+                            <select class="form-select facility-select" name="facilityBookings[${bookingCount}][facility]" data-index="${bookingCount}" required>
+                                <option value="">-- Select Facility --</option>
+                                ${Object.entries(facilitiesData).map(([id, facility]) => `
+                                    <option value="${id}" data-has-rooms="${facility.rooms?.length > 0}">
+                                        ${facility.name}${facility.rooms?.length > 0 ? ' (Has Rooms)' : ''}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="room-selection mb-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="time-slots-container">
+                    <h6 class="slots-header">Time Slots</h6>
+                    <div class="time-slots" data-index="${bookingCount}">
+                        ${getTimeSlotTemplate(bookingCount, 0)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Add this function after getNewBookingTemplate
+function addFirstTimeSlot(bookingIndex) {
+    const timeSlots = document.querySelector(`.facility-booking[data-index="${bookingIndex}"] .time-slots`);
+    if (!timeSlots) return;
+
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    
+    // Clear any existing slots
+    timeSlots.innerHTML = '';
+    
+    // Add the first time slot
+    const slotHtml = getTimeSlotTemplate(bookingIndex, 0);
+    timeSlots.insertAdjacentHTML('beforeend', slotHtml);
+    
+    // Set date restrictions if start/end dates are set
+    if (startDate && endDate) {
+        const dateInput = timeSlots.querySelector('.timeslot-date');
+        if (dateInput) {
+            dateInput.min = startDate;
+            dateInput.max = endDate;
+        }
+    }
+}
+
+// Update the addBooking handler
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+
+    // Add Booking Button Handler
+    document.getElementById('addBooking').addEventListener('click', function() {
+        const container = document.getElementById('facilityBookingsContainer');
+        const bookingCount = container.querySelectorAll('.facility-booking').length;
+        
+        container.insertAdjacentHTML('beforeend', getNewBookingTemplate(bookingCount));
+        const newBooking = container.lastElementChild;
+        
+        // Initialize facility select for the new booking
+        const facilitySelect = newBooking.querySelector('.facility-select');
+        if (facilitySelect) {
+            facilitySelect.addEventListener('change', () => handleFacilitySelection(facilitySelect));
+        }
+        
+        // Add first time slot
+        addFirstTimeSlot(bookingCount);
+    });
+
+    // Update time slot handler
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.add-time-slot, .addSlot')) {
+            const bookingCard = e.target.closest('.facility-booking');
+            const timeSlots = bookingCard.querySelector('.time-slots');
+            const slotCount = timeSlots.querySelectorAll('.time-slot-card').length;
+            addTimeSlot(timeSlots, bookingCard.dataset.index, slotCount);
+        }
+    });
+
+    // Initialize handlers for existing facility selects
+    document.querySelectorAll('.facility-select').forEach(select => {
+        select.addEventListener('change', () => handleFacilitySelection(select));
+    });
+});
+
+// Remove the duplicate addTimeSlot function and keep only this one
+function addTimeSlot(timeSlotContainer, bookingIndex) {
+    const currentSlots = timeSlotContainer.querySelectorAll('.time-slot-card');
+    const nextSlotIndex = currentSlots.length;
+    
+    console.log('Adding new time slot:', { bookingIndex, nextSlotIndex }); // Debug log
+
+    const newSlot = getTimeSlotTemplate(bookingIndex, nextSlotIndex);
+    timeSlotContainer.insertAdjacentHTML('beforeend', newSlot);
+
+    // Initialize the new slot's date input with the current date restrictions
+    const newSlotDateInput = timeSlotContainer.lastElementChild.querySelector('.timeslot-date');
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    
+    if (startDate && endDate) {
+        newSlotDateInput.min = startDate;
+        newSlotDateInput.max = endDate;
+    }
+
+    updateTimeSlotDates();
+}
+
+// Update the click event handlers - remove duplicate handlers and simplify
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+
+    // Single unified handler for add/remove slot actions
+    document.addEventListener('click', function(e) {
+        // Handle add slot
+        if (e.target.closest('.addSlot, .add-time-slot')) {
+            e.preventDefault(); // Prevent multiple triggers
+            const bookingCard = e.target.closest('.facility-booking');
+            if (!bookingCard) return;
+
+            const timeSlotContainer = bookingCard.querySelector('.time-slots');
+            if (!timeSlotContainer) return;
+
+            addTimeSlot(timeSlotContainer, bookingCard.dataset.index);
+        }
+
+        // Handle remove slot
+        if (e.target.closest('.removeSlot')) {
+            const slotCard = e.target.closest('.time-slot-card');
+            const timeSlotContainer = slotCard.closest('.time-slots');
+            
+            if (timeSlotContainer.querySelectorAll('.time-slot-card').length > 1) {
+                slotCard.remove();
+                updateSlotIndexes(timeSlotContainer);
+            } else {
+                alert('You must have at least one time slot.');
+            }
+        }
+    });
+
+    // Remove any other duplicate event listeners for addSlot
+});
+
+// Add function to update slot indexes after removal
+function updateSlotIndexes(container) {
+    const slots = container.querySelectorAll('.time-slot-card');
+    const bookingIndex = container.closest('.facility-booking').dataset.index;
+    
+    slots.forEach((slot, index) => {
+        slot.dataset.index = index;
+        
+        // Update input names
+        slot.querySelectorAll('input').forEach(input => {
+            const name = input.getAttribute('name');
+            if (name) {
+                input.setAttribute('name', name.replace(/\[\d+\]\[slots\]\[\d+\]/, `[${bookingIndex}][slots][${index}]`));
+            }
+        });
+    });
+}
+
+// Add this function at the top level of your file
+function updateTimeSlotDates() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    if (!startDate || !endDate) return;
+
+    document.querySelectorAll('.timeslot-date').forEach(input => {
+        // Set min and max dates
+        input.min = startDate;
+        input.max = endDate;
+
+        // Clear date if outside new range
+        if (input.value) {
+            if (input.value < startDate || input.value > endDate) {
+                input.value = '';
+            }
+        }
+    });
+
+    checkDateConflicts();
+}
+
+// Add this after the addBooking handler in the DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+
+    // Add Remove Booking Handler
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-booking')) {
+            const bookingCard = e.target.closest('.facility-booking');
+            const container = document.getElementById('facilityBookingsContainer');
+            
+            if (container.querySelectorAll('.facility-booking').length > 1) {
+                bookingCard.remove();
+                updateBookingIndexes(container);
+            } else {
+                alert('You must have at least one booking.');
+            }
+        }
+    });
+
+    // ...existing code...
+});
+
+// Add this new function to update booking indexes after removal
+function updateBookingIndexes(container) {
+    container.querySelectorAll('.facility-booking').forEach((booking, index) => {
+        // Update data-index
+        booking.dataset.index = index;
+        
+        // Update booking number display
+        booking.querySelector('.booking-number').textContent = index + 1;
+        
+        // Update facility select name and data-index
+        const facilitySelect = booking.querySelector('.facility-select');
+        if (facilitySelect) {
+            facilitySelect.name = `facilityBookings[${index}][facility]`;
+            facilitySelect.dataset.index = index;
+        }
+
+        // Update room select name if it exists
+        const roomSelect = booking.querySelector('.room-selection select');
+        if (roomSelect) {
+            roomSelect.name = `facilityBookings[${index}][room]`;
+        }
+
+        // Update time slots container data-index and input names
+        const timeSlotsContainer = booking.querySelector('.time-slots');
+        if (timeSlotsContainer) {
+            timeSlotsContainer.dataset.index = index;
+            
+            // Update all time slot input names
+            timeSlotsContainer.querySelectorAll('.time-slot-card').forEach((slot, slotIndex) => {
+                slot.querySelectorAll('input').forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        input.setAttribute('name', name.replace(/facilityBookings\[\d+\]/, `facilityBookings[${index}]`));
+                    }
+                });
+            });
+        }
+    });
+}
