@@ -338,7 +338,7 @@ $stats = [
 </head>
 <body>
     <div class="dashboard">
-        <?php include 'includes/sidebar.php'; ?>
+        <?php include 'moderator_sidebar.php'; ?>
         <div class="content">
             <h2 class="text-center">Submitted Proposals for <?= htmlspecialchars($club_name) ?></h2>
             
