@@ -12,7 +12,7 @@
             <i class="fas fa-file-alt"></i>
             <span>Activity Proposal</span>
         </a>
-        <a href="client_view.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'client_view.php' ? 'active' : '' ?>">
+        <a href="client.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'client.php' ? 'active' : '' ?>">
             <i class="fas fa-eye"></i>
             <span>View Proposals</span>
         </a>

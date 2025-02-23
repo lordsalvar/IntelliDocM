@@ -4,15 +4,11 @@
         <span><?php echo htmlspecialchars($_SESSION['full_name'] ?? $_SESSION['username'] ?? 'User'); ?></span>
     </div>
     <nav>
-        <a href="client_dashboard.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'dean_dashboard.php' ? 'active' : '' ?>">
+        <a href="dean_dashboard.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'dean_dashboard.php' ? 'active' : '' ?>">
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
         </a>
-        <a href="activity_proposal.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'activity_proposal.php' ? 'active' : '' ?>">
-            <i class="fas fa-file-alt"></i>
-            <span>Activity Proposal</span>
-        </a>
-        <a href="client_view.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'deanview_document.php' ? 'active' : '' ?>">
+        <a href="dean_viewProposal.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'dean_viewProposal.php' ? 'active' : '' ?>">
             <i class="fas fa-eye"></i>
             <span>View Proposals</span>
         </a>
