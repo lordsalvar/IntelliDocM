@@ -8,27 +8,37 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
     exit();
 }
 
-// Fetch notifications for the user - simplified query for your table structure
+// Fetch notifications for the user - modified query without status check
 $user_id = $_SESSION['user_id'];
 $notifications_query = "
-    SELECT * FROM notifications 
-    WHERE user_id = ? 
-    ORDER BY created_at DESC
+    SELECT n.*, 
+           CASE WHEN n.is_read = 0 THEN 'unread' ELSE 'read' END as status
+    FROM notifications n 
+    WHERE n.user_id = ? 
+    ORDER BY n.created_at DESC
 ";
+
 $stmt = $conn->prepare($notifications_query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $notifications = $stmt->get_result();
 
-// Mark all as read functionality
+// Update mark all as read functionality to use is_read
 if (isset($_POST['mark_all_read'])) {
-    $update_query = "UPDATE notifications SET status = 'read' WHERE user_id = ?";
+    $update_query = "UPDATE notifications SET is_read = 1 WHERE user_id = ?";
     $stmt = $conn->prepare($update_query);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     header('Location: notifications.php');
     exit();
 }
+
+// Count unread notifications using is_read
+$unread_query = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0";
+$stmt = $conn->prepare($unread_query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$unread = $stmt->get_result()->fetch_row()[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +63,6 @@ if (isset($_POST['mark_all_read'])) {
                         <h2><i class="fas fa-bell"></i> Notifications</h2>
                         <span class="notification-count">
                             <?php
-                            $unread = mysqli_query($conn, "SELECT COUNT(*) FROM notifications WHERE user_id = $user_id AND status = 'unread'")->fetch_row()[0];
                             echo $unread ? "($unread)" : "";
                             ?>
                         </span>
