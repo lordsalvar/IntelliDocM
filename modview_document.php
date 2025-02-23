@@ -14,6 +14,29 @@ $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
 
+// Fetch facility bookings for this proposal
+$bookings_sql = "
+    SELECT 
+        b.booking_date,
+        b.start_time,
+        b.end_time,
+        b.status,
+        f.name as facility_name,
+        GROUP_CONCAT(r.room_number SEPARATOR ', ') as room_numbers
+    FROM bookings b
+    JOIN facilities f ON b.facility_id = f.id
+    LEFT JOIN booking_rooms br ON b.id = br.booking_id
+    LEFT JOIN rooms r ON br.room_id = r.id
+    WHERE b.activity_proposal_id = ?
+    GROUP BY b.id
+";
+$stmt = $conn->prepare($bookings_sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$facility_bookings = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_qr'])) {
     // Generate QR Code content
     $qrData = "http://10.6.8.72/main/IntelliDocM/verify_qr/mod_verify_qr.php?proposal_id=" . urlencode($proposal['proposal_id']) . "&moderator_name=" . urlencode($proposal['moderator_name']);
@@ -85,6 +108,7 @@ $conn->close();
 <div class="dashboard">
 
 <div class="container my-5">
+<a class="btn btn-secondary mb-3 back-button" href="/main/intellidocm/moderator_dashboard.php">← Back</a>
     <!-- Overlay Box -->
     <div class="overlay-box">
         <p><strong>Index No.:</strong> <u> 7.3 </u></p>
@@ -217,43 +241,44 @@ $conn->close();
 
 
         <div class="mb-4">
-            <h4 class="mb-3">Facility Bookings</h4>
-            <?php if (empty($facility_bookings)): ?>
-                <p class="text-muted">No facilities booked for this activity.</p>
-            <?php else: ?>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>Facility</th>
-                                <th>Room(s)</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($facility_bookings as $booking): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($booking['facility_name']) ?></td>
-                                    <td><?= htmlspecialchars($booking['room_numbers'] ?: 'Whole Facility') ?></td>
-                                    <td><?= date('F d, Y', strtotime($booking['booking_date'])) ?></td>
-                                    <td>
-                                        <?= date('h:i A', strtotime($booking['start_time'])) ?> -
-                                        <?= date('h:i A', strtotime($booking['end_time'])) ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-<?= strtolower($booking['status']) === 'confirmed' ? 'success' : (strtolower($booking['status']) === 'pending' ? 'warning' : 'danger') ?>">
-                                            <?= htmlspecialchars($booking['status']) ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <h4 class="mb-3">Facility Bookings</h4>
+                    <?php if (empty($facility_bookings)): ?>
+                        <p class="text-muted">No facilities booked for this activity.</p>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Facility</th>
+                                        <th>Room(s)</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($facility_bookings as $booking): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($booking['facility_name']) ?></td>
+                                            <td><?= htmlspecialchars($booking['room_numbers'] ?: 'Whole Facility') ?></td>
+                                            <td><?= date('F d, Y', strtotime($booking['booking_date'])) ?></td>
+                                            <td>
+                                                <?= date('h:i A', strtotime($booking['start_time'])) ?> -
+                                                <?= date('h:i A', strtotime($booking['end_time'])) ?>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-<?= strtolower($booking['status']) === 'confirmed' ? 'success' : (strtolower($booking['status']) === 'pending' ? 'warning' : 'danger') ?>">
+                                                    <?= htmlspecialchars($booking['status']) ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
-        </div>
+
 
 
         <div class="row mb-4">

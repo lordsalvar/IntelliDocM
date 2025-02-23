@@ -4,7 +4,7 @@ require_once 'database.php';
 include 'system_log/activity_log.php';
 
 // Validate user login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'dean') {
     header('Location: login.php');
     exit();
 }
@@ -421,7 +421,7 @@ $stats = [
                                     <i class="fas fa-circle"></i> <?= ucfirst($row['status']) ?>
                                 </span>
                             </div>
-                           <!-- Inserted Proposal Metadata Block -->
+                            <!-- Inserted Proposal Metadata Block -->
         <div class="proposal-content">
             <div class="proposal-meta">
                 <div class="meta-item">
@@ -455,7 +455,7 @@ $stats = [
             </div>
         </div>
                             <div class="proposal-footer">
-                                <a href="client_view.php?id=<?= $row['proposal_id'] ?>" class="btn btn-outline-primary">
+                                <a href="deanview_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-outline-primary">
                                     <i class="fas fa-eye"></i> View
                                 </a>
                             </div>

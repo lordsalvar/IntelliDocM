@@ -4,7 +4,7 @@ require_once 'database.php';
 include 'system_log/activity_log.php';
 
 // Validate user login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'moderator') {
     header('Location: login.php');
     exit();
 }
@@ -414,14 +414,15 @@ $stats = [
                     </div>
                 <?php else: ?>
                     <?php while ($row = $proposals_result->fetch_assoc()): ?>
-                        <div class="proposal-card" data-status="<?= strtolower($row['status']) ?>">
-                            <div class="proposal-header">
-                                <h3 class="proposal-title"> <?= htmlspecialchars($row['activity_title']) ?> </h3>
-                                <span class="status-badge <?= strtolower($row['status']) ?>">
-                                    <i class="fas fa-circle"></i> <?= ucfirst($row['status']) ?>
-                                </span>
-                            </div>
-                           <!-- Inserted Proposal Metadata Block -->
+    <div class="proposal-card" data-status="<?= strtolower($row['status']) ?>">
+        <div class="proposal-header">
+            <h3 class="proposal-title"> <?= htmlspecialchars($row['activity_title']) ?> </h3>
+            <span class="status-badge <?= strtolower($row['status']) ?>">
+                <i class="fas fa-circle"></i> <?= ucfirst($row['status']) ?>
+            </span>
+        </div>
+
+        <!-- Inserted Proposal Metadata Block -->
         <div class="proposal-content">
             <div class="proposal-meta">
                 <div class="meta-item">
@@ -454,13 +455,15 @@ $stats = [
                 </div>
             </div>
         </div>
-                            <div class="proposal-footer">
-                                <a href="client_view.php?id=<?= $row['proposal_id'] ?>" class="btn btn-outline-primary">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                            </div>
-                        </div>
-                    <?php endwhile; ?>
+
+        <div class="proposal-footer">
+            <a href="modview_document.php?id=<?= $row['proposal_id'] ?>" class="btn btn-outline-primary">
+                <i class="fas fa-eye"></i> View
+            </a>
+        </div>
+    </div>
+<?php endwhile; ?>
+
                 <?php endif; ?>
             </div>
         </div>
