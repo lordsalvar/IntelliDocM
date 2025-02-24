@@ -13,7 +13,7 @@ function getTimeBasedGreeting()
     } elseif ($hour >= 17 && $hour < 21) {
         return ['greeting' => 'Good Evening', 'icon' => 'moon'];
     } else {
-        return ['greeting' => 'Good Night', 'icon' => 'moon'];
+        return ['greeting' => 'Good Morning', 'icon' => 'sun'];
     }
 }
 
@@ -103,36 +103,50 @@ $recent_utilization = $conn->query("
     LIMIT 5
 ")->fetch_all(MYSQLI_ASSOC);
 
-// Update the calendar events query to only show confirmed activities
+// Update the calendar events query to include more details
 $mini_calendar_events = $conn->query("
     SELECT 
-        activity_title as title,
-        activity_date as start,
-        end_activity_date as end,
-        status,
+        ap.activity_title as title,
+        ap.activity_date as start,
+        ap.end_activity_date as end,
+        ap.status,
+        ap.club_name,
+        ap.venue,
+        ap.start_time,
+        ap.end_time,
         'activity' as type,
-        DATEDIFF(end_activity_date, activity_date) as duration
-    FROM activity_proposals 
-    WHERE activity_date >= CURRENT_DATE 
-    AND activity_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
-    AND status = 'confirmed'  /* Add this condition */
+        DATEDIFF(ap.end_activity_date, ap.activity_date) as duration,
+        u.full_name as submitted_by
+    FROM activity_proposals ap
+    LEFT JOIN users u ON ap.user_id = u.id
+    WHERE ap.activity_date >= CURRENT_DATE 
+    AND ap.activity_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    AND ap.status = 'confirmed'
     UNION ALL
     SELECT 
         CONCAT(f.name, ' - ', GROUP_CONCAT(r.room_number)) as title,
-        booking_date as start,
-        booking_date as end,
-        status,
+        b.booking_date as start,
+        b.booking_date as end,
+        b.status,
+        c.club_name,
+        f.name as venue,
+        b.start_time,
+        b.end_time,
         'booking' as type,
-        0 as duration
+        0 as duration,
+        u.full_name as submitted_by
     FROM bookings b
     JOIN facilities f ON b.facility_id = f.id
     LEFT JOIN booking_rooms br ON b.id = br.booking_id
     LEFT JOIN rooms r ON br.room_id = r.id
-    WHERE booking_date >= CURRENT_DATE 
-    AND booking_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
-    AND b.status = 'Confirmed'  /* Add this condition - note the capital C */
+    LEFT JOIN users u ON b.user_id = u.id
+    LEFT JOIN club_memberships cm ON u.id = cm.user_id
+    LEFT JOIN clubs c ON cm.club_id = c.club_id
+    WHERE b.booking_date >= CURRENT_DATE 
+    AND b.booking_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    AND b.status = 'Confirmed'
     GROUP BY b.id
-    ORDER BY start ASC
+    ORDER BY start ASC, start_time ASC
     LIMIT 10")->fetch_all(MYSQLI_ASSOC);
 
 ?>
@@ -894,6 +908,38 @@ $mini_calendar_events = $conn->query("
         .event-details {
             align-items: flex-start;
         }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-item i {
+            color: #1976d2;
+            width: 16px;
+            text-align: center;
+        }
+
+        .event-date .time {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .event-info h4 {
+            margin-bottom: 0.25rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -1003,17 +1049,30 @@ $mini_calendar_events = $conn->query("
                                             <span class="duration"><?= $event['duration'] + 1 ?> days</span>
                                         <?php else: ?>
                                             <span class="date"><?= date('M d', strtotime($event['start'])) ?></span>
+                                            <span class="time"><?= date('g:i A', strtotime($event['start_time'])) ?></span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="event-details">
                                         <div class="event-info">
                                             <h4><?= htmlspecialchars($event['title']) ?></h4>
-                                            <?php if ($event['type'] === 'activity' && $event['duration'] > 0): ?>
-                                                <span class="event-duration">
-                                                    <i class="fas fa-clock"></i>
-                                                    <?= $event['duration'] + 1 ?> day<?= $event['duration'] > 0 ? 's' : '' ?> activity
+                                            <div class="event-meta">
+                                                <?php if ($event['club_name']): ?>
+                                                    <span class="meta-item">
+                                                        <i class="fas fa-users"></i> <?= htmlspecialchars($event['club_name']) ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                                <span class="meta-item">
+                                                    <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($event['venue']) ?>
                                                 </span>
-                                            <?php endif; ?>
+                                                <span class="meta-item">
+                                                    <i class="fas fa-clock"></i>
+                                                    <?= date('g:i A', strtotime($event['start_time'])) ?> -
+                                                    <?= date('g:i A', strtotime($event['end_time'])) ?>
+                                                </span>
+                                                <span class="meta-item">
+                                                    <i class="fas fa-user"></i> <?= htmlspecialchars($event['submitted_by']) ?>
+                                                </span>
+                                            </div>
                                         </div>
                                         <span class="event-status">
                                             <i class="fas fa-circle"></i>

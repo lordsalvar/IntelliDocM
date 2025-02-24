@@ -55,28 +55,39 @@ if ($club_name) {
     $proposals_result = $stmt->get_result();
 }
 
-// Replace the existing calendar events query with this:
+// Update the calendar events query
 $mini_calendar_events_query = $conn->prepare("
     SELECT 
-        activity_title as title,
-        activity_date as start,
-        end_activity_date as end,
-        status,
+        ap.activity_title as title,
+        ap.activity_date as start,
+        ap.end_activity_date as end,
+        ap.status,
+        ap.club_name,
+        ap.venue,
+        ap.start_time,
+        ap.end_time,
         'activity' as type,
-        DATEDIFF(end_activity_date, activity_date) as duration
-    FROM activity_proposals 
-    WHERE activity_date >= CURRENT_DATE 
-    AND activity_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
-    AND club_name = ?
-    AND status = 'confirmed'
+        DATEDIFF(ap.end_activity_date, ap.activity_date) as duration,
+        u.full_name as submitted_by
+    FROM activity_proposals ap
+    LEFT JOIN users u ON ap.user_id = u.id
+    WHERE ap.activity_date >= CURRENT_DATE 
+    AND ap.activity_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    AND ap.club_name = ?
+    AND ap.status = 'confirmed'
     UNION ALL
     SELECT 
         CONCAT(f.name, ' - ', GROUP_CONCAT(r.room_number)) as title,
-        booking_date as start,
-        booking_date as end,
-        status,
+        b.booking_date as start,
+        b.booking_date as end,
+        b.status,
+        c.club_name,
+        f.name as venue,
+        b.start_time,
+        b.end_time,
         'booking' as type,
-        0 as duration
+        0 as duration,
+        u.full_name as submitted_by
     FROM bookings b
     JOIN facilities f ON b.facility_id = f.id
     LEFT JOIN booking_rooms br ON b.id = br.booking_id
@@ -84,12 +95,12 @@ $mini_calendar_events_query = $conn->prepare("
     LEFT JOIN users u ON b.user_id = u.id
     LEFT JOIN club_memberships cm ON u.id = cm.user_id
     LEFT JOIN clubs c ON cm.club_id = c.club_id
-    WHERE booking_date >= CURRENT_DATE 
-    AND booking_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
+    WHERE b.booking_date >= CURRENT_DATE 
+    AND b.booking_date <= DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY)
     AND c.club_name = ?
     AND b.status = 'Confirmed'
     GROUP BY b.id
-    ORDER BY start ASC
+    ORDER BY start ASC, start_time ASC
     LIMIT 10
 ");
 
@@ -164,17 +175,30 @@ if ($club_name) {
                                         <span class="duration"><?= $event['duration'] + 1 ?> days</span>
                                     <?php else: ?>
                                         <span class="date"><?= date('M d', strtotime($event['start'])) ?></span>
+                                        <span class="time"><?= date('g:i A', strtotime($event['start_time'])) ?></span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="event-details">
                                     <div class="event-info">
                                         <h4><?= htmlspecialchars($event['title']) ?></h4>
-                                        <?php if ($event['type'] === 'activity' && $event['duration'] > 0): ?>
-                                            <span class="event-duration">
-                                                <i class="fas fa-clock"></i>
-                                                <?= $event['duration'] + 1 ?> day<?= $event['duration'] > 0 ? 's' : '' ?> activity
+                                        <div class="event-meta">
+                                            <?php if ($event['club_name']): ?>
+                                                <span class="meta-item">
+                                                    <i class="fas fa-users"></i> <?= htmlspecialchars($event['club_name']) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                            <span class="meta-item">
+                                                <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($event['venue']) ?>
                                             </span>
-                                        <?php endif; ?>
+                                            <span class="meta-item">
+                                                <i class="fas fa-clock"></i>
+                                                <?= date('g:i A', strtotime($event['start_time'])) ?> -
+                                                <?= date('g:i A', strtotime($event['end_time'])) ?>
+                                            </span>
+                                            <span class="meta-item">
+                                                <i class="fas fa-user"></i> <?= htmlspecialchars($event['submitted_by']) ?>
+                                            </span>
+                                        </div>
                                     </div>
                                     <span class="event-status">
                                         <i class="fas fa-circle"></i>
@@ -464,16 +488,22 @@ if ($club_name) {
             color: #2c3e50;
         }
 
-        .event-duration {
-            font-size: 0.8rem;
-            color: #666;
+        .event-meta {
             display: flex;
-            align-items: center;
-            gap: 0.35rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
         }
 
-        .event-duration i {
-            font-size: 0.75rem;
+        .event-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .event-meta .meta-item i {
+            font-size: 0.85rem;
             color: #1976d2;
         }
 
