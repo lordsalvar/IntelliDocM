@@ -3,6 +3,10 @@ include 'database.php';
 
 $id = $_GET['id']; // Get the proposal ID from the URL
 
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    die("Invalid proposal ID.");
+}
+
 // Fetch the proposal data
 $sql = "SELECT * FROM activity_proposals WHERE proposal_id = ?";
 $stmt = $conn->prepare($sql);
@@ -11,6 +15,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 $proposal = $result->fetch_assoc();
 $stmt->close();
+
+if (!$proposal) {
+    die("Proposal not found.");
+}
+
 
 // Add this after proposal data fetch
 $showActions = true;
@@ -78,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 3. Insert notification
-        if (isset($proposal['id'], $proposal['activity_title'])) {
+        if (isset($proposal['user_id'], $proposal['activity_title'])) {
             $message = ($status === 'Approved')
                 ? "Your activity proposal '{$proposal['activity_title']}' has been approved."
                 : "Your activity proposal '{$proposal['activity_title']}' has been rejected. Reason: $rejectionReason";
@@ -376,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <?php if ($showActions): ?>
                         <form method="POST" onsubmit="return confirmAction(event)" id="actionForm">
-                            <button type="submit" name="action" value="approve" class="btn btn-success mx-2" onclick="this.disabled=true; document.getElementById('actionForm').submit();">
+                            <button type="submit" name="action" value="approve" class="btn btn-success mx-2">
                                 <i class="fas fa-check"></i> Approve
                             </button>
                             <button type="button" class="btn btn-danger mx-2" data-toggle="modal" data-target="#rejectModal">
@@ -429,11 +438,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     return false;
                 }
                 const form = event.target;
-                const buttons = form.querySelectorAll('button');
-                buttons.forEach(button => button.disabled = true);
+                setTimeout(() => {
+                    const buttons = form.querySelectorAll('button');
+                    buttons.forEach(button => button.disabled = true);
+                }, 100);
                 return true;
             }
         </script>
+
 </body>
 
 </html>

@@ -549,6 +549,39 @@ $proposals = $conn->query($sql);
                 // Add your rejection logic here
             }
         }
+
+        // Add real-time status checking
+        function checkProposalUpdates() {
+            const proposals = document.querySelectorAll('.proposal-card');
+            proposals.forEach(proposal => {
+                const proposalId = proposal.querySelector('.btn-action').getAttribute('onclick').match(/\d+/)[0];
+
+                fetch(`check_proposal_status.php?id=${proposalId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status !== proposal.dataset.status) {
+                            // Update status badge
+                            const statusBadge = proposal.querySelector('.status-badge');
+                            statusBadge.className = `status-badge ${data.status.toLowerCase()}`;
+                            statusBadge.innerHTML = `<i class="fas fa-circle"></i> ${data.status}`;
+
+                            // Update proposal card status
+                            proposal.dataset.status = data.status.toLowerCase();
+
+                            // Show notification
+                            const notification = document.createElement('div');
+                            notification.className = 'alert alert-info position-fixed top-0 end-0 m-3';
+                            notification.innerHTML = `Proposal status updated to: ${data.status}`;
+                            document.body.appendChild(notification);
+                            setTimeout(() => notification.remove(), 3000);
+                        }
+                    })
+                    .catch(error => console.error('Error checking status:', error));
+            });
+        }
+
+        // Check for updates every 30 seconds
+        setInterval(checkProposalUpdates, 30000);
     </script>
 </body>
 
